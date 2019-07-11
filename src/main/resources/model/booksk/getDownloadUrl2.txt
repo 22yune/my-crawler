@@ -1,0 +1,12 @@
+get http://booksk.com/wp-content/plugins/erphpdown/downloadfile.php?id=170753&filename=1&md5key=b652b322b4a1f78a31fce4b1a1e42df6&times=1561342432&session_name=aHR0cHMlM0ElMkYlMkZwYW4uYmFpZHUuY29tJTJGcyUyRjFZMzJlS0VwYTFoT05tZDhGY1g3LXZBLS0tZXJwaHBkb3du
+
+Host: booksk.com
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:66.0) Gecko/20100101 Firefox/66.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Cookie: wordpress_c3fc9d9982e9ab5977990f6e3d5d05bb=107043.539.b157d4656531750e8ffc7e9d18b5ccdf%7C1562547969%7CTfLpu0g3YsL4ZPkoGXUOJLq3udFXIYfQ3LpP9hq8r9l%7Cdd1920a30fb5a459f2e20a252d92b5d4285d8ea57df30266de2b491160c0edaa; UM_distinctid=169e73c82b4fc-0b44c75a5f1fbd-40574133-100200-169e73c82b5b2; CNZZDATA1264928487=970741416-1554358243-null%7C1561338070; yunsuo_session_verify=eef38c377280831b53f983f9a4cf437c; wordpress_logged_in_c3fc9d9982e9ab5977990f6e3d5d05bb=107043.166.b00bc6564543faef86db76ce669fc2d0%7C1562547969%7CTfLpu0g3YsL4ZPkoGXUOJLq3udFXIYfQ3LpP9hq8r9l%7C1153e776c83ac442374efb08a94152425b42bb1ccad29ef379d6ac187cb1bfd6; wp_xh_session_c3fc9d9982e9ab5977990f6e3d5d05bb=ffe94c6dae4c6bfefdf45e2b6e5bc0fa%7C%7C1561511013%7C%7C1561507413%7C%7Cae0eb27310e34e31daac6e93f601af4b
+Upgrade-Insecure-Requests: 1
+
+<script type='text/javascript'>window.location='https://pan.baidu.com/s/1Y32eKEpa1hONmd8FcX7-vA';</script>

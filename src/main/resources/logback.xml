@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds" debug="false">
+
+    <contextName>PT-LOG</contextName>
+
+    <!-- 定义日志文件 输出位置 -->
+    <property name="common_log_dir" value="logs/common" />
+    <property name="exception_log_dir" value="logs/exception"/>
+
+    <property name="pattern" value="%date [Method=%X{method}, URI=%X{requestURIWithQueryString}, IP=%X{remoteAddr}] [%level] [%logger] [%class:%line]-%msg%n" />
+
+    <!-- 日志最大的历史 30天 -->
+    <property name="maxHistory" value="15" />
+
+    <appender name="ibconsole" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 非INFO级别日志，全部过滤掉 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <!--<onMismatch>DENY</onMismatch>-->
+        </filter>
+        <!-- 过滤掉所有低于INFO级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <encoder>
+            <pattern>%date [Method=%X{method}, URI=%X{requestURIWithQueryString}, IP=%X{remoteAddr}] [%level] [%logger] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <!--*******************************common_log开始***************************************************** -->
+    <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 RollingFileAppender -->
+    <appender name="common_log"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 支持多JVM同时操作同一个日志文件 -->
+        <prudent>true</prudent>
+        <!-- 最常用的滚动策略，它根据时间来制定滚动策略.既负责滚动也负责出发滚动 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志输出位置 可相对、和绝对路径 -->
+            <fileNamePattern>
+                ${common_log_dir}/%d{yyyy-MM-dd}/common_log%i.log
+            </fileNamePattern>
+            <maxHistory>${maxHistory}</maxHistory>
+            <!-- 按时间回滚的同时，按文件大小来回滚 -->
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>2MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <!--  日志输出格式 -->
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+
+    </appender>
+
+
+
+    <!--*******************************common_log结束***************************************************** -->
+
+
+    <!--*******************************exception_log开始***************************************************** -->
+    <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 RollingFileAppender -->
+    <appender name="exception_log"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 支持多JVM同时操作同一个日志文件 -->
+        <prudent>true</prudent>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!-- 最常用的滚动策略，它根据时间来制定滚动策略.既负责滚动也负责出发滚动 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志输出位置 可相对、和绝对路径 -->
+            <fileNamePattern>
+                ${exception_log_dir}/%d{yyyy-MM-dd}/exception_log%i.log
+            </fileNamePattern>
+            <maxHistory>${maxHistory}</maxHistory>
+            <!-- 按时间回滚的同时，按文件大小来回滚 -->
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>2MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <!--  日志输出格式 -->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${pattern}</pattern>
+        </layout>
+
+    </appender>
+
+    <!-- logger级别   DEBUG -->
+    <logger name="exception" additivity="false">
+        <!-- 打印debug级别日志及以上级别日志 -->
+        <level value="info" />
+        <!-- 文件输出 -->
+        <appender-ref ref="exception_log" />
+    </logger>
+
+    <logger name="com.xquant.platform.component.logging.ThrowLog" additivity="false">
+        <appender-ref ref="exception_log" />
+    </logger>
+    <!--*******************************exception_log结束***************************************************** -->
+
+    <logger name="org.activiti" level="info" />
+    <logger name="org.springframework" level="info" />
+    <logger name="org.mybatis" level="info" />
+    <logger name="org.apache" level="info" additivity="info"/>
+    <logger name="org.quartz" level="warn" />
+    <logger name="org.docx4j.convert.out.common" level="info" />
+    <logger name="druid.sql.DataSource" level="info" />
+    <logger name="java.sql" level="info" />
+    <logger name="org.apache" level="info" />
+    <logger name="com.mchange.v2" level="info" />
+    <logger name="httpclient.wire" level="info" />
+    <logger name="com.example.tools.mycrawler.HttpUtils" level="error" />
+    <logger name="com.example.tools.mycrawler.amazon.AmazonVisit" level="error"/>
+    <!-- 根logger的设置-->
+    <root>
+        <level value="debug" />
+        <appender-ref ref="ibconsole" />
+        <appender-ref ref="common_log" />
+        <appender-ref ref="exception_log" />
+    </root>
+
+</configuration>

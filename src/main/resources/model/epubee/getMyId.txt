@@ -1,0 +1,21 @@
+POST http://cn.epubee.com/keys/genid_with_localid.asmx/genid_with_localid
+
+Host: cn.epubee.com
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:66.0) Gecko/20100101 Firefox/66.0
+Accept: application/json, text/javascript, */*; q=0.01
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Referer: http://cn.epubee.com/books/?s=UNIX%E7%8E%AF%E5%A2%83%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B(%E7%AC%AC3%E7%89%88)&action=
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+X-Forwarded-For: 192.168.0.1
+Content-Length: 13
+Connection: keep-alive
+Cookie: isVip=0; _gat=1
+Pragma: no-cache
+Cache-Control: no-cache
+
+{localid:'0'}
+
+
+{"d":[{"__type":"Container.json_Add_Temp","ID":23929247,"isVip":0,"Name":"ip_183.129.165.101","email":"","kindle_email":"","UserName":""}]}

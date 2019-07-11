@@ -1,0 +1,14 @@
+
+http://cn.epubee.com/app_books/reader.aspx?bid=jnMn62JG8lk31MQ51vJSRAdsnJSArMYLPrNW6%2fzdwN6yNOAlyZzWcV5eqT4F4Q8PWz%2blTglfdhLC2qVPrzJ7nqi1iQiPHvGEXux17Oz215vzbhoBV6s4FySF2Q%2bN7ouHmvBszbJk59DtWRskzVDzkw%3d%3d&agent=mozilla/5.0%20%28windows%20nt%206.1%3B%20wow64%3B%20rv%3A66.0%29%20gecko/20100101%20firefox/66.0
+
+HTTP/1.1 302 Found
+Cache-Control: private
+Content-Type: text/html; charset=utf-8
+Location: http://reader.epubee.com/?book=books/d2/d29d9b2707abe32117632d49175ea7d4&qu=23929247%24%24%24%240
+Server: Microsoft-IIS/7.5
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Date: Fri, 21 Jun 2019 07:39:47 GMT
+Content-Length: 218
+
+http://reader.epubee.com/books/d2/d29d9b2707abe32117632d49175ea7d4.epub

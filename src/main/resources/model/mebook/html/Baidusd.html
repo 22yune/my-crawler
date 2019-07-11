@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=7,9,10,11"/>
+    <meta name="renderer" content="webkit">
+    <script src="/sns/box-static/disk-share/js/share.dp.js?t=1555555199081"></script>
+    <link rel="shortcut icon" hrefs="/res/static/images/favicon.ico"/>
+    <script src="/sns/box-static/disk-share/js/mod.js?t=1555555199081"></script>
+    <link rel="stylesheet" type="text/css" hrefs="/box-static/consult/base.css"/>
+    <link rel="stylesheet" type="text/css" hrefs="/box-static/consult/system-core.css"/>
+    <script src="/box-static/consult/base.js"></script>
+    <script src="/box-static/consult/system-core.js"></script>
+
+    <link rel="stylesheet" type="text/css" hrefs="/box-static/consult/function.css"/>
+
+
+    <meta content="b31ebb7c3759312418b3645de4991aef" name="baidu-tc-verification"/>
+    <meta content="max-age=30" http-equiv="Cache-Control"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <meta content="网盘,百度网盘,百度云,网络U盘,网络硬盘,免费网盘,网盘下载,网盘资源,同步,云存储,外链分享,离线下载" name="keywords"/>
+    <meta content="百度网盘为您提供文件的网络备份、同步和分享服务。空间大、速度快、安全稳固，支持教育网加速，支持手机端。注册使用百度网盘即可享受免费存储空间" name="description"/>
+    <link rel="stylesheet" type="text/css" hrefs="/box-static/consult/file-widget-1-icons.css"/>
+    <link rel="stylesheet" type="text/css" hrefs="/box-static/consult/function-widget-1-icons.css"/>
+    <script src="/box-static/consult/file-widget-1-manifest.js"></script>
+    <script src="/box-static/consult/function-widget-1-manifest.js"></script>
+    <script src="/box-static/consult/file-widget-1-map.js"></script>
+    <script src="/box-static/consult/function-widget-1-map.js"></script>
+    <style type="text/css">.icon-shareSave-gray {
+        background-repeat: no-repeat;
+    }
+
+    .g-button:hover .icon-shareSave-gray {
+        background-repeat: no-repeat;
+    }
+
+    .icon-shareSave-white {
+        background-repeat: no-repeat;
+    }
+
+    .g-button:hover .icon-shareSave-white {
+        background-repeat: no-repeat;
+    }
+
+    .icon-shareSave-blue {
+        background-repeat: no-repeat;
+    }
+
+    .g-button:hover .icon-shareSave-blue {
+        background-repeat: no-repeat;
+    }
+
+    .icon-unlinkShare-gray {
+        background-repeat: no-repeat;
+    }
+
+    .g-button:hover .icon-unlinkShare-gray {
+        background-repeat: no-repeat;
+    }
+
+    .icon-shareSave-gray {
+        background-position: 0px 0px
+    }
+
+    .g-button:hover .icon-shareSave-gray {
+        background-position: 0px -34px
+    }
+
+    .icon-shareSave-white {
+        background-position: 0px -68px
+    }
+
+    .g-button:hover .icon-shareSave-white {
+        background-position: 0px -102px
+    }
+
+    .icon-shareSave-blue {
+        background-position: 0px -136px
+    }
+
+    .g-button:hover .icon-shareSave-blue {
+        background-position: 0px -170px
+    }
+
+    .icon-unlinkShare-gray {
+        background-position: 0px -204px
+    }
+
+    .g-button:hover .icon-unlinkShare-gray {
+        background-position: 0px -238px
+    }
+
+    .icon-shareSave-gray, .g-button:hover .icon-shareSave-gray, .icon-shareSave-white, .g-button:hover .icon-shareSave-white, .icon-shareSave-blue, .g-button:hover .icon-shareSave-blue, .icon-unlinkShare-gray, .g-button:hover .icon-unlinkShare-gray {
+        background-image: url(/sns/box-static/disk-share/icons_z_85b2ffc.png?t=1555555199081)
+    }</style>
+    <script type="text/javascript">[].push.apply(window.manifest || (window.manifest = []), [{
+        "name": "\u7f51\u76d8\u94fe\u63a5\u7ba1\u7406-\u8bc4\u8bba",
+        "group": "com.baidu.pan",
+        "description": "The comment plugin.",
+        "entranceFile": "disk-share:widget\/plugin\/comment\/start.js"
+    }, {
+        "name": "\u7f51\u76d8\u94fe\u63a5\u7ba1\u7406-\u70b9\u8d5e",
+        "group": "com.baidu.pan",
+        "description": "The likes plugin.",
+        "entranceFile": "disk-share:widget\/plugin\/likes\/start.js"
+    }, {
+        "name": "\u7f51\u76d8\u94fe\u63a5\u7ba1\u7406-\u4e3e\u62a5",
+        "group": "com.baidu.pan",
+        "description": "The qrCode plugin.",
+        "buttons": [{
+            "position": "shareTools",
+            "index": 4,
+            "title": "\u4e3e\u62a5",
+            "buttonStyle": "normal",
+            "name": "reportBad",
+            "yunData": "yunData.MYUK !== yunData.SHARE_UK",
+            "conditions": {"pageModule": "link"}
+        }],
+        "entranceFile": "disk-share:widget\/plugin\/reportBad\/start.js"
+    }, {
+        "name": "\u4fdd\u5b58\u5230\u7f51\u76d8",
+        "group": "com.baidu.pan",
+        "description": "The tools of transferFiles plugin.",
+        "buttons": [{
+            "position": "shareTools",
+            "index": 1,
+            "title": "\u4fdd\u5b58\u5230\u7f51\u76d8",
+            "buttonStyle": "normal",
+            "icon": "icon-save-disk",
+            "name": "shareSave",
+            "color": "blue",
+            "conditions": {"pageModule": "link"},
+            "yunData": "yunData.MYUK !== yunData.SHARE_UK"
+        }, {
+            "position": "shareListTools",
+            "index": 1,
+            "title": "\u4fdd\u5b58\u5230\u6211\u7684\u767e\u5ea6\u7f51\u76d8",
+            "buttonStyle": "normal",
+            "icon": "icon-save-disk",
+            "name": "shareSave",
+            "conditions": {"pageModule": "link"},
+            "yunData": "yunData.MYUK !== yunData.SHARE_UK"
+        }, {
+            "position": "shareList",
+            "index": 1,
+            "title": "\u4fdd\u5b58\u5230\u6211\u7684\u767e\u5ea6\u7f51\u76d8",
+            "buttonStyle": "normal",
+            "icon": "icon-save-disk",
+            "name": "shareSave",
+            "conditions": {"pageModule": "link"},
+            "yunData": "yunData.MYUK !== yunData.SHARE_UK"
+        }],
+        "entranceFile": "disk-share:widget\/plugin\/shareFileSave\/start.js"
+    }, {
+        "name": "\u7f51\u76d8\u94fe\u63a5\u7ba1\u7406-\u53d6\u6d88\u5206\u4eab\u94fe\u63a5",
+        "group": "com.baidu.pan",
+        "description": "The unlinkShare plugin.",
+        "buttons": [{
+            "position": "shareTools",
+            "index": 1,
+            "title": "\u53d6\u6d88\u5206\u4eab",
+            "buttonStyle": "normal",
+            "icon": "icon-share-cancel",
+            "name": "unLinkShare",
+            "conditions": {"pageModule": "link"},
+            "yunData": "yunData.MYUK === yunData.SHARE_UK"
+        }],
+        "entranceFile": "disk-share:widget\/plugin\/unLinkShare\/start.js"
+    }]);</script>
+    <link rel="stylesheet" type="text/css" hrefs="/sns/box-static/disk-share/css/layout/layout.css?t=1555555199081"/>
+    <link rel="stylesheet" type="text/css" hrefs="/sns/box-static/disk-share/css/page/share-single.css?t=1555555199081"/>
+    <link rel="stylesheet" type="text/css" hrefs="/sns/box-static/disk-share/pkg/system_95f8a99.css?t=1555555199081"/>
+    <link rel="stylesheet" type="text/css" hrefs="/sns/box-static/disk-share/pkg/page-ui_17b7d68.css?t=1555555199081"/>
+</head>
+<body>
+<script> alog('speed.set', 'ht', +new Date); </script>
+
+<div class="frame-all" id="layoutApp">
+
+    <div class="frame-main" id="layoutMain">
+        <div class="frame-content">
+
+            <div node-type="module" class="module-share-header">
+                <div class="slide-show-header clearfix">
+                    <div class="slide-show-left">
+                        <h2 class="file-name" title="文件名">
+                            <em class="global-icon-16"></em>文件名</h2>
+                    </div>
+                    <div class="slide-show-right">
+<span class="slide-header-funcs">
+</span>
+                        <div class="module-share-top-bar g-clearfix">
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+                    <div class="cb"></div>
+                    <div class="slide-show-other-infos">
+                        <div class="share-file-info">
+                            <span>2016-09-28 12:16</span>
+                        </div>
+                        <div class="share-valid-check">
+                            失效时间：永久有效
+                        </div>
+                        <div class="slide-show-other-cns clearfix">
+<span class="title-funcs">
+<a class="funcs-tui" hidefocus="true" hrefs="javascript:void(0);" id="albumTui" title="赞"><em
+        class="tui_icon"></em><b>赞(0)</b><span class="tui-number"></span></a>
+<span class="share-operate-seprate"></span>
+<div class="comment-container"><a class="funcs-comment" hrefs="#comment_panel">评论</a></div>
+<span class="funcs-share-area">
+</span>
+</span>
+                        </div>
+                        <div class="cb"></div>
+                    </div>
+                </div>
+            </div>
+            <div node-type="module" class="module-share-file-main">
+                <div class="share-file-viewer">
+
+                    <div node-type="share-info-box" class="share-info-box"></div>
+
+                </div>
+                <div class="ad-single-bottom ad-platform-tips" node-id="web-sharesinglebanner" id="web-single-bottom">
+                </div>
+            </div>
+            <a hrefs="javascript:;" name="comment_panel" id="comment_panel"></a>
+            <div class="comment_panel global-clearfix"></div>
+
+        </div>
+        <div class="module-aside aside" id="layoutAside">
+
+            <div node-type="module" class="module-share-person-info">
+                <div class="share-person-inner global-clearfix haha">
+                    <div class="share-person-avatar">
+                        <a hrefs="//yun.baidu.com/buy/center?tag=1&from=sicon" class="unvip-icon sicon"><em></em></a>
+                        <a hrefs="/share/home?uk=2671205744&suk=avgjYbaK6_QLGKH1GviPUQ" target="_blank" title="去Ta的分享主页"
+                           class="person-icon"><img alt="间**ay"
+                                                    src="https://ss0.bdstatic.com/7Ls0a8Sm1A5BphGlnYG/sys/portrait/item/139faf33.jpg"></a>
+                    </div>
+                    <div class="share-person-data self">
+                        <div class="share-person-data-top">
+                            <a hrefs="/share/home?uk=2671205744&suk=avgjYbaK6_QLGKH1GviPUQ" target="_blank"
+                               title="去Ta的分享主页" class="share-person-username global-ellipsis">间**ay</a>
+                            <a hrefs="//yun.baidu.com/buy/center?tag=1&from=sicon" class="unvip-icon sicon">
+                                <em></em>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <ul class="share-person-numbers" node-type="share-person-numbers">
+                    <li class="sharecnt"><a hrefs="/share/home?uk=2671205744&suk=avgjYbaK6_QLGKH1GviPUQ&view=share"><em
+                            title="<%= data.pubshare_count %>"><%= data.pubshare_count %></em><span>分享</span></a></li>
+                    <li class="albumcnt"><a hrefs="/share/home?uk=2671205744&suk=avgjYbaK6_QLGKH1GviPUQ&view=album"><em
+                            title="<%= data.album_count %>"><%= data.album_count %></em><span>专辑</span></a></li>
+                    <li class="followcnt"><a hrefs="/share/home?uk=2671205744&suk=avgjYbaK6_QLGKH1GviPUQ&view=follow"><em
+                            title="<%= data.follow_count %>"><%= data.follow_count %></em><span>订阅</span></a></li>
+                    <li class="fanscnt"><a hrefs="/share/home?uk=2671205744&suk=avgjYbaK6_QLGKH1GviPUQ&view=fans"><em
+                            title="<%= data.fans_count %>"><%= data.fans_count %></em><span>粉丝</span></a></li>
+                </ul>
+            </div>
+            <div id='web-right-view' type='4' style="margin-top:10px" node-id="web-sharelinkpic"
+                 class="ad-platform-tips">
+            </div>
+            <link rel="stylesheet" type="text/css" hrefs="/sns/box-static/disk-share/css/cover.css?t=1555555199081"/>
+            <link rel="stylesheet" node-type="theme-link" type="text/css"
+                  hrefs="/box-static/disk-theme/theme/white/header-theme.css"/>
+
+        </div>
+    </div>
+    <div id="ft">
+
+        <div class="module-share-footer">
+            <div>&copy;2019Baidu<a target="_blank" hrefs="//pan.baidu.com/platform/home">移动开放平台</a>|<a target="_blank"
+                                                                                                      hrefs="/disk/duty/">服务协议</a>|<a
+                    target="_blank" hrefs="//yun.baidu.com/disk/privacy">权利声明</a>|<span class="versions"><a
+                    hrefs="//yun.baidu.com/disk/version" target="_blank">版本更新</a><b
+                    id="vers-update-new">web版有更新</b></span>|<a target="_blank" hrefs="http://yun.baidu.com/disk/help">帮助中心</a>|<a
+                    target="_blank" hrefs="http://qingting.baidu.com/index?pid=19">问题反馈</a>|<a
+                    hrefs="http://copyright.baidu.com/index.php/index/complaint" target="_blank">版权投诉</a></div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript" src="/sns/box-static/disk-share/js/log.js?t=1555555199081"></script>
+
+<script>
+    void function (e, t) {
+        for (var n = t.getElementsByTagName("img"), a = +new Date, i = [], o = function () {
+            this.removeEventListener && this.removeEventListener("load", o, !1), i.push({img: this, time: +new Date})
+        }, s = 0; s < n.length; s++) !function () {
+            var e = n[s];
+            e.addEventListener ? !e.complete && e.addEventListener("load", o, !1) : e.attachEvent && e.attachEvent("onreadystatechange", function () {
+                "complete" == e.readyState && o.call(e, o)
+            })
+        }();
+        alog("speed.set", {fsItems: i, fs: a})
+    }(window, document);
+</script>
+<img style="position:absolute;top:-10px;left:-10px;width:1px;height:1px;display:none;"
+     src="//pcs.baidu.com/rest/2.0/pcs/file?method=plantcookie&type=ett"/>
+<img style="position:absolute;top:-10px;left:-10px;width:1px;height:1px;display:none;"
+     src="//pcs.baidu.com/rest/2.0/pcs/file?method=plantcookie&type=stoken&source=pcs"/>
+<img style="position:absolute;top:-10px;left:-10px;width:1px;height:1px;display:none;"
+     src="//pcsdata.baidu.com/rest/2.0/pcs/file?method=plantcookie&type=stoken&source=pcsdata"/>
+<script>
+    void function (a, b, c, d, e, f) {
+        function g(b) {
+            a.attachEvent ? a.attachEvent("onload", b, !1) : a.addEventListener && a.addEventListener("load", b)
+        }
+
+        function h(a, c, d) {
+            d = d || 15;
+            var e = new Date;
+            e.setTime((new Date).getTime() + 1e3 * d), b.cookie = a + "=" + escape(c) + ";path=/;expires=" + e.toGMTString()
+        }
+
+        function i(a) {
+            var c = b.cookie.match(new RegExp("(^| )" + a + "=([^;]*)(;|$)"));
+            return null != c ? unescape(c[2]) : null
+        }
+
+        function j() {
+            var a = i("PMS_JT");
+            if (a) {
+                h("PMS_JT", "", -1);
+                try {
+                    a = a.match(/{["']s["']:(\d+),["']r["']:["']([\s\S]+)["']}/), a = a && a[1] && a[2] ? {
+                        s: parseInt(a[1]),
+                        r: a[2]
+                    } : {}
+                } catch (c) {
+                    a = {}
+                }
+                a.r && b.referrer.replace(/#.*/, "") != a.r || alog("speed.set", "wt", a.s)
+            }
+        }
+
+        if (a.alogObjectConfig) {
+            var k = a.alogObjectConfig.sample, l = a.alogObjectConfig.rand;
+            d = "https:" === a.location.protocol || a.alogObjectConfig.https ? "https://fex.bdstatic.com" + d : "http://fex.bdstatic.com" + d, k && l && l > k || (g(function () {
+                alog("speed.set", "lt", +new Date), e = b.createElement(c), e.async = !0, e.src = d + "?v=" + ~(new Date / 864e5) + ~(new Date / 864e5), f = b.getElementsByTagName(c)[0], f.parentNode.insertBefore(e, f)
+            }), j())
+        }
+    }(window, document, "script", "/hunter/alog/dp.min.js");
+</script>
+<script>
+    /* eslint-disable */
+    if (navigator.userAgent.indexOf('MSIE') < 0 || navigator.userAgent.indexOf('MSIE 11.0') > 0) {
+        alog('speed.set', 'drt', +new Date);
+    }
+</script>
+</body>
+<script type="text/javascript">require.resourceMap({
+    "res": {
+        "disk-share:widget/plugin/comment/commentPanel.css": {
+            "url": "/sns/box-static/disk-share/widget/plugin/comment/commentPanel_ed83fcd.css?t=1555555199081",
+            "pkg": "disk-share:p7"
+        },
+        "disk-share:widget/plugin/likes/likes.css": {
+            "url": "/sns/box-static/disk-share/widget/plugin/likes/likes_d41d8cd.css?t=1555555199081",
+            "pkg": "disk-share:p7"
+        },
+        "disk-share:widget/plugin/reportBad/reportBad.css": {
+            "url": "/sns/box-static/disk-share/widget/plugin/reportBad/reportBad_832a435.css?t=1555555199081",
+            "pkg": "disk-share:p7"
+        },
+        "disk-share:widget/plugin/shareFileSave/ShareFileTree/createFolder/createFolder.css": {
+            "url": "/sns/box-static/disk-share/widget/plugin/shareFileSave/ShareFileTree/createFolder/createFolder_8cc1133.css?t=1555555199081",
+            "pkg": "disk-share:p7"
+        },
+        "disk-share:widget/plugin/shareFileSave/ShareFileTree/fileTree/fileTree.css": {
+            "url": "/sns/box-static/disk-share/widget/plugin/shareFileSave/ShareFileTree/fileTree/fileTree_e6e142c.css?t=1555555199081",
+            "pkg": "disk-share:p7"
+        },
+        "disk-share:widget/plugin/shareFileSave/ShareFileTree/fileTreeDialog/fileTreeDialog.css": {
+            "url": "/sns/box-static/disk-share/widget/plugin/shareFileSave/ShareFileTree/fileTreeDialog/fileTreeDialog_5b69130.css?t=1555555199081",
+            "pkg": "disk-share:p7"
+        },
+        "disk-share:widget/plugin/shareFileSave/icon.css": {
+            "url": "/sns/box-static/disk-share/widget/plugin/shareFileSave/icon_2da309c.css?t=1555555199081",
+            "pkg": "disk-share:p7"
+        },
+        "disk-share:widget/plugin/unLinkShare/icon.css": {
+            "url": "/sns/box-static/disk-share/widget/plugin/unLinkShare/icon_895d140.css?t=1555555199081",
+            "pkg": "disk-share:p7"
+        },
+        "disk-share:widget/plugin/comment/context.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/comment/context_6e5b906.js?t=1555555199081",
+            "pkg": "disk-share:p2"
+        },
+        "disk-share:widget/plugin/comment/commentPanel.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/comment/commentPanel_f1e2b3f.js?t=1555555199081",
+            "pkg": "disk-share:p2",
+            "deps": ["disk-share:widget/plugin/comment/context.js", "disk-share:widget/plugin/comment/commentPanel.css"]
+        },
+        "disk-share:widget/plugin/comment/start.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/comment/start_02e3e45.js?t=1555555199081",
+            "pkg": "disk-share:p2",
+            "deps": ["disk-share:widget/plugin/comment/context.js", "disk-share:widget/plugin/comment/commentPanel.js"]
+        },
+        "disk-share:widget/plugin/likes/context.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/likes/context_f102bf6.js?t=1555555199081",
+            "pkg": "disk-share:p3"
+        },
+        "disk-share:widget/plugin/likes/likes.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/likes/likes_94aedae.js?t=1555555199081",
+            "pkg": "disk-share:p3",
+            "deps": ["disk-share:widget/plugin/likes/context.js", "disk-share:widget/plugin/likes/likes.css"]
+        },
+        "disk-share:widget/plugin/likes/start.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/likes/start_b693337.js?t=1555555199081",
+            "pkg": "disk-share:p3",
+            "deps": ["disk-share:widget/plugin/likes/context.js", "disk-share:widget/plugin/likes/likes.js"]
+        },
+        "disk-share:widget/plugin/reportBad/context.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/reportBad/context_1105fbb.js?t=1555555199081",
+            "pkg": "disk-share:p4"
+        },
+        "disk-share:widget/plugin/reportBad/reportBad.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/reportBad/reportBad_d3592ee.js?t=1555555199081",
+            "pkg": "disk-share:p4",
+            "deps": ["disk-share:widget/plugin/reportBad/context.js", "disk-share:widget/plugin/reportBad/reportBad.css"]
+        },
+        "disk-share:widget/plugin/reportBad/start.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/reportBad/start_62e49cb.js?t=1555555199081",
+            "pkg": "disk-share:p4",
+            "deps": ["disk-share:widget/plugin/reportBad/context.js", "disk-share:widget/plugin/reportBad/reportBad.js"]
+        },
+        "disk-share:widget/plugin/shareFileSave/context.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/shareFileSave/context_60831c2.js?t=1555555199081",
+            "pkg": "disk-share:p5"
+        },
+        "disk-share:widget/plugin/shareFileSave/ShareFileTree/fileManagerApi/fileManagerApi.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/shareFileSave/ShareFileTree/fileManagerApi/fileManagerApi_4176785.js?t=1555555199081",
+            "pkg": "disk-share:p5",
+            "deps": ["disk-share:widget/plugin/shareFileSave/context.js"]
+        },
+        "disk-share:widget/plugin/shareFileSave/ShareFileTree/createFolder/createFolder.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/shareFileSave/ShareFileTree/createFolder/createFolder_e7ebe0a.js?t=1555555199081",
+            "pkg": "disk-share:p5",
+            "deps": ["disk-share:widget/plugin/shareFileSave/context.js", "disk-share:widget/plugin/shareFileSave/ShareFileTree/fileManagerApi/fileManagerApi.js", "disk-share:widget/plugin/shareFileSave/ShareFileTree/createFolder/createFolder.css"]
+        },
+        "disk-share:widget/plugin/shareFileSave/ShareFileTree/fileTree/fileTree.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/shareFileSave/ShareFileTree/fileTree/fileTree_ccfc7eb.js?t=1555555199081",
+            "pkg": "disk-share:p5",
+            "deps": ["disk-share:widget/plugin/shareFileSave/context.js", "disk-share:widget/plugin/shareFileSave/ShareFileTree/fileTree/fileTree.css"]
+        },
+        "disk-share:widget/plugin/shareFileSave/ShareFileTree/fileTreeDialog/fileTreeDialog.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/shareFileSave/ShareFileTree/fileTreeDialog/fileTreeDialog_b9cc407.js?t=1555555199081",
+            "pkg": "disk-share:p5",
+            "deps": ["disk-share:widget/plugin/shareFileSave/context.js", "disk-share:widget/plugin/shareFileSave/ShareFileTree/fileTree/fileTree.js", "disk-share:widget/plugin/shareFileSave/ShareFileTree/createFolder/createFolder.js", "disk-share:widget/plugin/shareFileSave/ShareFileTree/fileTreeDialog/fileTreeDialog.css"]
+        },
+        "disk-share:widget/plugin/shareFileSave/util/transferFilesService.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/shareFileSave/util/transferFilesService_dccd27b.js?t=1555555199081",
+            "pkg": "disk-share:p5",
+            "deps": ["disk-share:widget/plugin/shareFileSave/ShareFileTree/fileTreeDialog/fileTreeDialog.js", "disk-share:widget/plugin/shareFileSave/context.js"]
+        },
+        "disk-share:widget/plugin/shareFileSave/util/transferFiles.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/shareFileSave/util/transferFiles_a8f9852.js?t=1555555199081",
+            "pkg": "disk-share:p5",
+            "deps": ["disk-share:widget/plugin/shareFileSave/util/transferFilesService.js", "disk-share:widget/plugin/shareFileSave/context.js"]
+        },
+        "disk-share:widget/plugin/shareFileSave/start.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/shareFileSave/start_192e022.js?t=1555555199081",
+            "pkg": "disk-share:p5",
+            "deps": ["disk-share:widget/plugin/shareFileSave/util/transferFiles.js", "disk-share:widget/plugin/shareFileSave/context.js"]
+        },
+        "disk-share:widget/plugin/unLinkShare/context.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/unLinkShare/context_0d7e4ba.js?t=1555555199081",
+            "pkg": "disk-share:p6"
+        },
+        "disk-share:widget/plugin/unLinkShare/unLinkShare.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/unLinkShare/unLinkShare_9147098.js?t=1555555199081",
+            "pkg": "disk-share:p6",
+            "deps": ["disk-share:widget/plugin/unLinkShare/context.js"]
+        },
+        "disk-share:widget/plugin/unLinkShare/start.js": {
+            "url": "/sns/box-static/disk-share/widget/plugin/unLinkShare/start_cdf1d14.js?t=1555555199081",
+            "pkg": "disk-share:p6",
+            "deps": ["disk-share:widget/plugin/unLinkShare/context.js", "disk-share:widget/plugin/unLinkShare/unLinkShare.js"]
+        },
+        "disk-share:static/js/pcsDownloadUtil.js": {"url": "/sns/box-static/disk-share/js/pcsDownloadUtil.js?t=1555555199081"},
+        "disk-share:static/js/baidu-tongji.js": {"url": "/sns/box-static/disk-share/js/baidu-tongji.js?t=1555555199081"}
+    },
+    "pkg": {
+        "disk-share:p7": {"url": "/sns/box-static/disk-share/pkg/plugin_80276e1.css?t=1555555199081"},
+        "disk-share:p2": {"url": "/sns/box-static/disk-share/pkg/plugin-comment_b78b9bb.js?t=1555555199081"},
+        "disk-share:p3": {"url": "/sns/box-static/disk-share/pkg/plugin-likes_b05fb9f.js?t=1555555199081"},
+        "disk-share:p4": {"url": "/sns/box-static/disk-share/pkg/plugin-reportBad_13a2497.js?t=1555555199081"},
+        "disk-share:p5": {"url": "/sns/box-static/disk-share/pkg/plugin-shareFileSave_7442489.js?t=1555555199081"},
+        "disk-share:p6": {"url": "/sns/box-static/disk-share/pkg/plugin-unLinkShare_738aade.js?t=1555555199081"}
+    }
+});</script>
+<script type="text/javascript" src="/sns/box-static/disk-share/widget/data/yunData_861dc4f.js?t=1555555199081"></script>
+<script type="text/javascript" src="/sns/box-static/disk-share/pkg/system_d5dd143.js?t=1555555199081"></script>
+<script type="text/javascript" src="/sns/box-static/disk-share/pkg/page-ui_fd6835d.js?t=1555555199081"></script>
+<script type="text/javascript" src="/sns/box-static/disk-share/js/boot.js?t=1555555199081"></script>
+<script type="text/javascript">!function () {
+    (function () {
+        var context = require('system-core:context/context.js');
+        var Broker = require('system-core:pluginHub/Broker/Broker.js');
+        var yunData = require('disk-share:widget/data/yunData.js');
+        yunData.setData({
+            "loginstate": 0,
+            "username": "",
+            "third": 0,
+            "flag": 2,
+            "file_list": {
+                "errno": 0,
+                "list": [{
+                    "fs_id": 65265242106798,
+                    "app_id": "250528",
+                    "parent_path": "",
+                    "server_filename": ".pdf",
+                    "size": 41971424,
+                    "server_mtime": 1469802661,
+                    "server_ctime": 1469753154,
+                    "local_mtime": 1469753154,
+                    "local_ctime": 1469753154,
+                    "isdir": 0,
+                    "isdelete": "0",
+                    "status": "0",
+                    "category": 4,
+                    "share": "0",
+                    "path_md5": "",
+                    "delete_fs_id": "0",
+                    "extent_int3": "0",
+                    "extent_tinyint1": "0",
+                    "extent_tinyint2": "0",
+                    "extent_tinyint3": "0",
+                    "extent_tinyint4": "0",
+                    "oper_id": "0",
+                    "path": ".pdf",
+                    "root_ns": 867147539,
+                    "md5": "",
+                    "file_key": "",
+                    "thumbs": {
+                        "url1": "https:\/\/thumbnail0.baidupcs.com\/thumbnail\/6bc43cfb38659f1cc53494305218f702?fid=2671205744-250528-65265242106798&time=1556535600&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-mD6AumBpzvo0pspClMkUEv3gfb0%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=449786381431606436&dp-callid=0&size=c140_u90&quality=100&vuk=-&ft=video",
+                        "url3": "https:\/\/thumbnail0.baidupcs.com\/thumbnail\/6bc43cfb38659f1cc53494305218f702?fid=2671205744-250528-65265242106798&time=1556535600&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-mD6AumBpzvo0pspClMkUEv3gfb0%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=449786381431606436&dp-callid=0&size=c850_u580&quality=100&vuk=-&ft=video"
+                    },
+                    "docpreview": "https:\/\/pcsdata.baidu.com\/doc\/6bc43cfb38659f1cc53494305218f702?fid=2671205744-250528-65265242106798&time=1556537519&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-MvAwLye2fnbkUzyo%2BXWKoK6OTSA%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=449786381431606436&dp-callid=0",
+                    "is_baiduspider": 0,
+                    "server_filename_suffix": ".pdf"
+                }]
+            },
+            "uk": 2671205744,
+            "task_key": null,
+            "task_time": null,
+            "sampling": false,
+            "bdstoken": null,
+            "is_vip": 0,
+            "bt_paths": null,
+            "applystatus": null,
+            "sign1": null,
+            "sign2": null,
+            "sign3": null,
+            "timestamp": 1556537519,
+            "timeline_status": null,
+            "face_status": null,
+            "srv_ts": null,
+            "need_tips": null,
+            "is_year_vip": 0,
+            "show_vip_ad": null,
+            "vip_end_time": null,
+            "is_evip": 0,
+            "is_svip": 0,
+            "is_auto_svip": 0,
+            "photo": "https:\/\/ss0.bdstatic.com\/7Ls0a8Sm1A5BphGlnYG\/sys\/portrait\/item\/139faf33.jpg",
+            "linkusername": "\u95f4**ay",
+            "shareid": 321144011,
+            "sign": "25e0c193785a1ccb60a1d1a7f908499a7329caf6",
+            "public": 1,
+            "ctime": 1475036196,
+            "description": "",
+            "self": false,
+            "visitor_avatar": null,
+            "novelid": false,
+            "visitor_uk": null,
+            "share_page_type": "single",
+            "is_master_vip": 0,
+            "is_master_svip": 0,
+            "errortype": null,
+            "curr_activity_code": 0,
+            "activity_end_time": 0,
+            "expiredType": 0,
+            "pansuk": "",
+            "sharesuk": "avgjYbaK6_QLGKH1GviPUQ",
+            "unlogin_user_in_small_flow": null,
+            "title_img": ["iVBORw0KGgoAAAANSUhEUgAAARsAAAAeCAIAAACT9S1xAAATH0lEQVR42uxceVRUR7q\/dDc2YCMQxQDNFmygg0Qg45FFhGEzIhiEIaFlCQ6QgIRRDIuMIh1AkIEgxAENjCyDDAHHDGuCECQqLbuCgEBDswg0ayNLCy3QyzuHmlfnvkbRnPHkZXLu7x9v1a1bXbdufd\/3+35VQhCJRAgGDBjeEHDYFGDAgFkUBgyYRWHAgFkUBgwYMIvCgAGzKAwYMIvCgAHD61pUYGDg48ePX3hLIBA82xQCgUDsEZFIFBERMTk5+Yu9WEtLS2Bg4BvscGxs7Jtvvtm8zd\/\/\/vfq6urX6e3rr78uKyv7WQPo6+v76quvuFzua7bn8XgJCQkIgvT29r6y8ffff19bW7tJg+Xl5U8\/\/fQ1vyCfz19cXJyYmBgYGGhvb+\/u7oa3hoaGrl+\/\/hu2KAL4p6qqanR0FH2jra0tKCjIw8MDXUkmk+3t7evq6uzs7OTk5OBcIwgiIyMDigsLC5WVlba2tugH79+\/f+XKFTqd\/rJxMBiMtLS0TQbq6enp6Oj4+i\/GZrN\/+OGHF97y8PD4\/vvvN3+8tLTU0tLy3r17g4ODx48fB6skKCjIyclJWVkZtHn27Nm+ffu+\/fZbAwMDUFNXV0elUg8ePIggSFxc3D\/\/+U\/YIZFIbGpqgsXi4mJPT8\/Xf52ZmRkHB4eZmRkOhwPsBILFYrW3t8OipaWloqIigiBLS0tffvmlr6+vs7MzjUaLiopis9mZmZkcDmd2dnZ0dHTPnj3ffPNNWFhYZGTkTz\/9pKioaG1t\/bIByMjIzM3NpaWlXbhwQexWRkZGdHQ0n8+XkJAQiURra2vLy8saGhokEkl6HYaGhl999RVonJycvLi46OXlhSBIQEBAY2Mjuqu33367qqrqZWMQCoWNjY0\/\/PADmUw+ceLEr9qipqamhoeH0TdsbGwQBBGrJBD+3d7AwKC1tRVcR0ZGIggCJ9rExARcXL58+ezZs+B6bW2Nz+eDLy0GKyur8vJyMpm8ucHs2rXrTb3z0tJScnKym5vbyxpYW1uvra0hCPL8+fOTJ08ePnx4586dmpqae\/fu\/fbbb7\/44gu4OLZs2fLee+8hCOLt7b20tPTgwYPm5ubGxsbdu3f7+\/s7OTmBllwu18rKCv0T4+PjtbW1m7h8MKsAExMTdnZ2xsbGCQkJ+\/fv37p16\/nz5+Hd\/v7+mzdvPnz4UFZWVltb+5133pGUlEQQZHFxEUEQSUnJysrKvLy8Z8+eSUtLA77Q09OTnJysoaExNjaWlZX1l7\/8hc\/n4\/F4sZispqa2cWBxcXHwWk5Obn5+3s\/Pz9fXF66N1tbWoKAgMVOBy6ygoODRo0ddXV2SkpIsFsvHxwea8dDQ0CZ2wmQyzc3NFxcX8Xj8Z5999muPUZ988gmCIA0NDf\/4xz9e2O7IkSMffPABmvjNz8+D65WVFQRBYBFSvhMnTvj4+AAnamJi8ujRI01NTeDaiUQi+OrQSt9Zx3\/yJllZWeXl5ehVOD09ffToUXSblJQU8CtEIjE1NVXMXwD4+fnhcP8mwwcPHjQxMYmKigJ8z9XV9ebNm8CixsbGkpKSiouLQeM\/\/OEPq6ur8\/PzZDL5yJEjioqKKusA\/cDJQVsUDofjcDivfK+GhgY3NzcLC4vc3FwCgVBbW\/vBBx\/09fWlpaUBmmC\/jqCgICqVGhQUFBERce3aNWA5KysrFAoF9FNZWdnQ0BATE1NTU9Pf329nZ4cgSH5+Pp\/Pt7a2ZrFYRCKxoqICQRBnZ+dTp05BX0AikTYZXnl5eVhYGLrm+fPnU1NTVCpVzBd3dXXFxsb+6U9\/UlNTc3NzAw5UXV1dX19fzF+\/ENu2bcvKyrKxsUGvw1+vRQE8Xse5c+fEGmVmZra0tKDfpLu729DQEL1cIMOZmJgAF5LrQBDk4sWLx44dgxNna2sbHBxMo9He7Jt0dnYKhULgGkAeNTQ0hGZW3t7eCwsLsGhmZga+em9vb15eXnx8PKiHZgAQHR1tYWEREhKira19+PDh8PBwNptNJpNDQ0MPHToE1iWCIB9++CGCILdu3aJSqa6urgiCPH36tK+vD\/JDdJ+Li4tLS0uJiYliv7UxdYmNjU1JSTl37lxkZKSEhASI1Q0NDTQaTU9PLykpyc3NTSy2JCQkxMXF4fF4DoejqqqKNtr29nYGg8FkMsfGxtLS0nR1dW\/cuBEcHHzw4MFLly5pamq6uLhsnIGPPvqopaVl4\/BUVVUZDMaRdfT39wPHClZRfHw82jUrKSnt2LGjubn5+vXr+fn5ycnJc3NzoaGhtbW109PT0K+x2exNZkNZWRlM8n9HHoWOyzU1NWKVT5482bNnD7rmvffeeyXrg66xqqpq8+T41q1bXV1drxyrhobGRx99tEkDHR0dsJqBwysqKoJFEHzEqB1M4SoqKtAt0TA1NbWwsKioqDh9+jRYxHg8fmBgoKampqOjA\/rp9PR0sJgYDAaYQB8fn4CAAD09PXTcBgBkr6enB5ocGhISEpaWlvX19ceOHRMKhXQ63dTU9O7du+g2586du3btWkBAQGpq6t27d6emprhc7tOnT4eHh1ksVnx8PBjD6urq5OSkkpJScHCwi4uLSCQaHh5ub2\/n8XjDw8NEIvHu3buZmZlKSko5OTm6urrm5uYbx3PlypXl5eWUlJRPPvlk586do6OjoaGho6OjwcHBsI29vf3vfvc7wCpnZ2fHx8dh4tTe3k6j0SIiIggEwqFDh0pKSnJzc6urq7ds2QK87ZUrV9Bk5zeiTEA3cODAATGTAFmQhoaGmJgDnR+Px0MQBBb5fD566fj4+Hz++ecCgaCkpARUzs3Ntba2SklJgXXv6Oi4sLCAziiysrJUVVU3Bvdt27a9wTe\/dOlSZmYmGP\/09DRkKTAB4PP5z58\/RxCkqKhISkoKxBl\/f38EQUgkUldXF4lEApUGBgZgeQ0ODiYmJoJrLpdrZmYGeJRAIHjw4AGaAhkbG2\/kAiDHGx0dnZ+ff\/fdd0+ePGlvbx8YGAiS9bm5OSaTCb8OhUIZGBjo6+vr6Ojw8PDgcDiSkpJ5eXm9vb2xsbGXLl06fvy4SCQqKCiYmJiorq4ODw9XUVGxtLS0s7PT1tZOSkpaWlqiUqmT6xgfH5+amoIKB9RaJCQkFBUV+Xz+9u3bHRwcXFxcCgsLT5w4cfbsWahFQQrw1ltvgZg\/NDQUEBAA6gEFRRDk\/fffLyoqioqK8vX1BVk64OGQmff29ooJWv\/dFuXh4QFIEZwCsbywqKiouLgYELmenp69e\/eiG3z33XdirG91dZVGo01OTiooKAwPD+fn54N6DofDYDBArJeWlnZ0dHRbB7hbWFh49erV7777TkdHByzrzem1WICFkXNgYGB1dRUWNwaKgIAAQBGbmprodHpGRkZnZ6ejoyPUMK9du\/aagtLa2tr9+\/c7Ojrc3NxIJNKhQ4cQBLl58yZsgMfjFRQUsrKyfH19EQTR0tJ6YeKOIMidO3eAtKigoBASEgJqwK2amho\/Pz9YBABiD4vFgnkUEN98fX09PT3xePyFCxcoFEpdXd327duBzdfW1pLJZAsLi\/j4eJgCPVoHVEfv3bu3uroKJHtAxoyMjPz9\/ePj411dXU1MTIDULi8vD8Pajz\/+uHXrVrAA5ufngSsBPcBc7s6dOwUFBW1tbYJ1\/JbVcyCgFxQUvIzZCwQCQ0NDgUAgKSkJ+DcQspaXl11dXf\/2t7+RyWTQsqysDFCdkJCQyclJQM33rwPSwpflUTMzMydPnkxOTgbmlJCQ8PDhw6KiIpBCvBJVVVWdnZ1QxOdwOGimB1R+tBwMvKycnByBQNi+fXtkZCSFQoFL5Pjx45AK8ni81dVVaGwzMzNo3ZJAILDZbCAPjo+P+\/n5ycnJmZqaiu0mXb9+3d3dfWlp6WXjl5KSevr0qYKCAnoPAG5AjY6Orq2tofmzqqrqC2UDKpWalpZmb29PIBA+\/vhjDQ0NYE4gMltaWuJwuN27d6elpQHD5nK5ZDKZQqHcu3cPPV0yMjJNTU3QNsAIWSwW0Gn6+vp27NhRX18Pw5q8vDzwZQwGAzpcFosFtW9nZ2cSiWRgYLCysgJccGFhIQyMr6PT\/JexPh0dHWVlZVVVVfgBgPDQ0NCAFlJPnz7t7e1dXV19+fLlioqKvXv3HjlyhMFgyMjIrKysxMTE5OXlqaioHD16NCwsLCYm5jWHIhQKjx07tn\/\/fkgYAgICTExMzpw5k5iY+MrHra2tbW1toQRfUlISHByM3qg5f\/78zp07YRGGLyaTubS0xOFwYmJihELhyMgIXD2AmopEIhqNtra29q9\/\/QtBkJGREWNj49zcXOAsAIaHh4ElyMjImJubS0tLk0gkFovV2NgIYmxJSYmuru5f\/\/rXTSaERqPt378fPfkXL16Eae3y8rKYepmeng7pE1pqu3DhwtWrV8PDw+nrMDQ0tLKyMjEx6enpARQgIyMjOTkZbrxmZ2cfPXq0vb29s7MTbAYAA1ZXVw9YB+xcX18\/KirK0dFRJBIZGhpC4YdIJDKZTBCjxsfHl5eXYWI8Pz8PUiYcDpefn08mk3ft2iUrKwvugolCpw+\/KYsCq4fH46EdIZVKRQfoiYmJ0tLSy5cvNzc3A5Xvyy+\/HBkZYa\/jxo0bXl5ehw8fbm5u3vixN0dYWNjQ0BCap8nLy5eUlBgbG+vo6IjpChvxSiEoNjYWbb3oDR8ymQyLG\/sJDg4Gu0ygqK6unp2d7e7unp6eDlgcUBq7u7vNzMzk5eUBbVtZWTE3Nz99+rRIJJKQkFBRUUlMTNy1a1d4ePgmg0xKSgLZCAB61xuwvk00HjabXV5eXlpa2tbW1tTUJC8vT6fTlZWVU1JSHBwcysrKBgYGzpw5AyyfQCAAtYnNZsfFxf34449NTU2BgYE\/\/fQTcAHt7e3Qujaio6ODy+WC12cymWgBnc\/nb9myRVVVFboJuBvh4OCwsrLy4MGDlpaW999\/H0EQJycndB71ss0bQK0HBgaA4c3NzfX29hIIBAqFMj4+np6eHhoaqqCgkJqaamBgYGVlVV9fz2AwNp\/qX8iigC9EbyZwOBw8Hg\/+87yEhER6evqHH364c+dOHA4HRAgcDpebmwtOsnC53FOnTjEYjLi4uK+\/\/hoyRgaDATvkcrlMJhPWyMvL6+vrf\/HFFykpKSYmJv7+\/s\/\/FzweD+g\/n3\/+ua6u7oEDB97Ua+NwuFu3br3sbl5eHjogFxUV1dXVvf3227DS1dUVh8PRaDQejxcUFLSwsNDc3BwREeHh4QFpM5FIfGFGujmampq0tLR+1iM5OTlnz56dnZ1VV1dvaWnJy8vbvn07kUicnp4GbNnd3X1mZsbLy6utrW3r1q3oTGxiYsLe3t7f39\/AwEBfXz8jI+OPf\/xjdna2pKRkWVkZ9Bdohwv6NDAw6OnpIRKJIGFGb7hxuVz0diWYbZB7u7u7M5lMPT29ffv2\/VwR4smTJ++++y64fvjwIXhNDodTX18fHx9vZ2d34MABOp3u4uJiZWVVUFCQk5MTFBQkJp\/8P1gUgUA4f\/58dHQ0WnKorq5+8uQJ+E5GRkYgu6BSqY8ePfr0009BrBcIBEVFReDIVk5ODphrNA+BRTU1tYZ1gKKRkdHFixdBNq+ioiK3Dtl1gFRHSkoqNTXVw8Ojv78f3e1\/gj\/\/+c9iZ3nQGBwcBAvF19f39u3bd+7c0dbWFmvj4uKSnZ3t7e0tFArl5eXNzMzodLqSkhKdTtfV1dXW1gZJBViF4MiIjIxMXl4edNgAQEretm2blJTU4OBgZWVlc3Mz9Oizs7PoXayJiQkxJdbPz8\/BwcHCwkJDQwNKOJ2dnaWlpX19fZCrnzp1ys\/PD3wpiOLi4oCAAGdnZ0BE8Xh8cXGxqampjY1NREREd3f3xx9\/DFrevn0byPf9\/f0w+IBvcfv2bfTGOoIg09PTKysrYrvnISEhcXFxSUlJpqamW7duLS0tdXJyGh8ff\/z4cWhoKIxCk5OTFAqlsbFxx44dYhNOoVBe+DdRXF1d2Ww2cGSDg4OAT6akpNDp9F\/enP6PRdnY2EhLSxMIBLQ5gd3JxsZGPB5fWFgIDgeAei0trfr6+tbWVsAJcTicl5fXvn37gLgMH9fT01NTU9vkRB88nQCOw72MC3322Wc\/y5ykpaXhAbyNW5OOjo6\/\/\/3vX\/bsmTNnSCQSDod766236uvrwVGPjfD09OTxeHv27NHS0lJSUgLaup+fX1tb28jIyOrqKlC0hEIhaA8Cu1gnu3fvHhkZWVtbEwgEpqam0dHRRkZG4BadTgeC2yZQV1ff+JqysrKTk5OKioo3btyAldCcZGRkgIzU399Pp9PR54nV1dWbmpra2tqUlJQSEhLgdoWsrCyHwxEKhVevXoXCOoCmpubGaOPu7r6RFEhJScGWtra2G7c90VwXnQCDIzsbAyYE5AUwBZWUlHzhkbdfABLY30LC8GvD4OAgOJSI3iSAYvKvHJhFYcDwJoH9j0MMGDCLwoABsygMGDCLwoABA2ZRGDBgFoUBw28D\/xMAAP\/\/wRxWECwmm1wAAAAASUVORK5CYII="],
+            "urlparam": [],
+            "XDUSS": "null"
+        });
+
+        yunData.setData('SERVERTIME', 1556537519994);
+        context.extend({data: {user: yunData.get()}, Broker: Broker});
+    })();
+}();
+!function () {
+    var context = require('system-core:context/context.js').instanceForSystem;
+    context.pluginControl.init();
+    window.context = context;
+    require("disk-share:widget/system/util/contextExtend.js");
+    context.message.callPlugin('IE浏览器升级提示@com.baidu.pan', {});
+}();
+!function () {
+    require("disk-share:widget/pageModule/share-top-bar/share-top-bar.js");
+}();
+!function () {
+    require("disk-share:widget/pageModule/share-header/share-header.js");
+    require("disk-share:widget/pageModule/share-header/service/btns.js");
+}();
+!function () {
+    require("disk-share:widget/pageModule/share-file-main/fileType/document/document.js");
+}();
+!function () {
+    var filePageComment = require("disk-share:widget/pageModule/singleFileComment/singleFileComment.js");
+    new filePageComment();
+}();
+!function () {
+    require("disk-share:widget/pageModule/share-file-main/adPanLog.js");
+}();
+!function () {
+    require("disk-share:widget/pageModule/share-person-info/share-person-info.js");
+}();
+!function () {
+    require("disk-share:widget/pageModule/share-footer/share-footer.js");
+}();
+!function () {
+    require("disk-share:widget/pageModule/page-controller/index.js");
+    require("disk-share:widget/pageModule/page-controller/share-single.js");
+    require('disk-share:widget/pageModule/activateGuide/activateGuide.js');
+    require('disk-share:widget/pageModule/adPlatform/adPlatform.js').getAdResoucre(
+        {
+            list: [
+                {
+                    'id': 'web-sharelinkpic',
+                    'w': 200,
+                    'h': 200
+                },
+                {
+                    'id': 'web-sharesinglebanner',
+                    'w': 710,
+                    'h': 90
+                }],
+            uk: (window.yunData ? window.yunData.MYUK : '')
+        }
+    );
+}();
+!function () {
+    require.async("disk-share:static/js/baidu-tongji.js");
+}();</script>
+</html>
+

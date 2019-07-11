@@ -1,0 +1,21 @@
+post http://cn.epubee.com/keys/get_ebook_list_search.asmx/getSearchList
+
+Host: cn.epubee.com
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:66.0) Gecko/20100101 Firefox/66.0
+Accept: application/json, text/javascript, */*; q=0.01
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Referer: http://cn.epubee.com/books/?s=%E6%95%B0%E5%AD%A6%E9%82%A3%E4%BA%9B%E4%BA%8B%E5%84%BF%3A%E6%80%9D%E6%83%B3%E3%80%81%E5%8F%91%E7%8E%B0%E3%80%81%E4%BA%BA%E7%89%A9%E5%92%8C%E5%8E%86%E5%8F%B2%20(%E5%9B%BE%E7%81%B5%E6%96%B0%E7%9F%A5)&action=
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Content-Length: 76
+Connection: keep-alive
+Cookie: isVip=0
+Cache-Control: max-age=0
+
+{skey:'数学那些事儿:思想、发现、人物和历史 (图灵新知)'}
+
+
+
+
+{"d":[{"__type":"js_ebook_data","bid":"9PRtzG%2fm2A9sl95uMxyTRQ%3d%3d","Title":"数学那些事儿:思想、发现、人物和历史 (图灵新知)[.azw3]","Cover":"a6/a61c47cfa5972c0574251980e61dadee_s.jpg"},{"__type":"js_ebook_data","bid":"jy3XP4%2fUmDBKh8vrdin7hg%3d%3d","Title":"数学那些事儿:思想、发现、人物和历史 (图灵新知)[.epub]","Cover":"99/99a756ac9e15d76f61a5fa42e350f3cd_s.jpg"},{"__type":"js_ebook_data","bid":"m8t%2b%2by2XKsnQVAF%2fOn4zPw%3d%3d","Title":"数学那些事儿:思想、发现、人物和历史 (图灵新知)[.mobi]","Cover":"99/99a756ac9e15d76f61a5fa42e350f3cd_s.jpg"}]}

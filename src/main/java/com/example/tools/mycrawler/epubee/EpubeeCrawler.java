@@ -203,7 +203,7 @@ public class EpubeeCrawler {
 
 
     public static void main(String[] args) {
-        String bookName = "迷茫的旅行商：一个无处不在的计算机算法问题 (图灵新知 10)";
+        String bookName = "快速阅读";
         List<Book> books = GetBook.getDownloadUrl(new UserContext(), bookName, new HashSet<>());
         System.out.println(books);
     }

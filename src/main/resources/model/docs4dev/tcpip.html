@@ -1,0 +1,1333 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=9">
+    <title>《TCP/IP详解 卷1：协议》在线阅读版（全网唯一） -  即时通讯开发者社区!</title>
+
+    <meta name="keywords" content="在线版,TCP/IP详解,TCP/IP,协议,TCP/IP的分层,互联网的地址,域名系统,DNS,ICMP,SNMP,UDP,ipv4,ipv6" />
+    <meta name="description" content="《TCP/IP详解，卷1：协议》是一本完整而详细的TCP/IP协议指南。描述了属于每一层的各个协议以及它们如何在不同操作系统中运行。即时通讯网(52im.net)独家整理发布了本在线阅读版。 ,即时通讯网" />
+    <meta name="generator" content="WordPress 4.7-beta4-39346" />
+    <meta name="author" content="52IM.NET" />
+    <meta name="copyright" content="2007-2015 (c) Nettime Co. Ltd." />
+    <meta name="MSSmartTagsPreventParsing" content="True" />
+    <meta http-equiv="MSThemeCompatible" content="Yes" />
+    <base href="http://www.52im.net/" /><link rel="stylesheet" type="text/css" href="data/cache/style_7_common.css?pSb" />
+    <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js" type="text/javascript" type="text/javascript"></script>
+    <script type="text/javascript">var STYLEID = '7', STATICURL = 'static/', IMGDIR = 'template/qu_115style/images', VERHASH = 'pSb', charset = 'gbk', discuz_uid = '0', cookiepre = '1z6p_446c_', cookiedomain = '.52im.net', cookiepath = '/', showusercard = '1', attackevasive = '0', disallowfloat = 'newthread', creditnotice = '1|威望|,2|金币|,3|贡献|', defaultstyle = '', REPORTURL = 'aHR0cDovL3d3dy41MmltLm5ldC90b3BpYy10Y3BpcHZvbDEuaHRtbA==', SITEURL = 'http://www.52im.net/', JSPATH = 'static/js/', CSSPATH = 'data/cache/style_', DYNAMICURL = '';var q_jq=jQuery.noConflict();</script>
+    <script src="static/js/common.js?pSb" type="text/javascript"></script>
+
+    <meta name="application-name" content="即时通讯网" />
+    <meta name="msapplication-tooltip" content="即时通讯网" />
+    <meta name="msapplication-task" content="name=首页;action-uri=http://www.52im.net;icon-uri=http://www.52im.net/template/qu_115style/images/portal.ico" /><meta name="msapplication-task" content="name=社区;action-uri=http://www.52im.net/forum.php;icon-uri=http://www.52im.net/template/qu_115style/images/bbs.ico" />
+    <meta name="msapplication-task" content="name=动态;action-uri=http://www.52im.net/home.php;icon-uri=http://www.52im.net/template/qu_115style/images/home.ico" /><script src="static/js/portal.js?pSb" type="text/javascript"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <!--[if IE 7]>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome-ie7.min.css" rel="stylesheet" type="text/css" />
+    <![endif]-->
+
+    <script type="text/javascript">
+        <!--
+        window.onerror=function(){return true;}
+        // -->
+    </script>
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?bda50b4d01749abc4f2e1a002524ecd1";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+</head>
+
+<body id="nv_portal" class="pg_topic" onkeydown="if(event.keyCode==27) return false;">
+<div id="append_parent"></div><div id="ajaxwaitid"></div>
+<div class="animate-layer">
+    <s class="a-bird a-bird-01"></s>
+    <s class="a-bird a-bird-02"></s>
+    <s class="a-bird a-bird-03"></s>
+    <s class="a-bird a-bird-04"></s>
+    <s class="a-bird a-bird-05"></s>
+    <s class="a-bird a-bird-06"></s>
+    <s class="a-cloud a-cloud-01"></s>
+    <s class="a-cloud a-cloud-02"></s>
+    <s class="a-cloud a-cloud-03"></s>
+    <s class="a-cloud a-cloud-04"></s>
+    <s class="a-cloud a-cloud-05"></s>
+    <s class="a-cloud a-cloud-06"></s>
+    <s class="a-balloon a-balloon-01"></s>
+    <s class="a-balloon a-balloon-02"></s>
+    <s class="a-meteor a-meteor-01"></s>
+    <s class="a-meteor a-meteor-02"></s>
+    <s class="a-meteor a-meteor-03"></s>
+    <s class="a-meteor a-meteor-04"></s>
+    <s class="a-star a-star-01"></s>
+    <s class="a-star a-star-02"></s>
+    <s class="a-star a-star-03"></s>
+    <s class="a-star a-star-04"></s>
+    <s class="a-star a-star-05"></s>
+</div>
+<div id="change_theme_btn_menu" class="q_qiehuan_menu">
+    <h2>
+        <a class="dialog-handle" href="javascript:void(0)" onClick="qout()"></a>
+    </h2>
+    <div style="padding:15px 0 0 0;">
+        <span onMouseOut="this.className='cl'" onMouseOver="this.className='cl q_sslct_btn'" onClick="extstyle('')"><img src="template/qu_115style/style/t0-bg.jpg" /><em>默认</em></span></div>
+</div>
+<script>
+    jQuery(function(){
+        jQuery('#change_theme_btn').click(function(){
+            if(!jQuery('#change_theme_btn_menu').is(':visible')){
+                jQuery('#change_theme_btn_menu').css({display:'block', top:'-100px'}).animate({top: '+100'}, 500);
+            }
+        });
+    });
+    function qout(){
+        jQuery('#change_theme_btn_menu').animate({top:'0'}, 500, function(){
+            jQuery(this).css({display:'none', top:'-100px'});
+        });
+    }
+</script>
+<div id="toptb" class="cl q_none">
+    <div class="wp">
+        <div class="z"></div>
+        <div class="y">
+            <a id="switchblind" href="javascript:;" onClick="toggleBlind(this)" title="开启辅助访问" class="switchblind">开启辅助访问</a>
+        </div>
+    </div>
+</div>
+<div class="qing_changestyle"></div>
+
+<div id="qmenu_menu" class="animate p_pop blk" style="display: none;">
+    <div class="ptm pbw hm">
+        <a href="member.php?mod=logging&amp;action=login&amp;referer=" onclick="showWindow('login', this.href);return false;">登录</a><span class="pipe">|</span>
+        <a href="member.php?mod=register">立即注册</a>
+    </div>
+</div><div id="hd">
+    <div class="wp" style="margin:0 auto; padding:0;">
+
+        <div id="cngeeker_nv_logo">
+            <a class="cngeeker_nv_logo_i" href="http://www.52im.net/">
+
+            </a>
+        </div>
+
+        <div class="hdc cl"><script type="text/javascript">
+            jQuery(function()
+            {
+                jQuery('#hov_btn').hover(function()
+                {
+                    jQuery('div.qing_lg_after ul').show();
+                },function()
+                {
+                    jQuery('div.qing_lg_after ul').hide();
+                });
+            });
+
+        </script>
+            <script src="static/js/logging.js?pSb" type="text/javascript"></script>
+            <div class="qing_login">
+
+                <a href="plug-wechat-login.html"><img src="template/qu_115style/img/wechat_login_simple.png" class="vm"></a>
+                <a style="margin-left: 0px" href="http://www.52im.net/connect.php?mod=login&amp;op=init&amp;referer=http%3A%2F%2Fwww.52im.net%2F&amp;statfrom=login" target="_top" rel="nofollow"><img src="template/qu_115style/img/qq_login_simple.gif" class="vm"></a>
+                <span class="pipe" style="margin: 0 5px 0 10px;border-right: 1px solid #CDCDCD;line-height: 24px;height: 24px;"></span>
+
+                <a class="qing_lg" href="member.php?mod=logging&amp;action=login&amp;referer=" onclick="showWindow('login', this.href);return false;">登录</a>
+                <a class="qing_reg" href="member.php?mod=register">立即注册</a>
+            </div>
+        </div>
+
+        <div id="qing_nv">
+            <a  style="display:none;" href="javascript:;" id="qmenu" class="animate" onMouseOver="showMenu({'ctrlid':'qmenu','pos':'34!','ctrlclass':'a','duration':2})">快捷导航</a>
+            <ul><li id="mn_N75e4" ><a href="topic-tcpipvol1.html?mobile=no" hidefocus="true"  >TCP/IP详解</a>
+            </li>
+                <li id="mn_P11" ><a href="http://www.52im.net/pi/" hidefocus="true" title="即时通讯相关的最新资讯。"  >资讯<span>即时通讯相关的最新资讯。</span></a>
+                </li>
+                <li id="mn_home" ><a href="http://www.52im.net/home.php" hidefocus="true" title="Space"  >动态<span>Space</span></a>
+                </li>
+                <li id="mn_forum_2" ><a href="http://www.52im.net/forum.php" hidefocus="true" title="精品技术讨论和交流专区。"  >社区<span>精品技术讨论和交流专区。</span></a>
+                </li>
+                <li id="mn_forum_11" ><a href="http://www.52im.net/forum.php?mod=collection&op=all" hidefocus="true" title="精选帖子、资料的合辑。"  >技术精选<span>精选帖子、资料的合辑。</span></a>
+                </li>
+                <li id="mn_portal" ><a href="http://www.52im.net" hidefocus="true" title="即时通讯网门户首页。"  >首页<span>即时通讯网门户首页。</span></a>
+                </li>
+            </ul>
+        </div>
+        <ul class="p_pop h_pop" id="plugin_menu" style="display: none">  <li><a href="plug-dsu_paulsign-sign.html" id="mn_plink_sign">每日签到</a></li>
+        </ul>
+        <div class="p_pop h_pop" id="mn_userapp_menu" style="display: none"></div><div id="mu" class="cl">
+    </div>
+    </div>
+</div>
+
+
+<div id="wp" class="wp cl">
+    <div class="qing_subnav">
+        <div class="sub_l q_fl">
+            <a class="qing_logo" href="http://www.52im.net/">
+                <img width="20" height="20" src="template/qu_115style/img/cngeeker_minilogo.png" alt="">
+                <em>首页</em>
+            </a>
+            <div id="qing_pt" class="subnr z cl">
+                <a href="./" class="nvhm" title="首页">即时通讯网</a><em>&rsaquo;</em>《TCP/IP详解 卷1：协议》在线阅读版（全网唯一）                                                </div>
+            <div class="z" style="margin-left:20px; line-height:45px;"></div>
+        </div>
+        <div id="scbar" class="q_fr cl">
+            <form id="scbar_form" method="post" autocomplete="off" onsubmit="searchFocus($('scbar_txt'))" action="search.php?searchsubmit=yes" target="_blank">
+                <input type="hidden" name="mod" id="scbar_mod" value="search" />
+                <input type="hidden" name="formhash" value="856b2e4e" />
+                <input type="hidden" name="srchtype" value="title" />
+                <input type="hidden" name="srhfid" value="0" />
+                <input type="hidden" name="srhlocality" value="portal::topic" />
+                <table cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td class="scbar_type_td"><a href="javascript:;" id="scbar_type" style="color:#666666;" onclick="showMenu(this.id)" hidefocus="true">搜索</a></td>
+                        <td class="scbar_txt_td"><input type="text" name="srchtxt" id="scbar_txt" value="请输入搜索内容" autocomplete="off" x-webkit-speech speech /></td>
+                        <td class="scbar_btn_td"><button type="submit" name="searchsubmit" id="scbar_btn" sc="1" class="pn pnc" value="true"></button></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <ul id="scbar_type_menu" class="p_pop" style="display: none;"><li><a href="javascript:;" rel="article">文章</a></li><li><a href="javascript:;" rel="forum" class="curtype">帖子</a></li><li><a href="javascript:;" rel="user">用户</a></li></ul>
+        <script type="text/javascript">
+            initSearchmenu('scbar', '');
+        </script>
+    </div>
+
+    <div id="pt" class="bm cl">
+        <div class="z">
+            <a href="./" class="nvhm" title="首页">即时通讯网</a> <em>&rsaquo;</em> 《TCP/IP详解 卷1：协议》在线阅读版（全网唯一）</div>
+    </div>
+    <link id="style_css" rel="stylesheet" type="text/css" href="static/topic/t1/style.css?pSb">
+    <link id="style_css" rel="stylesheet" type="text/css" href="template/qu_115style/img/js_css/topic_tcpip.css?pSb">
+
+    <style id="diy_style" type="text/css">
+        .net52im_tcpip_placeholder {color: #d2d2d2;margin-left: 10px;/*margin-right: 10px;*/}
+    </style>
+    <div id="widgets">
+    </div>
+    <div class="wp cl">
+        <!--[diy=diypage]-->
+        <div id="diypage" class="area">
+        </div>
+        <!--[/diy]-->
+
+        <div id="j_ptl_ct" class="ptl_ct cl">
+            <div class="ct_l">
+
+                <div class="cl">
+                    <div class="ask-list2col ask-list2col-left" id="ID_bbs_subjects">
+                        <h3>TCP/IP详解 卷1：协议<!--<a href="http://www.52im.net/forum.php" class="ask-list-more" target="_blank">[发贴评论]</a>--><span class="net52im_h3_flag">在线阅读</span>
+                            <span class="y">
+<div class="js-threadlist-th-btns cl">
+<a page="1" href="javascript:void(0);" class="btn_l btn_current">全书目录</a><a page="2" href="javascript:void(0);" class="btn_r ">缅怀作者</a>
+</div>
+</span>
+                        </h3>
+
+                        <div id="ID_bbs_subjects_p1_bookdesc" class="net52im_book cl">
+                            <div class="subject cl">
+                                <div id="mainpic"><img src="template/qu_115style/img/tcpip_vol1/tcpip_cover_opti.jpg" alt="TCP/IP详解 卷1：协议" width="117"></div>
+                                <div id="info">
+                                    <div class="rating_logo">基本信息</div>
+                                    <span class="pl">版本:</span> <span>全网唯一在线版（全书）</span><br> <!--class="ver_desc"-->
+                                    <span class="pl">制作:</span> <a href="http://www.52im.net" target="_blank">即时通讯网独家制作</a><br>
+                                    <span class="pl">发布:</span> 2016年04月14日<br>
+                                    <span> <span class="pl"> 作者</span>: <a href="http://baike.baidu.com/link?url=78oLEn6RTZ_w2KbzbyN5qRvzGfyMqoYLvTQnrxZapsZIDDyY-U8rf3dxsvMSlErtH6f6AAFz--2l4MI1aZQgZ_" target="_blank">W.Richard Stevens</a> </span><br>
+                                    <span> <span class="pl"> 译者</span>: 范建华 等4人</span><br>
+                                    <span class="pl">页数:</span> 423<br>
+                                    <span class="pl">传播:</span> 非商业，仅作研究之用<br>
+                                    <span class="pl">系列:</span>&nbsp;<a href="https://book.douban.com/series/12438" target="_blank">TCP/IP详解（中文版）</a><br>
+                                </div>
+                            </div>
+                            <div id="interest_sectl">
+                                <div class="rating_wrap cl">
+                                    <div class="rating_logo">内容简介</div>
+                                    <div class="rating_self cl">
+                                        <p>《TCP/IP详解卷1：协议》是一本详细的TCP/IP协议指南，计算机网络历久不衰的经典著作之一。</p>
+                                        <p>作者理论联系实际，使读者可以轻松掌握TCP/IP的知识。阅读对象为计算机专业学生、教师以及研究网络的技术人员。</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="interest_sectl" style="width: 143px;margin: 2px 0 0 0;padding: 0 0 0 15px;">
+                                <div class="rating_wrap cl" style="padding-bottom: 0;">
+                                    <div class="rating_logo">豆瓣评分</div>
+                                    <div class="rating_self cl" > <strong class="rating_num"> 9.2 </strong> <span content="10.0"></span>
+                                        <div class="rating_right">
+                                            <div class="bigstar45" style="background: url(template/qu_115style/img/tcpip_vol1/ic_rating_m.png) no-repeat;
+background: -webkit-image-set(url(template/qu_115style/img/tcpip_vol1/ic_rating_m.png) 1x, url(template/qu_115style/img/tcpip_vol1/ic_rating_m@2x.png) 2x) no-repeat;
+background: -moz-image-set(url(template/qu_115style/img/tcpip_vol1/ic_rating_m.png) 1x, url(template/qu_115style/img/tcpip_vol1/ic_rating_m@2x.png) 2x) no-repeat;
+background: -o-image-set(url(template/qu_115style/img/tcpip_vol1/ic_rating_m.png) 1x, url(template/qu_115style/img/tcpip_vol1/ic_rating_m@2x.png) 2x) no-repeat;
+background: -ms-image-set(url(template/qu_115style/img/tcpip_vol1/ic_rating_m.png) 1x, url(template/qu_115style/img/tcpip_vol1/ic_rating_m@2x.png) 2x) no-repeat;
+background-position: 0px -15px;">
+                                            </div>
+                                            <div class="rating_sum"> <span> <a href="https://book.douban.com/subject/1088054/collections" class="rating_people" target="_blank"><span>1500+ </span>人评价</a> </span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rating_wrap cl">
+                                    <div class="rating_logo">作者简介</div>
+                                    <div class="rating_self cl">
+                                        <p>一位深受尊敬的专家，不幸逝于1999年9月1日，他的离去是计算机界的巨大损失。<a href="http://www.kohala.com/start/" class="ask-list-more" target="_blank" style="margin-left: 5px;">[作者主页]</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="ID_bbs_subjects_p1_bookcopy" class="net52im_copy">
+                            <p><b>版权说明：</b>此“在线阅读版”内容收集自网络，仅为方便个人学习和研究之用，版权归原书出版方所有，请支持正版。</p>
+                        </div>
+
+                        <ul id="ID_bbs_subjects_p1" class="ask-q-list2col" style="display: block;">
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/1/" class="fname"  target="_blank">第1章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/1/" class="gellipsis-d g_istoday" target="_blank">概述<span class="net52im_tcpip_placeholder">·············································································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-154-1-2.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_1" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第1页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/2/" class="fname"  target="_blank">第2章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/2/" class="gellipsis-d g_istoday" target="_blank">链路层<span class="net52im_tcpip_placeholder">··········································································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-155-1-2.html" target="_blank">读书笔记</a>
+                                    <span class="gellipsis-time" style="color:#b4b4b4;">习题答案</span>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第15页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/3/" class="fname"  target="_blank">第3章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/3/" class="gellipsis-d g_istoday" target="_blank">IP：网际协议<span class="net52im_tcpip_placeholder">································································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-156-1-2.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_3" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第24页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/4/" class="fname"  target="_blank">第4章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/4/" class="gellipsis-d g_istoday" target="_blank">ARP：地址解析协议<span class="net52im_tcpip_placeholder">·····················································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-156-1-2.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_4" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第38页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/5/" class="fname"  target="_blank">第5章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/5/" class="gellipsis-d g_istoday" target="_blank">RARP：逆地址解析协议<span class="net52im_tcpip_placeholder">···············································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="color:#b4b4b4;margin-left: 8px;">读书笔记</span>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_5" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第47页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/6/" class="fname"  target="_blank">第6章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/6/" class="gellipsis-d g_istoday" target="_blank">ICMP：Internet控制报文协议<span class="net52im_tcpip_placeholder">········································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-157-1-2.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_6" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第50页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/7/" class="fname"  target="_blank">第7章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/7/" class="gellipsis-d g_istoday" target="_blank">Ping程序<span class="net52im_tcpip_placeholder">·······································································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-157-1-2.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_7" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第61页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/8/" class="fname"  target="_blank">第8章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/8/" class="gellipsis-d g_istoday" target="_blank">Traceroute程序<span class="net52im_tcpip_placeholder">·····························································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-157-1-2.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_8" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第71页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/9/" class="fname"  target="_blank">第9章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/9/" class="gellipsis-d g_istoday" target="_blank">IP选路<span class="net52im_tcpip_placeholder">···········································································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-160-1-2.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_9" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第83页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/10/" class="fname"  target="_blank">第10章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/10/" class="gellipsis-d g_istoday" target="_blank">动态选路协议<span class="net52im_tcpip_placeholder">································································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-160-1-2.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_10" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第95页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/11/" class="fname"  target="_blank">第11章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/11/" class="gellipsis-d g_istoday" target="_blank">UDP：用户数据报协议<span class="net52im_tcpip_placeholder">··················································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-161-1-2.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_11" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第107页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/12/" class="fname"  target="_blank">第12章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/12/" class="gellipsis-d g_istoday" target="_blank">广播和多播<span class="net52im_tcpip_placeholder">···································································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-248-1-1.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_12" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第128页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/13/" class="fname"  target="_blank">第13章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/13/" class="gellipsis-d g_istoday" target="_blank">IGMP：Internet组管理协议<span class="net52im_tcpip_placeholder">···········································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-248-1-1.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_13" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第136页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/14/" class="fname"  target="_blank">第14章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/14/" class="gellipsis-d g_istoday" target="_blank">DNS：域名系统<span class="net52im_tcpip_placeholder">····························································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-249-1-1.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_14" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第142页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/15/" class="fname"  target="_blank">第15章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/15/" class="gellipsis-d g_istoday" target="_blank">TFTP：简单文件传送协议<span class="net52im_tcpip_placeholder">············································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="color:#b4b4b4;margin-left: 8px;">读书笔记</span>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_15" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第159页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/16/" class="fname"  target="_blank">第16章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/16/" class="gellipsis-d g_istoday" target="_blank">BOOTP: 引导程序协议<span class="net52im_tcpip_placeholder">·················································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="color:#b4b4b4;margin-left: 8px;">读书笔记</span>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_16" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第163页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/17/" class="fname"  target="_blank">第17章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/17/" class="gellipsis-d g_istoday" target="_blank">TCP：传输控制协议<span class="net52im_tcpip_placeholder">·····················································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-419-1-1.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_17" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第170页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/18/" class="fname"  target="_blank">第18章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/18/" class="gellipsis-d g_istoday" target="_blank">TCP连接的建立与终止<span class="net52im_tcpip_placeholder">·················································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-423-1-1.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_18" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第174页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/19/" class="fname"  target="_blank">第19章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/19/" class="gellipsis-d g_istoday" target="_blank">TCP的交互数据流<span class="net52im_tcpip_placeholder">························································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-424-1-1.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_19" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第200页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/20/" class="fname"  target="_blank">第20章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/20/" class="gellipsis-d g_istoday" target="_blank">TCP的成块数据流<span class="net52im_tcpip_placeholder">························································································<span></a>
+                                <p class="fcontent">
+                                    <a class="gellipsis-time" style="margin-left: 8px;" href="http://www.52im.net/thread-424-1-1.html" target="_blank">读书笔记</a>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_20" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第209页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/21/" class="fname"  target="_blank">第21章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/21/" class="gellipsis-d g_istoday" target="_blank">TCP的超时与重传<span class="net52im_tcpip_placeholder">························································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_21" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第226页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/22/" class="fname"  target="_blank">第22章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/22/" class="gellipsis-d g_istoday" target="_blank">TCP的坚持定时器<span class="net52im_tcpip_placeholder">························································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_22" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第245页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/23/" class="fname"  target="_blank">第23章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/23/" class="gellipsis-d g_istoday" target="_blank">TCP的保活定时器<span class="net52im_tcpip_placeholder">························································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_23" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第251页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/24/" class="fname"  target="_blank">第24章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/24/" class="gellipsis-d g_istoday" target="_blank">TCP的未来和性能<span class="net52im_tcpip_placeholder">························································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_24" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第256页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/25/" class="fname"  target="_blank">第25章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/25/" class="gellipsis-d g_istoday" target="_blank">SNMP：简单网络管理协议<span class="net52im_tcpip_placeholder">···········································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_25" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第270页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/26/" class="fname"  target="_blank">第26章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/26/" class="gellipsis-d g_istoday" target="_blank">Telnet和Rlogin：远程登录<span class="net52im_tcpip_placeholder">···········································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_26" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第293页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/27/" class="fname"  target="_blank">第27章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/27/" class="gellipsis-d g_istoday" target="_blank">FTP：文件传送协议<span class="net52im_tcpip_placeholder">·····················································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_27" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第316页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/28/" class="fname"  target="_blank">第28章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/28/" class="gellipsis-d g_istoday" target="_blank">SMTP：简单邮件传送协议<span class="net52im_tcpip_placeholder">···········································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_28" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第332页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/29/" class="fname"  target="_blank">第29章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/29/" class="gellipsis-d g_istoday" target="_blank">网络文件系统<span class="net52im_tcpip_placeholder">·······························································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_29" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第347页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/30/" class="fname"  target="_blank">第30章</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/30/" class="gellipsis-d g_istoday" target="_blank">其他的TCP/IP应用程序<span class="net52im_tcpip_placeholder">·················································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <a class="gellipsis-time" href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/#hd_30" target="_blank">习题答案</a>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第363页</span>
+  </span>
+                                </p>
+                            </li>
+
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/a/" class="fname" title="技术分享" target="_blank">附录A</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/a/" class="gellipsis-d g_istoday" target="_blank">tcpdump程序<span class="net52im_tcpip_placeholder">································································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <span class="gellipsis-time">&nbsp;</span>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第371页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/b/" class="fname" title="技术分享" target="_blank">附录B</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/b/" class="gellipsis-d g_istoday" target="_blank">计算机时钟<span class="net52im_tcpip_placeholder">···································································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <span class="gellipsis-time">&nbsp;</span>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第376页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/c/" class="fname" title="技术分享" target="_blank">附录C</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/c/" class="gellipsis-d g_istoday" target="_blank">sock程序<span class="net52im_tcpip_placeholder">······································································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <span class="gellipsis-time">&nbsp;</span>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第378页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/" class="fname" title="技术分享" target="_blank">附录D</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/d/" class="gellipsis-d g_istoday" target="_blank">部分习题的解答<span class="net52im_tcpip_placeholder">····························································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <span class="gellipsis-time">&nbsp;</span>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第381页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/e/" class="fname" title="技术分享" target="_blank">附录E</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/e/" class="gellipsis-d g_istoday" target="_blank">配置选项<span class="net52im_tcpip_placeholder">······································································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <span class="gellipsis-time">&nbsp;</span>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第395页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/f/" class="fname" title="技术分享" target="_blank">附录F</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/f/" class="gellipsis-d g_istoday" target="_blank">可以免费获得的源代码<span class="net52im_tcpip_placeholder">·················································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <span class="gellipsis-time">&nbsp;</span>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第406页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/g/" class="fname" title="技术分享" target="_blank">附录G</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/g/" class="gellipsis-d g_istoday" target="_blank">参考文献<span class="net52im_tcpip_placeholder">······································································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <span class="gellipsis-time">&nbsp;</span>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第409页</span>
+  </span>
+                                </p>
+                            </li>
+                            <li>
+                                <a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/h/" class="fname" title="技术分享" target="_blank">附录H</a><span class="pipe">·</span><a href="http://docs.52im.net/extend/docs/book/tcpip/vol1/h/" class="gellipsis-d g_istoday" target="_blank">缩略语<span class="net52im_tcpip_placeholder">··········································································································<span></a>
+                                <p class="fcontent">
+                                    <span class="gellipsis-time" style="margin-left: 8px;">&nbsp;</span>
+                                    <span class="gellipsis-time">&nbsp;</span>
+                                    <span class="pipe" style="float: right;">·</span>
+                                    <span class="reply_count">
+<span class="count_of_replies" title="评论数">第420页</span>
+  </span>
+                                </p>
+                            </li>
+                        </ul>
+
+
+                        <div id="ID_bbs_subjects_p2" class="ask-q-list2col" style="display:none;">
+                            <img src="template/qu_115style/img/tcpip_vol1/w-richard-stevens.jpg" width="680" />
+                            <p>W.Richard Stevens（1951-1999），国际知名的UNIX和网络专家，受人尊敬的作家。他的著作有《UNIX网络编程》（两卷本），《UNIX环境高级编程》，《TCP/IP详解》（三卷本）等，同时他还是广受欢迎的教师和顾问。</p>
+                            <p>Stevens先生1951年生于赞比亚，早年，他就读于美国弗吉尼亚州的费什本军事学校，后获得密歇根大学学士、亚利桑那大学系统工程硕士和博士学位。他曾就职于基特峰国家天文台，从事计算机编程。</p>
+                            <p>Stevens先生不幸病逝于1999年9月1日，他的离去是计算机界的巨大损失。</p>
+                            <p>1999年9月1日，著名的TCP/IP,UINX技术专家，作家和教育家W. Richard Stevens与世长辞．享年48岁。他留下的6本书《Advanced Programming in the UNIX Environment》,《UNIX Network Programming Volume 1，2》，《TCP/IP Illustracted Volume 1，2，3》是每一个严肃的程序员必读的功课。尤其是《TCP/IP Illustracted Volume 1》已经达到了讲解TCP/IP圣经级别的书。</p>
+                            <p>作为他的读者，我要在这里对他表示自己最崇高的尊敬．在学习网络编程的过程中，最直接，最重要的领悟都是来自于他的文字。无法忘记那个读通《UNIX Network Programming》的夜晚，兴奋的我竟然无法入睡。所以对由于Stevens去世造成其第３卷无法出版的事实，我一直很是遗憾。缺少了这最重要的第３卷，《UNIX Network Programming》永远是不完整的．．．(幸好我们还有Douglas C. Schmidt和他的ACE，感谢上帝)</p>
+                            <p>作为一个铜矿家庭的后代，Stevens并没有选择获取财富的人生，他选择的是活在每个程序员的心中，活在无处不在的internet上面．当他去世后的第２年，他的妹妹和遗孀替他领奖的时候，她们被大家对他的尊敬所震撼，她们没有想到平时很普通的Stevens竟然有这么多的朋友这么多的读者．．．．．</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="cl" style="margin-top: 40px;border-top: 1px solid #e7e7e7;padding-top: 20px;">
+                    <div id="comment" class="bm js-ptl-atcl-cmt">
+                        <div class="bm_h js-ptl-atcl-t cl">
+                            <a href="http://www.52im.net/portal.php?mod=comment&amp;id=5&amp;idtype=topicid" class="y xi2">查看全部评论 <em id="_commentnum">(191)</em> <i class="icon-chevron-right"></i></a>
+
+                            <a href="javascript:;" class="y xi2" onclick="location.href=location.href.replace(/(\#.*)/, '')+'#cform';$('message').focus();return false;"><i class="icon-comment-alt"></i> 发表评论</a>
+                            <h3>最新评论</h3>
+                        </div>
+                        <div id="comment_ul" class="bm_c mtn"><a name="comment_anchor_512"></a>
+                            <dl id="comment_512_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-17990.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=17990&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(512, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-17990.html" class="xi2 xw1 name" c="1">罗杰</a>
+                                    <span class="xg1 xw0"><span title="2020-03-09 21:24">4&nbsp;天前</span></span>
+                                </dt>
+                                <dd>书中的图 可以替换成更加清晰的么 我愿意有空的时候提供</dd>
+                            </dl><a name="comment_anchor_508"></a>
+                            <dl id="comment_508_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-1.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=1&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(508, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-1.html" class="xi2 xw1 name" c="1">JackJiang</a>
+                                    <span class="xg1 xw0"><span title="2020-01-09 11:03">2&nbsp;个月前</span></span>
+                                </dt>
+                                <dd><div class="quote"><blockquote>引用自 Jacob_Wang: “这个是好东西，谢谢站长”</blockquote></div>嗯嗯</dd>
+                            </dl><a name="comment_anchor_507"></a>
+                            <dl id="comment_507_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-17388.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=17388&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(507, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-17388.html" class="xi2 xw1 name" c="1">Jacob_Wang</a>
+                                    <span class="xg1 xw0"><span title="2020-01-09 09:49">2&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>这个是好东西，谢谢站长</dd>
+                            </dl><a name="comment_anchor_505"></a>
+                            <dl id="comment_505_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-14853.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=14853&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(505, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-14853.html" class="xi2 xw1 name" c="1">WMZ</a>
+                                    <span class="xg1 xw0"><span title="2019-12-26 14:53">2&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>太好了</dd>
+                            </dl><a name="comment_anchor_504"></a>
+                            <dl id="comment_504_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-4384.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=4384&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(504, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-4384.html" class="xi2 xw1 name" c="1">wangye_123</a>
+                                    <span class="xg1 xw0"><span title="2019-12-26 11:38">2&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>全网唯一的好资料</dd>
+                            </dl><a name="comment_anchor_503"></a>
+                            <dl id="comment_503_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-17194.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=17194&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(503, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-17194.html" class="xi2 xw1 name" c="1">gorilla</a>
+                                    <span class="xg1 xw0"><span title="2019-12-23 17:16">2&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>马来人来了</dd>
+                            </dl><a name="comment_anchor_500"></a>
+                            <dl id="comment_500_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-16820.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=16820&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(500, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-16820.html" class="xi2 xw1 name" c="1">xladykiller</a>
+                                    <span class="xg1 xw0"><span title="2019-11-27 14:43">3&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>经典之作, 必须学习</dd>
+                            </dl><a name="comment_anchor_499"></a>
+                            <dl id="comment_499_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-16832.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=16832&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(499, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-16832.html" class="xi2 xw1 name" c="1">mark_lin</a>
+                                    <span class="xg1 xw0"><span title="2019-11-26 21:57">3&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>经典之作呀，谢谢无私分享，赞</dd>
+                            </dl><a name="comment_anchor_498"></a>
+                            <dl id="comment_498_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-16781.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=16781&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(498, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-16781.html" class="xi2 xw1 name" c="1">leiseven777</a>
+                                    <span class="xg1 xw0"><span title="2019-11-26 15:05">3&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>非常感谢！</dd>
+                            </dl><a name="comment_anchor_496"></a>
+                            <dl id="comment_496_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-16666.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=16666&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(496, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-16666.html" class="xi2 xw1 name" c="1">宋晓涛</a>
+                                    <span class="xg1 xw0"><span title="2019-11-14 10:59">3&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>好文章，赞一个</dd>
+                            </dl><a name="comment_anchor_495"></a>
+                            <dl id="comment_495_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-16515.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=16515&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(495, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-16515.html" class="xi2 xw1 name" c="1">yzhangy</a>
+                                    <span class="xg1 xw0"><span title="2019-11-04 11:52">4&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>经典中的经典</dd>
+                            </dl><a name="comment_anchor_494"></a>
+                            <dl id="comment_494_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-16027.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=16027&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(494, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-16027.html" class="xi2 xw1 name" c="1">ljw199152</a>
+                                    <span class="xg1 xw0"><span title="2019-10-07 21:41">5&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>传世经典，辛苦Jack了</dd>
+                            </dl><a name="comment_anchor_492"></a>
+                            <dl id="comment_492_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-1.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=1&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(492, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-1.html" class="xi2 xw1 name" c="1">JackJiang</a>
+                                    <span class="xg1 xw0"><span title="2019-09-29 09:59">5&nbsp;个月前</span></span>
+                                </dt>
+                                <dd><div class="quote"><blockquote>引用自 lancelotfh: “每天中午午休时看看网站里的帖子，对我帮助很大，感谢Jack”</blockquote></div>努力努力</dd>
+                            </dl><a name="comment_anchor_491"></a>
+                            <dl id="comment_491_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-15911.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=15911&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(491, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-15911.html" class="xi2 xw1 name" c="1">lancelotfh</a>
+                                    <span class="xg1 xw0"><span title="2019-09-25 13:06">5&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>每天中午午休时看看网站里的帖子，对我帮助很大，感谢Jack</dd>
+                            </dl><a name="comment_anchor_490"></a>
+                            <dl id="comment_490_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-15840.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=15840&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(490, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-15840.html" class="xi2 xw1 name" c="1">晨曦丶</a>
+                                    <span class="xg1 xw0"><span title="2019-09-21 17:49">5&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>很赞</dd>
+                            </dl><a name="comment_anchor_488"></a>
+                            <dl id="comment_488_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-15790.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=15790&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(488, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-15790.html" class="xi2 xw1 name" c="1">皮蛋</a>
+                                    <span class="xg1 xw0"><span title="2019-09-17 15:50">5&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>收藏。阅读方便</dd>
+                            </dl><a name="comment_anchor_485"></a>
+                            <dl id="comment_485_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-1.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=1&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(485, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-1.html" class="xi2 xw1 name" c="1">JackJiang</a>
+                                    <span class="xg1 xw0"><span title="2019-09-04 10:03">6&nbsp;个月前</span></span>
+                                </dt>
+                                <dd><div class="quote"><blockquote>引用自 snsmqing: “这本书排版清晰，看着很舒服，谢谢了！”</blockquote></div>嗯嗯</dd>
+                            </dl><a name="comment_anchor_484"></a>
+                            <dl id="comment_484_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-15560.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=15560&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(484, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-15560.html" class="xi2 xw1 name" c="1">snsmqing</a>
+                                    <span class="xg1 xw0"><span title="2019-09-03 13:32">6&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>这本书排版清晰，看着很舒服，谢谢了！</dd>
+                            </dl><a name="comment_anchor_481"></a>
+                            <dl id="comment_481_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-10545.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=10545&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(481, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-10545.html" class="xi2 xw1 name" c="1">caishujie</a>
+                                    <span class="xg1 xw0"><span title="2019-08-18 23:09">6&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>非常好的资源，感谢</dd>
+                            </dl><a name="comment_anchor_480"></a>
+                            <dl id="comment_480_li" class="ptm pbm cl">
+                                <dt class="mbn">
+<span class="li-avatar">
+  <a href="http://www.52im.net/space-uid-15361.html" target="_blank" c="1"><img src="http://www.52im.net/uc_server/avatar.php?uid=15361&size=small" /></a>
+</span>
+
+                                    <span class="y xw0 xi2 li-buttons">
+<a href="javascript:;" onclick="portal_comment_requote(480, '');" title="引用"><i  class="icon-comment-alt"></i></a> </span>
+                                    <a href="http://www.52im.net/space-uid-15361.html" class="xi2 xw1 name" c="1">沙忍</a>
+                                    <span class="xg1 xw0"><span title="2019-08-17 15:11">6&nbsp;个月前</span></span>
+                                </dt>
+                                <dd>很棒的帖子</dd>
+                            </dl><form id="cform" name="cform" action="portal.php?mod=portalcp&amp;ac=comment" method="post" autocomplete="off" class="mtm">
+                                <div class="tedt">
+                                    <div class="area">
+                                        <textarea name="message" rows="3" class="pt" id="message" onkeydown="ctrlEnter(event, 'commentsubmit_btn');"></textarea>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="referer" value="portal.php?mod=topic&topicid=5#comment" />
+                                <input type="hidden" name="topicid" value="5">
+                                <input type="hidden" name="formhash" value="856b2e4e">
+                                <input type="hidden" name="replysubmit" value="true">
+                                <input type="hidden" name="commentsubmit" value="true" />
+                                <p class="ptm"><button type="submit" name="commentsubmit_btn" id="commentsubmit_btn" value="true" class="pn"><strong>评论</strong></button></p>
+                            </form>
+                        </div>
+                    </div></div>
+            </div>
+            <div class="ct_r">
+                <div id="tuijian_bk" class="ask-list ask-list-right cl">
+                    <div class="bm_h cl">
+                        <h3><i class="icon-circle-arrow-down"></i> 手机扫码<a href="http://www.52im.net/thread-506-1-1.html" class="ask-list-more" target="_blank" style="color: #0078fe;">[下载CHM版] <i class="icon-hand-left" style="color: #FF3300;"></i></a></h3>
+                    </div>
+                    <div class="bm_c cl">
+                        <div class="tuijian_bk_ct">
+                            <div class="tuijian_bk_ct_pic">
+                                <img class="img-qr " src="template/qu_115style/img/tcpip_vol1/tcpip_qr2.png" alt="2维码_《TCP/IP详解，卷1：协议》_即时通讯网(52im.net)_即时通讯开发者社区" title="扫码在手机上查看《TCP/IP详解，卷1：协议》全书">
+                            </div>
+                            <div class="tuijian_bk_ct_desc">
+                                <span>扫码手机打开</span>
+                            </div>
+                        </div>
+                        <!--<a class="tuijian_bk_ct_mob" href="./"
+                        style="background-image: url(template/qu_115style/img/tcpip_vol1/bg_phone.png);
+                        background-image: -webkit-image-set(url(template/qu_115style/img/tcpip_vol1/bg_phone.png) 1x,url(template/qu_115style/img/tcpip_vol1/bg_phone@2x.png) 2x);
+                        background-image: -moz-image-set(url(template/qu_115style/img/tcpip_vol1/bg_phone.png) 1x,url(template/qu_115style/img/tcpip_vol1/bg_phone@2x.png) 2x);
+                        background-image: -o-image-set(url(template/qu_115style/img/tcpip_vol1/bg_phone.png) 1x,url(template/qu_115style/img/tcpip_vol1/bg_phone@2x.png) 2x);
+                        background-image: -ms-image-set(url(template/qu_115style/img/tcpip_vol1/bg_phone.png) 1x,url(template/qu_115style/img/tcpip_vol1/bg_phone@2x.png) 2x);">
+
+                                            </a>-->
+                        <!--<img class="tuijian_bk_ct_mob" src="template/qu_115style/img/tcpip_vol1/bg_phone.png" alt="2维码_《TCP/IP详解，卷1：协议》_即时通讯网(52im.net)_即时通讯开发者社区">-->
+                        <div class="tuijian_bk_ct" style="margin-left:12px;">
+                            <div class="tuijian_bk_ct_pic">
+                                <img class="img-qr " src="template/qu_115style/img/tcpip_vol1/cngeeker_qqgroup_mobiim5.png" alt="2维码_《TCP/IP详解，卷1：协议》_即时通讯网(52im.net)_即时通讯开发者社区" title="扫码在手机上查看《TCP/IP详解，卷1：协议》全书">
+                            </div>
+                            <div class="tuijian_bk_ct_desc">
+                                <span>技术群 215477170</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="latest_comments" class="ask-list ask-list-right cl">
+                    <div class="bm_h cl">
+                        <h3><i class="icon-circle-arrow-down"></i> TCP/IP协议族图<a href="http://www.52im.net/thread-180-1-1.html" class="ask-list-more" target="_blank">[高清下载]</a></h3>
+                    </div>
+                    <div class="bm_c cl">
+                        <a href="template/qu_115style/img/tcpip_vol1/tcpip_protocal_r.png" target="_blank">
+                            <img src="template/qu_115style/img/tcpip_vol1/tcpip_protocal_rpreview.png" width="120" alt="TCP/IP协议关系图_即时通讯网(52im.net)_即时通讯开发者社区" title="点击查看TCP/IP协议关系图"><!--230-->
+                        </a>
+                    </div>
+                </div>
+
+                <div id="latest_comments" class="ask-list ask-list-right cl">
+                    <div class="bm_h cl">
+                        <h3><i class="icon-circle-arrow-down"></i> 最全网络协议图<a href="http://www.52im.net/thread-180-1-1.html" class="ask-list-more" target="_blank">[高清下载]</a></h3>
+                    </div>
+                    <div class="bm_c cl">
+                        <a href="template/qu_115style/img/tcpip_vol1/network_protocal_all.png" target="_blank">
+                            <img src="template/qu_115style/img/tcpip_vol1/network_protocal_all_preview.png" width="120" alt="史上最全网络协议图_即时通讯网(52im.net)_即时通讯开发者社区" title="点击查看史上最全网络协议图">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="ask-list ask-list-right cl">
+                    <div class="bm_h"><h3><i class="icon-circle-arrow-down"></i> 技术方案推荐<span class="g_fanan_line_flag" style="background-color: rgb(235,0,0);font-weight: normal;">hot</span><a href="https://shop143012492.taobao.com/" class="g_fanan_more_link" target="_blank">[淘宝下单]</a></h3></div>
+                    <div class="bm_c">
+                        <ul class="g_good_fanan_content cl">
+                            <li class="fanan_line" onmouseover="this.className='fanan_line gf_lihover'" onmouseout="this.className='fanan_line'">
+                                <div class="fanan_head">
+                                    <a href="http://www.52im.net/forum-89-1.html" target="_blank"><img src="template/qu_115style/img/52im_fangan2_mb.png" align="left" alt="MobileIMSDK-即时通讯网(52im.net)"></a>
+                                </div>
+                                <h3><a href="http://www.52im.net/forum-89-1.html" target="_blank" title="MobileIMSDK">MobileIMSDK</a><a href="http://www.52im.net/thread-411-1-1.html" title="捐助作者，得MobileIMSDK精编注释版！" target="_blank"><span class="tjbk_txt_num">(v4.0精编版已发布)</span></a></h3>
+                                <p class="fanan_line_pcontent">轻量级开源移动端即时通讯框架。</p>
+                                <p>
+                                    <a href="http://www.52im.net/thread-52-1-1.html" target="_blank">快速入门</a>
+                                    <span class="pipe">/</span>
+                                    <a href="http://www.52im.net/thread-57-1-1.html" target="_blank">性能</a>
+                                    <span class="pipe">/</span>
+                                    <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=1" target="_blank">指南</a>
+                                    <span class="pipe">/</span>
+                                    <a href="http://www.52im.net/thread-60-1-1.html" target="_blank">常见问题</a>
+                                </p>
+                            </li>
+                            <li class="fanan_line" onmouseover="this.className='fanan_line gf_lihover'" onmouseout="this.className='fanan_line'">
+                                <div class="fanan_head">
+                                    <a href="http://www.52im.net/forum-110-1.html" target="_blank"><img src="template/qu_115style/img/52im_fangan2_mbweb.png" align="left" alt="MobileIMSDK-Web-即时通讯网(52im.net)"></a>
+                                </div>
+                                <h3><a href="http://www.52im.net/forum-110-1.html" title="MobileIMSDK-Web" target="_blank">MobileIMSDK-Web</a><a href="https://shop143012492.taobao.com/" title="支持作者，有偿获取MobileIMSDK-Web全部源码和资料！" target="_blank"><span class="tjbk_txt_num" style="margin-left: 4px;">(有偿开源)</span></a></h3>
+                                <p class="fanan_line_pcontent">轻量级Web端即时通讯框架。</p>
+                                <p>
+                                    <a href="http://www.52im.net/thread-959-1-1.html" target="_blank">详细介绍</a>
+                                    <span class="pipe">/</span>
+                                    <a href="https://item.taobao.com/item.htm?id=556857487083" target="_blank">精编源码</a>
+                                    <span class="pipe">/</span>
+                                    <a href="https://item.taobao.com/item.htm?id=556718940694" target="_blank">手册教程</a>
+                                </p>
+                            </li>
+                            <li class="fanan_line" onmouseover="this.className='fanan_line gf_lihover'" onmouseout="this.className='fanan_line'">
+                                <div class="fanan_head">
+                                    <a href="http://www.52im.net/forum-110-1.html" target="_blank"><img src="template/qu_115style/img/52im_fangan2_av.png" align="left" alt="RainbowAV-即时通讯网(52im.net)"></a>
+                                </div>
+                                <h3><a href="http://www.52im.net/forum-112-1.html" title="RainbowAV" target="_blank">RainbowAV<span class="fanan_line_flag">new</span></a><a href="https://shop143012492.taobao.com/" title="支持作者，有偿获取MobileIMSDK-Web全部源码和资料！" target="_blank"><span class="tjbk_txt_num" style="margin-left: 8px;">(有偿开源)</span></a></h3>
+                                <p class="fanan_line_pcontent">移动端实时音视频框架(含服务端)。</p>
+                                <p>
+                                    <a href="http://www.52im.net/thread-1027-1-1.html" target="_blank">详细介绍</a>
+                                    <span class="pipe">/</span>
+                                    <a href="http://www.52im.net/thread-1039-1-1.html" target="_blank">性能测试</a>
+                                    <span class="pipe">/</span>
+                                    <a href="https://fir.im/w2cn" target="_blank">安装体验</a>
+                                </p>
+                            </li>
+                            <li class="fanan_line" onmouseover="this.className='fanan_line gf_lihover'" onmouseout="this.className='fanan_line'">
+                                <div class="fanan_head">
+                                    <a href="http://www.52im.net/forum-90-1.html" target="_blank"><img src="template/qu_115style/img/52im_fangan2_rb.png" align="left" alt="RainbowChat-即时通讯网(52im.net)"></a>
+                                </div>
+                                <h3><a href="http://www.52im.net/forum-90-1.html" title="RainbowChat" target="_blank">RainbowChat</a><a href="http://www.52im.net/thread-1115-1-1.html" title="查看RainbowChat 技术转让说明及授权协议书范本！" target="_blank"><span class="tjbk_txt_num">(技术转让)</span></a></h3>
+                                <p class="fanan_line_pcontent">基于MobileIMSDK的产品级IM系统。</p>
+                                <p>
+                                    <a href="http://www.52im.net/thread-19-1-1.html" target="_blank">详细介绍</a>
+                                    <span class="pipe">/</span>
+                                    <a href="http://www.52im.net/thread-20-1-1.html" target="_blank">产品截图</a>
+                                    <span class="pipe">/</span>
+                                    <a href="http://rbchat_beta.52im.net/vg2b" target="_blank">安装体验</a>
+                                </p>
+                            </li>
+                            <li class="fanan_line" onmouseover="this.className='fanan_line gf_lihover'" onmouseout="this.className='fanan_line'">
+                                <div class="fanan_head">
+                                    <a href="http://www.52im.net/forum-115-1.html" target="_blank"><img src="template/qu_115style/img/52im_fangan2_rbweb.png" align="left" alt="RainbowChat_Web-即时通讯网(52im.net)"></a>
+                                </div>
+                                <h3><a href="http://www.52im.net/forum-115-1.html" title="RainbowChat-Web" target="_blank">RainbowChat-Web</a><a href="http://www.52im.net/thread-2489-1-1.html" title="查看RainbowChat-Web 技术转让说明及授权协议书范本！" target="_blank"><span class="tjbk_txt_num">(技术转让)</span></a></h3>
+                                <p class="fanan_line_pcontent">一套产品级Web端IM系统。</p>
+                                <p>
+                                    <a href="http://www.52im.net/thread-2483-1-1.html" target="_blank">详细介绍</a>
+                                    <span class="pipe">/</span>
+                                    <a href="http://www.52im.net/thread-2470-1-1.html" target="_blank">产品截图</a>
+                                    <span class="pipe">/</span>
+                                    <a href="http://www.52im.net/thread-2491-1-1.html" target="_blank">演示视频</a>
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="ask-list ask-list-right cl">
+                    <div class="bm_h"><h3><i class="icon-circle-arrow-down"></i> 技术好文分类<a href="http://www.52im.net/forum.php?mod=collection&amp;op=all" class="ask-list-more" target="_blank">[更多]</a></h3></div>
+                    <div class="bm_c">
+                        <div class="feilei_c cl" style="margin-top: 5px;">
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=8" target="_blank">网络编程基础</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=9" target="_blank">NIO编程精选</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=18" target="_blank">通信协议选型</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=7" target="_blank">IM架构篇</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=6" target="_blank">IM安全篇</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=20" target="_blank">IM群聊篇</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=19" target="_blank">IM热门讨论</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=17" target="_blank">心跳保活篇</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=10" target="_blank">IM综合资料</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=4" target="_blank">实时音视频开发</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=15" target="_blank">Web端实时通信</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=11" target="_blank">推送技术好文</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=12" target="_blank">IM大厂技术分享</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=23" target="_blank">社交产品总结</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=21" target="_blank">精品资源下载</a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=24" target="_blank">通信技术<span class="feilei_c_tcpip_f">高阶</span></a>
+                            <a href="http://www.52im.net/forum.php?mod=collection&amp;action=view&amp;ctid=13" target="_blank">程序人生</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="g_q-view-handle" style="z-index:10;">
+        <a id="dashang_show_btn" class="tvh-dashang" title="点击打赏站长！">
+            <i></i><span>打赏</span>
+        </a>
+    </div>
+    <div id="dashang_main" class="g_ds_main">
+        <div class="ds_dialog">
+            <div class="ds_content">
+                <div class="ds_header">
+                    <span class="ds_h_t">打赏站长</span>
+                    <a id="dashang_close_btn" class="ds_h_close" title="关闭">&times;</a>
+                </div>
+                <div class="ds_body">
+                    <div class="ds_b_wrapper">
+                        <img class="ds_b_wrapper_imgleft" src="http://www.52im.net/template/qu_115style/img/js_wpay_s.png" alt="使用微信打赏！" onmouseover="this.className='img_hover ds_b_wrapper_imgleft'" onmouseout="this.className='ds_b_wrapper_imgleft'" title="使用微信打赏！">
+                        <img src="http://www.52im.net/template/qu_115style/img/js_apay_s.png" alt="使用支付宝打赏！" onmouseover="this.className='img_hover'" onmouseout="this.className=''" title="使用支付宝打赏！">
+                    </div>
+                </div>
+                <div class="ds_footer">
+                    <div class="ds_f_action">
+                        <div class="ds_f_hint">即时通讯技术的分享和传播需要您的支持，感谢打赏！</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function showDashang(){
+            jQuery("#dashang_main").show();
+        }
+
+        function hideDashang(){
+            jQuery("#dashang_main").hide();
+        }
+
+        jQuery("#dashang_show_btn").click(function () {
+            showDashang();
+        });
+        jQuery("#dashang_close_btn").click(function () {
+            hideDashang();
+        });
+    </script>
+
+    <script type='text/javascript'>
+        <!--
+        jQuery(document).ready(function () {
+            jQuery('#ID_bbs_subjects .js-threadlist-th-btns a').hover(
+                function () {
+                    jQuery('#ID_bbs_subjects .js-threadlist-th-btns a').removeClass('btn_current');
+                    jQuery(this).addClass('btn_current');
+                    //jQuery('#ID_bbs_subjects ul').hide();
+                    var cp = jQuery(this).attr('page');
+
+                    jQuery('#ID_bbs_subjects #ID_bbs_subjects_p' + cp).show();
+
+                    if(cp==1)
+                    {
+                        jQuery('#ID_bbs_subjects #ID_bbs_subjects_p1_bookcopy').show();
+                        jQuery('#ID_bbs_subjects #ID_bbs_subjects_p1_bookdesc').show();
+                        jQuery('#ID_bbs_subjects #ID_bbs_subjects_p2').hide();
+                    }
+                    else if(cp==2)
+                    {
+                        jQuery('#ID_bbs_subjects #ID_bbs_subjects_p1_bookcopy').hide();
+                        jQuery('#ID_bbs_subjects #ID_bbs_subjects_p1_bookdesc').hide();
+                        jQuery('#ID_bbs_subjects #ID_bbs_subjects_p1').hide();
+                    }
+                },
+                function () {
+                }
+            );
+        });
+        //-->
+    </script>
+    <script src="misc.php?mod=diyhelp&action=get&type=topic&diy=yes&topicid=5&r=BOf5" type="text/javascript" type="text/javascript"></script>	</div>
+
+
+
+<div id="ft" class="wp">
+    <div id="js_ift_placehold"></div>
+    <div id="js_ift" class="js-clearfix js-saya-footer">
+        <div class="js-clearfix js-saya cl">
+            <div class="js-clearfix js-footer hidden-xs cl">
+                <div class="js-sspai hidden-xs">
+                    <h4>即时通讯网　</h4>
+                    <div style="padding-right:30px;">
+                        <p>实时推送、IM等即时通讯相关技术的学习、交流与分享的平台。专业的资料、专业的人、专业的社区！让即时通讯技术能更好传播与分享。</p>
+                        <div class="color-slogan">
+                            <span class="js-slogan js-slogan-1" >平等</span>
+                            <span class="js-slogan js-slogan-2" >开放</span>
+                            <span class="js-slogan js-slogan-3" >分享</span>
+                            <span class="js-slogan js-slogan-4" >传承</span>
+                        </div>
+                        <p>
+                            商务/合作：<a href="#">business@52im.net</a><br>
+                            投稿/报道：<a href="#">contact@52im.net</a>
+                        </p>
+
+
+                    </div>
+                </div>
+                <div class="js-functions hidden-xs">
+                    <h4>友情链接<a href="http://www.52im.net/thread-402-1-1.html" class="friend_link">[友链交换]</a></h4>
+                    <ul>
+                        <li> <a href="http://www.17ky.net/" target="_blank" title="争做中国最大的开源分享及荟萃平台，为IT开发者提供一个发现、使用、并交流开源技术的平台"> 一起开源网 </a> </li>
+                        <li> <a href="http://www.yuntongxun.com/?ly=52im&amp;qd=youlian&amp;cp=youlian&amp;xl=&amp;kw=" target="_blank" title="云通讯服务提供商"> 容联云通讯 </a> </li>
+                        <li> <a href="http://www.opensns.cn" target="_blank" title="OpenSNS是基于OneThink的轻量级社交化用户中心框架，系统秉持简约的设计风格，注重交流，为用户提供了一套轻量级的社交方案。"> OpenSNS </a> </li>
+                        <li> <a href="https://dun.163.com/" target="_blank" title="网易易盾-智能可靠的内容安全&业务安全服务"> 网易易盾 </a> </li>
+                        <li> <a href="https://www.anyrtc.io/" target="_blank" title="anyRTC--全球WebRTC先行者"> anyRTC </a> </li>
+                        <li> <a href="http://www.rongcloud.cn/" target="_blank" title="安全，可靠的全球互联网通信云服务商"> 融云 </a> </li>
+                        <li> <a href="http://www.easemob.com" target="_blank" title="即时通讯云服务商，连接人与人，连接人与商业"> 环信 </a> </li>
+                    </ul>
+                </div>
+                <div class="js-about hidden-xs">
+                    <h4>关于</h4>
+                    <ul class="">
+                        <li> <a href="topic-about.html?mobile=no"> 关于我们 </a> </li>
+                        <li> <a href="topic-qqgroup.html?mobile=no"> 活跃QQ群 </a> </li>
+                        <li> <a href="topic-docs.html?mobile=no"> 在线文档 </a> </li>
+                        <li> <a href="topic-sitelist.html?mobile=no"> 网址导航 </a> </li>
+                        <li> <a href="http://www.52im.net/thread-1188-1-1.html" target="_blank"> 广告投放 <sup style="color:rgb(221,0,0);">new</sup> </a> </li>
+                    </ul>
+                </div>
+                <div class="js-weixin-qr hidden-xs">
+                    <h4>手机访问本站</h4>
+                    <p><img src="template/qu_115style/img/cngeeker_weixin2.png" alt="即时通讯网手机版" title="扫码打开即时通讯网手机版！"></p>
+                </div>
+                <div class="js-weixin-qr hidden-xs">
+                    <h4>微信公众号<span class="js-f-h-flag">new</span></h4>
+                    <p><img src="template/qu_115style/img/52im_weixingonzhong.jpg" alt="即时通讯网微信公众号" title="扫码关注即时通讯网微信公众号！"></p>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="js-clearfix js-copyright">
+            <div class="js-clearfix js-saya">
+                <div class="js-copyright-text">
+                    <div class="js-text">
+                        <p class="js-site">Copyright &copy; 2014-2020 即时通讯网 - 即时通讯开发者社区 <span class="hidden-xs">/ 版本 V4.3</span></p>
+                        <p class="js-ipc">苏州网际时代信息科技有限公司 <a href="http://www.beian.miit.gov.cn" getarticles="" target="_blank">(苏ICP备16005070号-1）</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <p class="xs0">
+
+<span id="debuginfo" style="display:none;">
+Processed in 0.062500 second(s), 13 queries
+, Gzip On.
+</span>
+    </p></div>
+<div id="scrolltop">
+    <span hidefocus="true"><a title="返回顶部" onclick="window.scrollTo('0','0')" class="scrolltopa" ><b>返回顶部</b></a></span>
+</div>
+<script type="text/javascript">_attachEvent(window, 'scroll', function () { showTopLink(); });checkBlind();</script>
+</body>
+</html>

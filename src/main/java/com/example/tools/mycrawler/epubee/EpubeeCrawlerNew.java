@@ -235,7 +235,7 @@ public class EpubeeCrawlerNew {
     }
 
     public static void main(String[] args) {
-        String bookName = "表象与本质";
+        String bookName = "走进高敏感人群的内心世界";
         List<Book> books = GetBook.getDownloadUrl(new UserContext(), bookName, new HashSet<>());
         System.out.println(books);
     }

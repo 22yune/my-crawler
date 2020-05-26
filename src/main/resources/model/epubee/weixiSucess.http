@@ -1,0 +1,20 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection).
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+GET /files.aspx?linkid=wechat&utm_medium=weixin&utm_source=weixin&utm_campaign=weixin&utm_content=weixin&relocalid=ip_115.205.64.26 HTTP/1.1
+Host: cn.epubee.com
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Linux; Android 10; VOG-AL00 Build/HUAWEIVOG-AL00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.126 MQQBrowser/6.2 TBS/45016 Mobile Safari/537.36 MMWEBID/2070 MicroMessenger/7.0.10.1580(0x27000AFE) Process/tools NetType/4G Language/zh_CN ABI/arm64
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,image/wxpic,image/sharpp,image/apng,image/tpg,*/*;q=0.8
+Referer: http://cn.epubee.com/files.aspx?linkid=wechat&utm_medium=weixin&utm_source=weixin&utm_campaign=weixin&utm_content=weixin
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh-CN;q=0.9,en-US;q=0.8
+Cookie: _ga=GA1.2.549512546.1582631920; _gid=GA1.2.1579943240.1582631920; Hm_lvt_c1d52ae305ab701945e4c416b6cad0d5=1582631920; user_localid=ip_115.205.64.26; manager_suggestion=true; leftshow=1; Hm_lpvt_c1d52ae305ab701945e4c416b6cad0d5=1582634604; ASP.NET_SessionId=zbolt31kr1aa40ugua4uiu0r; identify=21603756; identifyusername=; uemail=396169591%40qq.com; kindle_email=; isVip=0
+
+###
+
+

@@ -1,0 +1,20 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection).
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+GET /files.aspx HTTP/1.1
+Host: cn.epubee.com
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+DNT: 1
+User-Agent: Mozilla/5.0 (Linux; Android 10; VOG-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.64 HuaweiBrowser/10.0.3.311 Mobile Safari/537.36
+DNT: 1
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+Referer: http://cn.epubee.com/files.aspx
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh-CN;q=0.9,en-US;q=0.8
+Cookie: Hm_lvt_c1d52ae305ab701945e4c416b6cad0d5=1582633292; _ga=GA1.2.615912959.1582633292; _gid=GA1.2.64059776.1582633292; identifyusername=; kindle_email=; isVip=0; ASP.NET_SessionId=40t24kjhpehig1r2svncqmtf; identify=21603756; user_localid=ip_115.205.64.26; uemail=396169591%40qq.com; messagescount=1; manager_suggestion=true; leftshow=1; Hm_lpvt_c1d52ae305ab701945e4c416b6cad0d5=1582633534; _gat=1
+
+###

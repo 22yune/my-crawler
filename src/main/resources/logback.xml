@@ -117,7 +117,7 @@
     <logger name="org.apache" level="info" />
     <logger name="com.mchange.v2" level="info" />
     <logger name="httpclient.wire" level="info" />
-    <logger name="com.example.tools.mycrawler.HttpUtils" level="error" />
+    <logger name="com.example.tools.mycrawler.HttpUtils" level="debug" />
     <logger name="com.example.tools.mycrawler.amazon.AmazonVisit" level="error"/>
     <!-- 根logger的设置-->
     <root>

@@ -45,12 +45,14 @@ public class MyBook {
                 String format = element.select("td div.listEbook div.contentshow span#gvBooks_lblExtensions_" + i).text().trim().split(" ")[0].substring(1).toUpperCase();
                 String size = element.select("td div.listEbook div.contentshow div table#gvBooks_gvBooks_child_" + i + " tr td.gvchild_first div.book_child span.list-filesize_k").text();
                 String reader = "http://cn.epubee.com/" + element.select("td div.listEbook div.contentshow div table#gvBooks_gvBooks_child_" + i + " tr td.list_reader a.child_send").attr("href");
+                String coverUrl = element.select("td div.listEbook div.covershow img").attr("src");
+                String author = element.select("td div.listEbook div.contentshow span#gvBooks_lblAuthor_" + i).text();
                 BookFormat bookFormat = null;
                 try {
                     BookFormat.valueOf(format);
                 } catch (Exception e) {
                 }
-                list.add(new Book(null, title, size, bookFormat, reader, null));
+                list.add(new Book(null, title, size, bookFormat, reader,coverUrl,author, null));
             } catch (Exception e) {
                 logger.error("我的书籍读取失败！\n" + element.toString() + "\n", e);
             }

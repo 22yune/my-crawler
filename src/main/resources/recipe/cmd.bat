@@ -1,0 +1,1 @@
+ebook-convert book.recipe .mobi  --mobi-keep-original-images --pretty-print --mobi-file-type=new  --output-profile=kindle_oasis --duplicate-links-in-toc --level1-toc=//h:h1 --level2-toc=//h:h21 --level3-toc=//h:h3 --test

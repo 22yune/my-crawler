@@ -4,6 +4,8 @@ import com.example.tools.mycrawler.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URLDecoder;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
@@ -18,6 +20,9 @@ public class ReadBook {
     private static Logger logger = LoggerFactory.getLogger(ReadBook.class);
 
     public static String readBook(String readUrl, UserContext user) throws TimeoutException{
+        return readBook(readUrl, user, false);
+    }
+    public static String readBook(String readUrl, UserContext user,boolean recipe) throws TimeoutException{
         try {
             Map<String, String> heads = new HashMap<>();
             heads.put("X-Forwarded-For", user.getIp());
@@ -33,10 +38,19 @@ public class ReadBook {
                 }
                 response = HttpUtils.get(readUrl, "identify=" + user.getId(), heads, 2, 20000);
             }
-            return response.get("Location").replace("?book=", "").replaceFirst("&.*", ".epub");
+            String contextUrl ;
+            if(recipe){
+                String host = response.get("Location").replaceFirst("mobile/\\?rq=.*", "");
+                 contextUrl = response.get("Location").replaceFirst(".*?rq=", "").replaceFirst("&.*", "");
+                // window.decodeURIComponent(window.atob(encode_data).replace("+", "%20"))
+                contextUrl = host + URLDecoder.decode(new String(Base64.getDecoder().decode(contextUrl), "utf-8").replace("+", "%20"),"UTF-8").replaceFirst("&.*","").replace("book=","");
+            }else {
+                contextUrl = response.get("Location").replace("?book=", "").replaceFirst("&.*", ".epub");
+            }
+            return contextUrl;
         } catch (Exception e) {
             if(e instanceof TimeoutException){
-                throw e;
+                throw (TimeoutException)e;
             }
             logger.error("读取失败！\n" + readUrl + "\n", e instanceof NullPointerException ? e.getMessage() : e);
         }

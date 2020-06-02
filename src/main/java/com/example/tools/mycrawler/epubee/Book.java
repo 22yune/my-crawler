@@ -15,6 +15,7 @@ public class Book {
     private Double levelNum;
     private String price;
     private String readUrl;
+    private String coverUrl;
     private String size;
     private String bid;
     private BookFormat format;
@@ -29,12 +30,14 @@ public class Book {
 
     }
 
-    public Book(String bid, String title, String size, BookFormat format, String readUrl, String downLoadUrl) {
+    public Book(String bid, String title, String size, BookFormat format, String readUrl, String coverUrl,String author, String downLoadUrl) {
         this.bid = bid;
         this.title = title;
         this.size = size;
         this.format = format;
         this.readUrl = readUrl;
+        this.coverUrl = coverUrl;
+        this.author = author;
         this.downLoadUrl = downLoadUrl;
     }
 
@@ -144,5 +147,13 @@ public class Book {
 
     public void setFormat(BookFormat format) {
         this.format = format;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 }

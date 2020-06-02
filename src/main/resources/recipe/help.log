@@ -1,0 +1,393 @@
+用法: ebook-convert.exe input_file output_file [options]
+
+转换不同格式的电子书。
+
+input_file 表示输入文件，output_file 表示输出文件。这两者作为命令行参数必须指定到最前面。
+
+输出的电子书格式可由 output_file 的扩展名得到。同时 output_file 也可以是一种以 .EXT 为扩展名的特殊格式。在这种情况下，输出文件的名称则使用输入文件的名称。注意：文件名不能以连字号作为开头。如果 output_file 不含扩展名，那么它将被视为一个目录并将会在该目录下生成 HTML 格式的“开放式电子书(OEB)”。这些文件会被视为正常文件而被输出插件所识别。
+
+在指定输入和输出文件后，你可以自定义特定的转换选项。根据输入和输出文件的类型不同可用的转换选项也不同。如需获取针对输入和输出文件的帮助，请在命令行中输入 -h。
+
+对于转换系统的完整文档请查阅
+https://manual.calibre-ebook.com/conversion.html
+
+每当向具有它们自己空间的ebook-convert.exe传递参数时，用引号括起这些参数。例如: "C:\some path with spaces"
+
+选项:
+  --version             显示程序版本号并退出
+
+  -h, --help            显示此帮助信息并退出
+
+  --list-recipes        列出内建的订阅清单名。你可以通过如下命令创建基于内建订阅清单的电子书： ebook-convert
+                        "Recipe Name.recipe" output.epub
+
+  --output-profile=OUTPUT_PROFILE
+                        设置输出配置文件。输出配置文件可以让转换系统针对指定的设备优化文档（例如通过根据设备屏幕大小缩放图片）。在某
+                        些情况下，可以用输出配置文件对特定设备优化输出，但几乎没有必要。可选项有：cybookg3,
+                        cybook_opus, default, generic_eink, generic_eink_hd,
+                        generic_eink_large, hanlinv3, hanlinv5, illiad, ipad,
+                        ipad3, irexdr1000, irexdr800, jetbook5, kindle,
+                        kindle_dx, kindle_fire, kindle_oasis, kindle_pw,
+                        kindle_pw3, kindle_voyage, kobo, msreader, mobipocket,
+                        nook, nook_color, nook_hd_plus, pocketbook_900,
+                        pocketbook_pro_912, galaxy, sony, sony300, sony900,
+                        sony-landscape, sonyt3, tablet
+
+
+  输入格式选项:
+    处理输入文件 recipe 的选项设置
+
+    --input-encoding=INPUT_ENCODING
+                        指定输入文件的编码格式。该设置将覆盖文档声明的编码格式。该设置对于未声明编码格式和错误编码格式的输入文件处理
+                        十分有用。
+
+    --username=USERNAME
+                        需登录才能访问内容的网站上对应的登录用户名。
+
+    --password=PASSWORD
+                        需登录才能访问内容的网站上对应的登录密码。
+
+    --test              
+
+    --dont-download-recipe
+                        不下载 calibre 服务器的最新订阅清单
+
+    --lrf               Optimize fetching for subsequent conversion to LRF.
+
+
+  输出格式选项:
+    处理输出 mobi 的选项设置
+
+    --toc-title=TOC_TITLE
+                        生成的行内目录标题。
+
+    --mobi-toc-at-start
+                        当为书籍添加目录时，添加在书的最前面而不是最后面。不建议启用本选项。
+
+    --share-not-sync    在 Kindle 阅读器中选择通过 Facebook
+                        或其他网站分享书籍的内容。警告：激活这个选项意味着你所阅读的书籍无法在多设备上自动同步最后阅读位置。
+                        这要怪亚马逊。
+
+    --pretty-print      如果开启本选项，输出插件将尽量生成可读的输出内容。对于某些输出插件本选项可能不起作用。
+
+    --mobi-keep-original-images
+                        calibre 默认将所有图像转换成 JPEG 格式放到输出的 MOBI
+                        文件中。这是为了尽量保证兼容，因为一些旧的 MOBI 查看器显示其他图像格式有问题。这一选项禁止
+                        calibre 这样做。如果你的文档包含大量 GIF/PNG 图像，转换成 JPEG
+                        会很大，这一选项会有用。
+
+    --extract-to=EXTRACT_TO
+                        解压MOBI文件的内容到指定文件夹。请注意该文件夹会先被清空。
+
+    --mobi-file-type=MOBI_FILE_TYPE
+                        默认情况下，calibre 生成包含旧 MOBI 6 格式的 MOBI
+                        文件。此格式与所有设备兼容。事实上，通过更改此设置，可以告诉 calibre 生成同时包含 MOBI 6
+                        和新 KF8 格式的 MOBI 文件或仅包含新 KF8 格式的 MOBI 文件。KF8 具有比 MOBI 6
+                        更多的特性，但只适用于较新的 Kindle。允许值：old, both, new
+
+    --dont-compress     不压缩文件内容。
+
+    --no-inline-toc     不要为书籍添加目录。如果书籍内容中本身就包括目录，则应启用本选项。
+
+    --personal-doc=PERSONAL_DOC
+                        使 MOBI 文件标记为个人文档的标签。该选项在转换时没有效果，仅用于将 MOBI
+                        文件发送到设备时。如果发送的文件有指定这个标签，在发送到 Kindle 时就会被标记为个人文档。
+
+    --mobi-ignore-margins
+                        忽略输入文档中的页边距。如果未选中，MOBI 输出插件会尝试转换输入文档中的页边距设置，否则就会忽略它们。
+
+    --prefer-author-sort
+                        如果“排序作者”字段值非空，在按作者排序时使用该字段的值排序。
+
+
+  界面外观:
+    输出的界面外观选项设置
+
+    --base-font-size=BASE_FONT_SIZE
+                        PTS中的基本字体大小。在生成的书籍中所有的字体尺寸将基于这个大小重新缩放。通过选择更大的尺寸，可以使输出中
+                        的字体更大，反之亦然。默认情况下，当值为0时，根据你选择的输出配置文件选择基本字体大小。
+
+    --disable-font-rescaling
+                        关闭字体缩放功能。
+
+    --font-size-mapping=FONT_SIZE_MAPPING
+                        将CSS字体名称映射为以pts为单位的字体大小. 例如12,12,14,16,18,20,22,24.
+                        这些设置是从xx-small到xx-large的对应映射, 最后的大小作为做对应的最大字体的映射.
+                        程序用这些尺寸进行只能文字字体缩放. 程序默认使用输出配置文件中指定的映射关系.
+
+    --embed-font-family=EMBED_FONT_FAMILY
+                        在书中嵌入指定字体。这指定了书中使用的“基础”字体。如果输入文件自己指定了字体，就有可能覆盖这个基础字体。你
+                        可以使用过滤样式信息的选项来去除输入文件的字体。注意，字体嵌入只在一些输出格式中有用，主要是
+                        EPUB、AZW3 和 DOCX。
+
+    --subset-embedded-fonts
+                        嵌入所有字体中用到的字。每种嵌入字体缩减到只包含文档中用到的字型。这能减小字体文件的体积。在嵌入某个特别大的
+                        ，包含大量未使用字的字体时有用(如中文)。
+
+    --embed-all-fonts   嵌入输入文档中引用到但未嵌入的字体。软件会在你的系统中查找这些字体，找到了就嵌入。字体嵌入只有当你的目的格式
+                        支持才有用，例如 EPUB、AZW3、DOCX 和 PDF。请保证你拥有在文档中嵌入字体的合适授权。
+
+    --line-height=LINE_HEIGHT
+                        pt
+                        行高。控制两行高度距离。仅仅适用于未定义行高的元素。大多数情况下，最小行高值更加有用。默认不进行行高操控。
+
+    --minimum-line-height=MINIMUM_LINE_HEIGHT
+                        最小行高，元素字体计算值的百分比。calibre
+                        将保证行中所有元素至少有此高度，无论输入文档如何定义。设为零即禁用。默认
+                        120%。首选项中也有此设定，请注意。否则可能出现双倍行高，达 240%。
+
+    --linearize-tables  一些布局不佳的源文件使用表格来设置页面布局可能会导致输出文件中的正文超过页面范围。本选项设定程序将内容从表格
+                        中提取出并以线型布局排列输出。
+
+    --extra-css=EXTRA_CSS
+                        CSS 样式表或原始 CSS 文件路径。该 CSS
+                        样式表将会被添加到源文件的样式规则中，它可以覆盖输入文件中已定义的相同样式。
+
+    --filter-css=FILTER_CSS
+                        以逗号分隔的 CSS 属性列表，将移除所有 CSS 样式规则。这是非常有用的，如果存在的一些样式信息，防止覆
+                        盖你的的设备上的样式信息。例如：字体系列，颜色，左边距，右边距
+
+    --transform-css-rules=TRANSFORM_CSS_RULES
+                        包含转换本书中CSS样式规则的文件路径。创建这样一个文件的最简单方法是在 calibre
+                        GUI中使用向导创建规则。在“界面外观->转换风格”的转换对话框部分访问它。
+                        一旦创建规则，就可以使用“导出”按钮将它们保存到文件中。
+
+    --expand-css        默认情况下，calibre 将使用各种CSS属性的简写形式，如边距、填充、边框等。此选项将使用完整的展开形式
+                        。注意，在生成EPUB文件时，由于Nook不能处理速记CSS，所以将输出配置文件设置为Nook配置文件中的一
+                        个，CSS总是被展开的。
+
+    --smarten-punctuation
+                        将普通引号、破折号和省略号转换为与它们对应的正确印刷体。有关详细信息, 请参阅
+                        https://daringfireball.net/projects/smartypants
+
+    --unsmarten-punctuation
+                        转换各种形式的引号、破折号和省略号到它们的标准形式。
+
+    --margin-top=MARGIN_TOP
+                        设定上边距，单位pts。默认为 5.0。如果设置为负值表示不使用页边距（保留使用原始文档的页边距）。提示：页
+                        面原始格式如PDF和docx有自己优先的边距设置。
+
+    --margin-left=MARGIN_LEFT
+                        设定左边距，单位pts。默认为 5.0。如果设置为负值表示不使用页边距（保留使用原始文档的页边距）。提示：页
+                        面原始格式如PDF和docx有自己优先的边距设置。
+
+    --margin-right=MARGIN_RIGHT
+                        设置右边距，单位pts，默认为 5.0。如果设置为负值表示不使用页边距（保留使用原始文档的页边距）。提示：页
+                        面原始格式如PDF和docx有自己优先的边距设置。
+
+    --margin-bottom=MARGIN_BOTTOM
+                        设定下边距，单位pts。默认为 5.0。如果设置为负值表示不使用页边距（保留使用原始文档的页边距）。提示：页
+                        面原始格式如PDF和docx有自己优先的边距设置。
+
+    --change-justification=CHANGE_JUSTIFICATION
+                        更改文本对齐方式。 使用值"left" 将转换资源中所有的文本为左对齐。 (如：未对齐)
+                        使用值"justify" 将转换资源中所有的未对齐的文本为对齐。使用值"original"(默认)则不更改源
+                        文件的对齐方式。请注意，仅部分输出格式支持对齐方式。
+
+    --insert-blank-line
+                        在章节之间插入空行. 如果源文件不使用章节标记 (<p> 或 <div> 标记) 本选项将不起作用。
+
+    --insert-blank-line-size=INSERT_BLANK_LINE_SIZE
+                        设置插入的空白行的高度（单位：em）。段落间的空行高度会是两倍于这个设置值。
+
+    --remove-paragraph-spacing
+                        移除段落之间的空行. 同时设置段落缩进为1.5em. 如果源文件不使用段落标记
+                        (<p>或者<div>标签)程序将不执行段落空行移除.
+
+    --remove-paragraph-spacing-indent-size=REMOVE_PARAGRAPH_SPACING_INDENT_SIZE
+                        当 calibre
+                        删除段落之间空行时，它会自动设置一个段落缩进，以确保轻松区分段落。此选项控制缩进的宽度(单位
+                        em)。如果你将此值设置为负数，则使用输入文件中自身定义的缩进，换句话说就是 calibre
+                        不进行缩进处理。
+
+    --asciiize          把 Unicode 字符转换为 ASCII 表达型式。请谨慎使用这个功能，因为它会把所有的 Unicode
+                        字符转换为 ASCII 字符。比如：它会把 "Михаил Горбачёв" 替换为 "Mikhail
+                        Gorbachiov"。并且当一个字符可能有多种表示方式时（比如中文和日文中一些共用的字符），
+                        calibre 会根据当前设置的界面语言类型决定如何去转换这类字符。
+
+    --keep-ligatures    保留输入文档中的“印刷连字”。所谓“印刷连字”是指对于ff, fi, fl之类的字母组合的一种特殊的展示方式
+                        。大部分阅读器在使用默认字体时无法支持“印刷连字”，所以常常无法正常显示。默认情况下，calibre
+                        会把“印刷连字”转换成对应的字母组合。本选项用于选择保留“印刷连字”。
+
+
+  启发式处理:
+    使用常见模式修改文档内容与结构。默认禁用。使用 --enable-heuristics 启用该功能。具体选项可以通过 --disable-*
+    参数禁用。
+
+    --enable-heuristics
+                        启用智能处理。在需要使用任何智能处理选项时都必须先启用这个选项。
+
+    --disable-markup-chapter-headings
+                        检测未格式化的章节标题和子标题。把它们从二级标题 (<h2>) 标签转换为三级标题 (<h3>)
+                        标签。这个选项不会创建目录，但可以与文档结构检测功能一起使用并创建目录。
+
+    --disable-italicize-common-cases
+                        寻找用于表示斜体的常见的词语或模式并把它转换为斜体。
+
+    --disable-fix-indents
+                        把多个空格构成的段落缩进转换为 CSS 控制的缩进。
+
+    --html-unwrap-factor=HTML_UNWRAP_FACTOR
+                        决定一行字符是否能成为一个新的段落的因子，有效值为 0 到 1 之间的小数，默认值是
+                        0.4，即略小于半行的长度。如果文档中只有很少的行需要消除段落内换行，应当减小这个设置值。
+
+    --disable-unwrap-lines
+                        决定某行是否为段落内的换行时，使用标点符号和其它格式做为线索。
+
+    --disable-delete-blank-paragraphs
+                        移除文档中每个段落间的空白段落。
+
+    --disable-format-scene-breaks
+                        对齐左对齐的小节分节符。把多个空白行表示小节分节符替换为水平横线。
+
+    --disable-dehyphenate
+                        分析文档中带有连字符的单词。这个文档本身被作为一个词典来确定连字符应该被保留还是被删除。
+
+    --disable-renumber-headings
+                        查找顺次出现的<h1>或<h2>标签。这些标签被重新编号以防止在章节头部中间断开。
+
+    --replace-scene-breaks=REPLACE_SCENE_BREAKS
+                        把小节分节符替换为指定的文本。在默认情况下，会使用输入文档中的文本。
+
+
+  查找并替换:
+    以用户预定义的模式修改文档内容和结构。
+
+    --sr1-search=SR1_SEARCH
+                        第一项要被替换的搜索模式（正则表达式）
+
+    --sr1-replace=SR1_REPLACE
+                        第一项搜索的替换文本。
+
+    --sr2-search=SR2_SEARCH
+                        第二项要被替换的搜索模式（正则表达式）<
+
+    --sr2-replace=SR2_REPLACE
+                        第二项搜索的替换文本。
+
+    --sr3-search=SR3_SEARCH
+                        第三项要被替换的搜索模式（正则表达式）<
+
+    --sr3-replace=SR3_REPLACE
+                        第三项搜索的替换文本。
+
+    --search-replace=SEARCH_REPLACE
+                        包含搜索和替换正则表达式的文件路径。该文件必须包含正则表达式交替行后面跟着替换模式（它可以是一个空行
+                        ）。正则表达式必须是Python正则表达式的语法并且文件必须是UTF-8编码。
+
+
+  结构检测:
+    设置自动检测文档结构。
+
+    --chapter-mark=CHAPTER_MARK
+                        设置标注章节的模式. "pagebreak"模式会在章节前插入下一页控制符.
+                        "rule"模式会在章节前插入空行. "none"模式不会在章节前插入控制.
+                        "both"模式会在章节前插入下一页控制符和空行.
+
+    --prefer-metadata-cover
+                        使用从源文件中检测到的封面文件.
+
+    --remove-first-image
+                        移除输入电子书的第一个图像。这是有用的如果输入文档有一个封面图像，但没有确定为封面图像。在这种情况下，如果你
+                        在 calibre 设置了封面，如果你不指定此选项，输出文件将最终有两个封面图片。
+
+    --disable-remove-fake-margins
+                        有些文档通过在每一页上指定左右页边距来指定页面边框大小。 calibre 会尝试检测并移除这些页边距。有时候
+                        calibre 会错误的移除不应该移除的页边距，在这种情况下，你可以禁用这项功能。
+
+    --start-reading-at=START_READING_AT
+                        用于检测文档中开始阅读位置的 XPath 表达式。某些电子书阅读器(以 Kindle
+                        为代表)使用此定位标识来打开书籍。请参阅 calibre 用户手册中的 XPath
+                        教程了解使用此功能的更多帮助。
+
+
+  目录:
+    设置自动生成目录。默认情况下若源文件有目录，它将被首选自动创建。
+
+    --level1-toc=LEVEL1_TOC
+                        指定应添加到目录级别1的所有标签的 XPath 表达式。如果指定此项，它会优先于其他自动检测形式。可查阅
+                        calibre 用户手册中的 XPath 向导。
+
+    --level2-toc=LEVEL2_TOC
+                        XPath 表达式指定所有标签应添加在二级目录表。每个条目加入到一级目录条目下。请参阅 calibre
+                        用户手册中 XPath 教程的例子。
+
+    --level3-toc=LEVEL3_TOC
+                        XPath 表达式指定所有标签应添加在三级目录表。每个条目加入到二级目录条目下。请参阅 calibre
+                        用户手册中 XPath 教程的例子。
+
+    --toc-threshold=TOC_THRESHOLD
+                        如果少于默认上限的章节数被检测到, 这些章节的链接将被添加到文件目录. 默认值; 6
+
+    --max-toc-links=MAX_TOC_LINKS
+                        输出文件目录中的最多链接项数量。设置为 0
+                        表示关闭。默认值：50。只有在检测到的章节数量小于该阈值时这些链接项才会被添加到目录中。
+
+    --no-chapters-in-toc
+                        不将自动检测到的章节添加到文件目录。
+
+    --toc-filter=TOC_FILTER
+                        从目录中移除匹配该证则表达式的链接项, 它们的子项也会被同时移除M.
+
+    --duplicate-links-in-toc
+                        在基于输入文档中的链接创建目录时，允许创建重复项。即在目录中允许出现名称重复的项，但它们指向文档中不同的位置
+                        。
+
+
+  元数据:
+    设定输出的元数据选项
+
+    --title=TITLE       设置标题。
+
+    --authors=AUTHORS   设置作者。多个作者之间请使用 & 符号分割。
+
+    --title-sort=TITLE_SORT
+                        用作排序的书籍标题序列数字。
+
+    --author-sort=AUTHOR_SORT
+                        用以进行按作者排序的关键字符串。
+
+    --cover=COVER       设置封面为指定文件或 URL
+
+    --comments=COMMENTS
+                        设置电子书描述。
+
+    --publisher=PUBLISHER
+                        设置电子书出版商。
+
+    --series=SERIES     设置书籍所属丛书。
+
+    --series-index=SERIES_INDEX
+                        设置书籍在丛书中的索引位置。
+
+    --rating=RATING     设置评分。评荐值为 1 到 5 之间的数字。
+
+    --isbn=ISBN         设置书籍的 ISBN。
+
+    --tags=TAGS         设置书籍的标签。多个标签之间请用逗号隔开。
+
+    --book-producer=BOOK_PRODUCER
+                        设置书籍制作人。
+
+    --language=LANGUAGE
+                        设置书籍语言。
+
+    --pubdate=PUBDATE   设置发布日期（假定在本地时区，除非明确指定时区）
+
+    --timestamp=TIMESTAMP
+                        设置书籍时间戳(已不再使用)
+
+    -m READ_METADATA_FROM_OPF, --read-metadata-from-opf=READ_METADATA_FROM_OPF, --from-opf=READ_METADATA_FROM_OPF
+                        从指定 OPF 文件中读元数据。读取的元数据将覆盖源文件中定义的其他元数据。
+
+
+  调试:
+    用于调试转换的选项
+
+    -v, --verbose       详细程度。指定多次来提高详细程度：指定两次是最详细，一次是中等，零次是最简略。
+
+    -d DEBUG_PIPELINE, --debug-pipeline=DEBUG_PIPELINE
+                        在转换过程的不同阶段分别保存输出到指定目录。如果你不确定在哪个阶段出了问题，这个选项非常实用。
+
+
+作者 Kovid Goyal <kovid@kovidgoyal.net>

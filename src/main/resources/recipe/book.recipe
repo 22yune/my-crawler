@@ -1,36 +1,36 @@
-#!/usr/bin/env python
-### -#*- coding:gbk -*-
+ï»¿#!/usr/bin/env python
+### -#*- coding:UTF-8 -*-
 
-from calibre.web.feeds.recipes import BasicNewsRecipe # ÒıÈë Recipe »ù´¡Àà
+from calibre.web.feeds.recipes import BasicNewsRecipe # å¼•å…¥ Recipe åŸºç¡€ç±»
 
-class Epubee(BasicNewsRecipe): # ¼Ì³Ğ BasicNewsRecipe ÀàµÄĞÂÀàÃû
-
-    #///////////////////
-    # ÉèÖÃµç×ÓÊéÔªÊı¾İ
-    #///////////////////
-    title = 'SpringÖĞÎÄÎÄµµ' # µç×ÓÊéÃû
-    #description = 'SpringÖĞÎÄÎÄµµ' # µç×ÓÊé¼ò½é
-    cover_url = '' # µç×ÓÊé·âÃæ
-    #masthead_url = '' # Ò³Í·Í¼Æ¬
-    __author__ = '' # ×÷Õß
-    language = 'zh' # ÓïÑÔ
-    #encoding = 'GBK' # ±àÂë
+class Epubee(BasicNewsRecipe): # ç»§æ‰¿ BasicNewsRecipe ç±»çš„æ–°ç±»å
 
     #///////////////////
-    # ×¥È¡Ò³ÃæÄÚÈİÉèÖÃ
+    # è®¾ç½®ç”µå­ä¹¦å…ƒæ•°æ®
     #///////////////////
-    #keep_only_tags = [{ 'class': 'example' }] # ½ö±£ÁôÖ¸¶¨Ñ¡ÔñÆ÷°üº¬µÄÄÚÈİ
-    #no_stylesheets = True # È¥³ı CSS ÑùÊ½
-    #remove_javascript = True # È¥³ı JavaScript ½Å±¾
-    auto_cleanup = True # ×Ô¶¯ÇåÀí HTML ´úÂë
-    delay = 5 # ×¥È¡Ò³Ãæ¼ä¸ôÃëÊı
-    max_articles_per_feed = 999 # ×¥È¡ÎÄÕÂÊıÁ¿
-    ignore_duplicate_articles = {'url'} # È¥ÖØ
+    title = 'Springä¸­æ–‡æ–‡æ¡£' # ç”µå­ä¹¦å
+    #description = 'Springä¸­æ–‡æ–‡æ¡£' # ç”µå­ä¹¦ç®€ä»‹
+    cover_url = '' # ç”µå­ä¹¦å°é¢
+    #masthead_url = '' # é¡µå¤´å›¾ç‰‡
+    __author__ = '' # ä½œè€…
+    language = 'zh' # è¯­è¨€
+    #encoding = 'UTF-8' # ç¼–ç 
+
+    #///////////////////
+    # æŠ“å–é¡µé¢å†…å®¹è®¾ç½®
+    #///////////////////
+    #keep_only_tags = [{ 'class': 'example' }] # ä»…ä¿ç•™æŒ‡å®šé€‰æ‹©å™¨åŒ…å«çš„å†…å®¹
+    #no_stylesheets = True # å»é™¤ CSS æ ·å¼
+    #remove_javascript = True # å»é™¤ JavaScript è„šæœ¬
+    auto_cleanup = True # è‡ªåŠ¨æ¸…ç† HTML ä»£ç 
+    delay = 5 # æŠ“å–é¡µé¢é—´éš”ç§’æ•°
+    max_articles_per_feed = 999 # æŠ“å–æ–‡ç« æ•°é‡
+    ignore_duplicate_articles = {'url'} # å»é‡
     remove_tags = [dict(name='div', class_='readertop'),
                    dict(name='div', class_='readermenu'),
                    dict(name='div', class_='readerbottom')]
     #///////////////////
-    # Ò³ÃæÄÚÈİ½âÎö·½·¨
+    # é¡µé¢å†…å®¹è§£ææ–¹æ³•
     # [
     #     {
     #         'feed title',
@@ -49,43 +49,43 @@ class Epubee(BasicNewsRecipe): # ¼Ì³Ğ BasicNewsRecipe ÀàµÄĞÂÀàÃû
     
     def parse_index(self):
         indexs = ["/books/mobile/3b/3b5c75efcc1537d5233740c6cb24dcd5/"]
-        ans = [] # ×é³É×îÖÕµÄÊı¾İ½á¹¹
+        ans = [] # ç»„æˆæœ€ç»ˆçš„æ•°æ®ç»“æ„
         for index in indexs :
             doc = self.parse_doc(index)
             ans = ans + doc
-        return ans # ·µ»Ø¿É¹© Calibre ×ª»»µÄÊı¾İ½á¹¹
+        return ans # è¿”å›å¯ä¾› Calibre è½¬æ¢çš„æ•°æ®ç»“æ„
     
     def parse_doc(self,index):
-        site = 'http://reader.epubee.com' # Ò³ÃæÁĞ±íÒ³
+        site = 'http://reader.epubee.com' # é¡µé¢åˆ—è¡¨é¡µ
         #index = '/docs/zh/spring-framework/5.1.3.RELEASE/reference'
-        soup = self.index_to_soup(site + index) # ½âÎöÁĞ±íÒ³·µ»Ø BeautifulSoup ¶ÔÏó
+        soup = self.index_to_soup(site + index) # è§£æåˆ—è¡¨é¡µè¿”å› BeautifulSoup å¯¹è±¡
         # print soup.find('title').__dict__
         #print '==='
         #print soup.find(name="description")
         #print '==='
         #self.description = soup.find(name="description")['content']
-        #links = soup.findAll("li",{"class":["level1","level2","level3","level4"]}) # »ñÈ¡ËùÓĞÎÄÕÂÁ´½Ó
+        #links = soup.findAll("li",{"class":["level1","level2","level3","level4"]}) # è·å–æ‰€æœ‰æ–‡ç« é“¾æ¥
         #print soup.text
         links = soup.findAll("div",{"class":["level_1"]})
         #print links[0].contents
-        ans = [] # ×é³É×îÖÕµÄÊı¾İ½á¹¹
-        for link in links: # Ñ­»·´¦ÀíËùÓĞÎÄÕÂÁ´½Ó
-            node = self.parseLeve("level_1",link)
+        ans = [] # ç»„æˆæœ€ç»ˆçš„æ•°æ®ç»“æ„
+        for link in links: # å¾ªç¯å¤„ç†æ‰€æœ‰æ–‡ç« é“¾æ¥
+            node = self.parseLeve("level_2",link)
             print node
-            articles = [] # ¶¨Òå¿ÕÎÄÕÂ×ÊÔ´Êı×é
+            articles = [] # å®šä¹‰ç©ºæ–‡ç« èµ„æºæ•°ç»„
             if len(node['childs']) > 0:
                 for child in node['childs']:
-                    cNode = self.parseLeve("level_2",child)
-                    articles.append({'title': cNode['title'] , 'url': cNode['url'], 'content' : ''})  # ×éºÏ±êÌâºÍÁ´½Ó # ÀÛ¼Óµ½Êı×éÖĞ
+                    cNode = self.parseLeve("level_3",child)
+                    articles.append({'title': cNode['title'] , 'url': cNode['url'], 'content' : ''})  # ç»„åˆæ ‡é¢˜å’Œé“¾æ¥ # ç´¯åŠ åˆ°æ•°ç»„ä¸­
                     for child2 in cNode['childs']:
-                        cNode2 = self.parseLeve("level_3",child2)
-                        articles.append({'title': cNode2['title'] , 'url': cNode2['url'], 'content' : ''})  # ×éºÏ±êÌâºÍÁ´½Ó # ÀÛ¼Óµ½Êı×éÖĞ
+                        cNode2 = self.parseLeve("level_4",child2)
+                        articles.append({'title': cNode2['title'] , 'url': cNode2['url'], 'content' : ''})  # ç»„åˆæ ‡é¢˜å’Œé“¾æ¥ # ç´¯åŠ åˆ°æ•°ç»„ä¸­
                 ans.append((node['title'], articles))
             else:
                 articles.append({'title': node['title'] , 'url':node['url'], 'content' : ''})
                 ans.append((node['title'], articles))
         print ans
-        return ans # ·µ»Ø¿É¹© Calibre ×ª»»µÄÊı¾İ½á¹¹
+        return ans # è¿”å›å¯ä¾› Calibre è½¬æ¢çš„æ•°æ®ç»“æ„
 
     def parseLeve(self,childLevel,soup):
         site = 'http://reader.epubee.com'

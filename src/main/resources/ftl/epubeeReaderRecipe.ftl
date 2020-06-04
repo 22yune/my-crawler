@@ -4,7 +4,7 @@
 from calibre.web.feeds.recipes import BasicNewsRecipe # 引入 Recipe 基础类
 
 class Epubee(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
-title + "   " + author + "   " + level + "   " + price + "   " + "   " + format + "   " + size  + "\n" + downLoadUrl
+
     #///////////////////
     # 设置电子书元数据
     #///////////////////

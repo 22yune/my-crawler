@@ -235,7 +235,7 @@ public class EpubeeCrawlerNew {
     }
 
     public static void main(String[] args) {
-        String bookName = "[武志红导读版] 我们内心的冲突";// [武志红导读版] 我们内心的冲突
+        String bookName = "走进高敏感人群的内心世界";// [武志红导读版] 我们内心的冲突
         List<Book> books = GetBook4Recipe.getDownloadUrl(new UserContext(), bookName, new HashSet<>() ,null,true);
         System.out.println(books);
         for (Book book : books){

@@ -4,12 +4,12 @@
 from calibre.web.feeds.recipes import BasicNewsRecipe # 引入 Recipe 基础类
 
 class Epubee(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
-
+title + "   " + author + "   " + level + "   " + price + "   " + "   " + format + "   " + size  + "\n" + downLoadUrl
     #///////////////////
     # 设置电子书元数据
     #///////////////////
     title = '${title}' # 电子书名
-    description = '在线阅读地址${downLoadUrl}' # 电子书简介
+    description = '在线阅读地址${downLoadUrl}\n ${title} \n ${author} \n ${size}' # 电子书简介
     cover_url = '${coverUrl!""}' # 电子书封面
     #masthead_url = '' # 页头图片
     __author__ = '${author!""}' # 作者

@@ -1,6 +1,5 @@
 package com.example.tools.mycrawler;
 
-import com.xquant.platform.component.etest.ETest;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

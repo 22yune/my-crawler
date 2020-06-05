@@ -1,4 +1,0 @@
-2019-07-02 20:25:19,905 [Method=, URI=, IP=] [INFO] [com.example.tools.mycrawler.MyCrawlerApplication] [org.springframework.boot.StartupInfoLogger:50]-Starting MyCrawlerApplication on B439 with PID 117444 (E:\demo\my-crawler\target\classes started by Administrator in E:\demo\my-crawler)
-2019-07-02 20:25:19,910 [Method=, URI=, IP=] [DEBUG] [com.example.tools.mycrawler.MyCrawlerApplication] [org.springframework.boot.StartupInfoLogger:53]-Running with Spring Boot v2.1.4.RELEASE, Spring v5.1.6.RELEASE
-2019-07-02 20:25:19,911 [Method=, URI=, IP=] [INFO] [com.example.tools.mycrawler.MyCrawlerApplication] [org.springframework.boot.SpringApplication:675]-No active profile set, falling back to default profiles: default
-2019-07-02 20:25:20,933 [Method=, URI=, IP=] [INFO] [com.example.tools.mycrawler.MyCrawlerApplication] [org.springframework.boot.StartupInfoLogger:59]-Started MyCrawlerApplication in 1.973 seconds (JVM running for 20.53)

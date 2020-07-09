@@ -28,7 +28,7 @@ public class AddBook {
         heads.put("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2");
         heads.put("Accept-Encoding", "gzip, deflate");
 
-        Map<String,String> map = HttpUtils.post("http://cn.epubee.com/app_books/addbook.asmx/online_addbook", null, null, heads, "{bookid:'" + book.getBid() + "',uid:" + user.getId() + ",act:'search'}",3);
+        Map<String,String> map = HttpUtils.post("http://cn.epubee.com/app_books/addbook.asmx/online_addbook", null, user.getCookie(), heads, "{bookid:'" + book.getBid() + "',uid:" + user.getId().getId() + ",act:'search'}",3);
         if(map.get("responseCode").equals("503")){
             throw new TimeoutException("");
         }

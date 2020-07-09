@@ -13,9 +13,11 @@ public class UserContext {
 
     private String ip;
 
-    private String id;
+    private ID id;
 
     private int count;
+
+    private String sessionId;
 
     public UserContext()  {
         init();
@@ -43,7 +45,8 @@ public class UserContext {
 
     private synchronized void next() throws TimeoutException {
         ip = IP.getNewIP();
-        id = ID.getNewId(ip);
+        sessionId = Session.getSession(ip);
+        id = ID.getNewId(ip,sessionId);
         count = 0;
     }
 
@@ -51,8 +54,12 @@ public class UserContext {
         return ip;
     }
 
-    public String getId() {
+    public ID getId() {
         return id;
+    }
+
+    public String getCookie(){//ASP.NET_SessionId=hz5wufhxcyqk4wfyntsxgixv;
+        return String.format("%s;identify=%s; eidentify=%s;identifyusername=; user_localid=%s; uemail=; kindle_email=; isVip=%d", sessionId,getId().getId(), getId().getEid(),getId().getName(),getId().getIsVip());
     }
 
     @Override

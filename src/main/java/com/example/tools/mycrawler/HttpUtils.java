@@ -17,7 +17,9 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 public class HttpUtils {
     private static Logger logger = LoggerFactory.getLogger(HttpUtils.class);
@@ -41,7 +43,9 @@ public class HttpUtils {
             URL realUrl = new URL(url); // 打开和URL之间的连接
             URLConnection connection = realUrl.openConnection(); // 设置通用的请求属性
             ((HttpURLConnection) connection).setInstanceFollowRedirects(false);
-            connection.setRequestProperty("Accept", "*/*");
+            if(!heads.containsKey("Accept")){
+                connection.setRequestProperty("Accept", "*/*");
+            }
             connection.setRequestProperty("connection", "Keep-Alive");
             connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:66.0) Gecko/20100101 Firefox/66.0");
 
@@ -55,15 +59,29 @@ public class HttpUtils {
             }
             // 建立实际的连接
             connection.connect(); // 定义 BufferedReader输入流来读取URL的响应
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String encode = connection.getHeaderField("Content-Encoding");
+            String charset = connection.getHeaderField("Content-Type");
+            InputStream inpt = connection.getInputStream();
+            if("gzip".equalsIgnoreCase(encode)){
+                inpt = new GZIPInputStream(inpt);
+            }
+            in = new BufferedReader(new InputStreamReader(inpt,"utf-8"));
             StringBuffer sb = new StringBuffer();
             String line;
             while ((line = in.readLine()) != null) {
                 sb.append(line + "\n"); //System.out.println("内容：" + line);
             }
-            String c = connection.getHeaderField("Set-Cookie");
+            List<String> cc = connection.getHeaderFields().get("Set-Cookie");
+            StringBuilder c = new StringBuilder();
+            if(cc != null){
+                for(String i : cc){
+                    c.append(i);
+                    c.append(";;");
+                }
+            }
+         //   String c = connection.getHeaderField("Set-Cookie");
             map.put("Location", connection.getHeaderField("Location"));
-            map.put("cookie", c);
+            map.put("cookie", c.toString());
             map.put("body", sb.toString());
             map.put("responseCode", ((HttpURLConnection) connection).getResponseCode() + "");
             return map;

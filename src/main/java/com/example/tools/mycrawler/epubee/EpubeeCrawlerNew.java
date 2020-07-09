@@ -235,11 +235,29 @@ public class EpubeeCrawlerNew {
     }
 
     public static void main(String[] args) {
-        String bookName = "Android Studio应用开发实战详解（异步图书）";// [武志红导读版] 我们内心的冲突
+        String bookName = "深入理解Java虚拟机：JVM高级特性与最佳实践（第3版）";
         List<Book> books = GetBook4Recipe.getDownloadUrl(new UserContext(), bookName, new HashSet<>() ,null,true);
         System.out.println(books);
-        for (Book book : books){
-            ReadDownload.downLoad(book,"E:\\recipes\\epubee");
+        Scanner scanner = new Scanner(System.in);
+
+        while (true){
+            String s = scanner.next();
+            System.out.println("===" + s);
+            if(s.equals("e")){
+                break;
+            }else if(s.equals("a")){
+                for (Book book : books){
+                    ReadDownload.downLoad(book,"E:\\LEVELB\\sideProject\\recipes\\epubee");
+                }
+                break;
+            }else {
+                try{
+                    ReadDownload.downLoad(books.get(Integer.valueOf(s)),"E:\\LEVELB\\sideProject\\recipes\\epubee");
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
+
     }
 }

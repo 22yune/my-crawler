@@ -30,13 +30,13 @@ public class ReadBook {
             heads.put("Accept-Encoding", "gzip, deflate");
             heads.put("Upgrade-Insecure-Requests", "1");
 
-            Map<String, String> response = HttpUtils.get(readUrl, "identify=" + user.getId(), heads);
+            Map<String, String> response = HttpUtils.get(readUrl, user.getCookie(), heads);
 
             if (response == null || (!response.get("responseCode").equals("302"))) {
                 if (response.get("responseCode").equals("200")) {
                     throw new TimeoutException("");
                 }
-                response = HttpUtils.get(readUrl, "identify=" + user.getId(), heads, 2, 20000);
+                response = HttpUtils.get(readUrl, user.getCookie(), heads, 2, 20000);
             }
             String contextUrl ;
             if(recipe){

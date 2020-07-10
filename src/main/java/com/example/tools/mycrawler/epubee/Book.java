@@ -23,7 +23,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return title + "   " + author + "   " + level + "   " + price + "   " + "   " + format + "   " + size  + "\n" + downLoadUrl;
+        return title + "   " + author + "   " + level + "   " + price + "   " + "   " + format + "   " + size  + "\n" + downLoadUrl + "\n" + coverUrl;
     }
 
     public Book() {

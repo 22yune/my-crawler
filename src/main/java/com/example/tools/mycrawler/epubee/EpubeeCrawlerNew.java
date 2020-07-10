@@ -235,7 +235,7 @@ public class EpubeeCrawlerNew {
     }
 
     public static void main(String[] args) {
-        String bookName = "深入理解Java虚拟机：JVM高级特性与最佳实践（第3版）";
+        String bookName = "计算机程序的构造和解释 （原书第2版）";
         List<Book> books = GetBook4Recipe.getDownloadUrl(new UserContext(), bookName, new HashSet<>() ,null,true);
         System.out.println(books);
         Scanner scanner = new Scanner(System.in);

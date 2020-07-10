@@ -100,6 +100,7 @@ public class GetBook4Recipe {
                             book.setReadUrl(myBook.getReadUrl());
                             book.setDownLoadUrl(location);
                             book.setSize(myBook.getSize());
+                            book.setCoverUrl(myBook.getCoverUrl());
                             bookNames.add(book.getTitle());
                             result.add(book);
                             success = true;

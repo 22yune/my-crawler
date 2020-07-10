@@ -73,19 +73,22 @@ class Epubee(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
             node = self.parseLeve("level_2",link)
             print node
             articles = [] # 定义空文章资源数组
-            if len(node['childs']) > 0:
-                for child in node['childs']:
-                    cNode = self.parseLeve("level_3",child)
-                    articles.append({'title': cNode['title'] , 'url': cNode['url'], 'content' : ''})  # 组合标题和链接 # 累加到数组中
-                    for child2 in cNode['childs']:
-                        cNode2 = self.parseLeve("level_4",child2)
-                        articles.append({'title': cNode2['title'] , 'url': cNode2['url'], 'content' : ''})  # 组合标题和链接 # 累加到数组中
-                ans.append((node['title'], articles))
-            else:
-                articles.append({'title': node['title'] , 'url':node['url'], 'content' : ''})
-                ans.append((node['title'], articles))
+            self.append(node,articles,3)
+            ans.append((node['title'], articles))
         print ans
         return ans # 返回可供 Calibre 转换的数据结构
+
+    def append(self, node, articles, cchildLevel):
+        print '======'
+        print node['title']
+        print cchildLevel
+        print '======'
+        articles.append({'title': node['title'] , 'url':node['url'], 'content' : ''})
+
+        if len(node['childs']) > 0:
+            for child in node['childs']:
+                cNode = self.parseLeve("level_" + str(cchildLevel), child)
+                self.append(cNode, articles, cchildLevel + 1)
 
     def parseLeve(self,childLevel,soup):
         site = 'http://reader.epubee.com'

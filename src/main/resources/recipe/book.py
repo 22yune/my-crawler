@@ -8,11 +8,11 @@ class Epubee(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
     #///////////////////
     # 设置电子书元数据
     #///////////////////
-    title = '${title}' # 电子书名
-    description = '在线阅读地址${downLoadUrl}\n ${title} \n ${author} \n ${size}' # 电子书简介
-    cover_url = '${coverUrl!""}' # 电子书封面
+    title = 'Spring中文文档' # 电子书名
+    #description = 'Spring中文文档' # 电子书简介
+    cover_url = '' # 电子书封面
     #masthead_url = '' # 页头图片
-    __author__ = '${author!""}' # 作者
+    __author__ = '' # 作者
     language = 'zh' # 语言
     #encoding = 'UTF-8' # 编码
 
@@ -46,20 +46,19 @@ class Epubee(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
     #     }
     # ]
     #///////////////////
-
+    
     def parse_index(self):
-        indexs = ["${downLoadUrl}"]
+        indexs = ["/books/mobile/3b/3b5c75efcc1537d5233740c6cb24dcd5/"]
         ans = [] # 组成最终的数据结构
         for index in indexs :
             doc = self.parse_doc(index)
             ans = ans + doc
         return ans # 返回可供 Calibre 转换的数据结构
-
+    
     def parse_doc(self,index):
         site = 'http://reader.epubee.com' # 页面列表页
         #index = '/docs/zh/spring-framework/5.1.3.RELEASE/reference'
-        print index
-        soup = self.index_to_soup(index) # 解析列表页返回 BeautifulSoup 对象
+        soup = self.index_to_soup(site + index) # 解析列表页返回 BeautifulSoup 对象
         # print soup.find('title').__dict__
         #print '==='
         #print soup.find(name="description")
@@ -80,15 +79,10 @@ class Epubee(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
         return ans # 返回可供 Calibre 转换的数据结构
 
     def append(self, node, articles, cchildLevel):
-        print '======'
-        print node['title']
-        print cchildLevel
-        print '======'
         articles.append({'title': node['title'] , 'url':node['url'], 'content' : ''})
-
         if len(node['childs']) > 0:
             for child in node['childs']:
-                cNode = self.parseLeve("level_" + str(cchildLevel), child)
+                cNode = self.parseLeve("level_" + (cchildLevel), child)
                 self.append(cNode, articles, cchildLevel + 1)
 
     def parseLeve(self,childLevel,soup):

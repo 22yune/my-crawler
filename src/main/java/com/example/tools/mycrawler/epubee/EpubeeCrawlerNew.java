@@ -241,6 +241,7 @@ public class EpubeeCrawlerNew {
         Scanner scanner = new Scanner(System.in);
 
         while (true){
+            System.out.println("input===" );
             String s = scanner.next();
             System.out.println("===" + s);
             if(s.equals("e")){

@@ -36,24 +36,8 @@ public class TianLangCrawlerByJsoup {
 
     public static void main(String[] args){
 
-        List<String> a = Arrays.asList("https://www.tianlangbooks.com/8638.html",
-                "https://www.tianlangbooks.com/8920.html",
-                "https://www.tianlangbooks.com/8987.html",
-                "https://www.tianlangbooks.com/9410.html",
-                "https://www.tianlangbooks.com/8803.html",
-                "https://www.tianlangbooks.com/8827.html",
-                "https://www.tianlangbooks.com/9484.html",
-                "https://www.tianlangbooks.com/8674.html",
-                "https://www.tianlangbooks.com/8703.html"
-        );
-        a.forEach( e -> books.add(getBookInfo(e)));
-        String d = DateUtils.formatDate(new Date());
-        save("bookInfo/"+ d, books.stream().map(e -> {
-            String s = JSON.toJSONString(e,false);
-            return s;
-        }).collect(Collectors.toList()));
 
-        //crawlerAll();
+        crawlerAll();
     }
 
     private static void crawlerAll() {
@@ -66,10 +50,7 @@ public class TianLangCrawlerByJsoup {
         CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
         future.join();
         String d = DateUtils.formatDate(new Date());
-        save("bookInfo/"+ d, books.stream().map(e -> {
-            String s = JSON.toJSONString(e,false);
-            return s;
-        }).collect(Collectors.toList()));
+        save("bookInfo/tianlang"+ d, books.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()));
         save("bookInfo/"+ d + "error", errorUrls);
         save("bookInfo/"+ d + "zero", sizeZero);
     }

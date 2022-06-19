@@ -43,7 +43,7 @@ public class HttpUtils {
             URL realUrl = new URL(url); // 打开和URL之间的连接
             URLConnection connection = realUrl.openConnection(); // 设置通用的请求属性
             ((HttpURLConnection) connection).setInstanceFollowRedirects(false);
-            if(!heads.containsKey("Accept")){
+            if(heads == null || !heads.containsKey("Accept")){
                 connection.setRequestProperty("Accept", "*/*");
             }
             connection.setRequestProperty("connection", "Keep-Alive");

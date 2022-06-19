@@ -1,0 +1,7 @@
+curl --location --request GET 'https://webapi.ctfile.com/getdir.php?path=d&d=18000254-49360899-bb4ee9&passcode=908047'
+
+curl --location --request GET 'https://webapi.ctfile.com/api.php?item=file_act&action=file_list&folder_id=49360899&uid=18000254&mb=0&display_subfolders=1&t=1655562717&k=95db29ec99bdcce754ca24736aa346bd'
+
+curl --location --request GET 'https://webapi.ctfile.com/getfile.php?path=f&f=tempdir-AmIEOwY0AGhQYgZjATVSNAEuDDhXbgE4CmZVOwNkBDAEYwQ1V3gKY1puVjQDN1w7VWECMFJqX29YMw'
+
+curl --location --request GET 'https://webapi.ctfile.com/get_file_url.php?uid=18000254&fid=598692866&file_chk=1a9104bd3131a9946d19c7e5823fe0b3' \

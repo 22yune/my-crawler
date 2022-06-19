@@ -1,6 +1,10 @@
 package com.example.tools.mycrawler.tianlang;
 
 import com.alibaba.fastjson.JSON;
+import com.example.tools.mycrawler.HttpUtils;
+import com.example.tools.mycrawler.ctfile.CtfileUtil;
+import com.example.tools.mycrawler.epubee.IP;
+import com.example.tools.mycrawler.lanzou.LanzouUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +25,8 @@ import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
 
 /**
  * @author yi_jing
@@ -53,6 +59,19 @@ public class TianLangCrawlerByJsoup {
         save("bookInfo/tianlang"+ d, books.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()));
         save("bookInfo/"+ d + "error", errorUrls);
         save("bookInfo/"+ d + "zero", sizeZero);
+    }
+    public static void downloadBook(TianLangCrawlerByJsoup.Book booku){
+        if(booku.getUrl2() != null){
+
+        }else {
+            CtfileUtil.Book book =  doRetry(3,() -> CtfileUtil.getBook(booku.getUrl1(),booku.getPwd1()));
+
+        }
+    }
+
+    private static void down(int i, String name, String url){
+        log.info("download {}   {}", i, name);
+        HttpUtils.download(url, "", IP.getNewIP(), name, "1", "/Users/hunliji/books/tianlang-lanzou");
     }
 
     public static List<Book> crawler(String url){
@@ -125,25 +144,6 @@ public class TianLangCrawlerByJsoup {
             links.forEach(visit);
             return null;
         });
-    }
-
-    public static void doRetry( int restry, Callable runnable){
-        if (restry <= 0) {
-            return;
-        }
-        try {
-            runnable.call();
-        } catch (Exception e) {
-            try {
-                Thread.sleep(new Random().nextInt(1000));
-            } catch (InterruptedException ignored) {
-            }
-            if (restry <= 1) {
-                log.error("=====", e);
-                return;
-            }
-            doRetry( restry - 1, runnable);
-        }
     }
 
     private static void save(String path,List<String> vs) {

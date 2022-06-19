@@ -12,10 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,6 +159,10 @@ public class HttpUtils {
 
     public static Map<String, String> download(String url, String cookie, String ip, String filename,
                                                final String totalSize, String dir) {
+        return download(url, cookie, ip, filename, totalSize, dir,null);
+    }
+    public static Map<String, String> download(String url, String cookie, String ip, String filename,
+        final String totalSize, String dir, Map<String, String> heads) {
         InputStream in = null;
         FileOutputStream fos = null;
         Map<String, String> map = new HashMap<String, String>();
@@ -178,6 +179,9 @@ public class HttpUtils {
             }
             if (ip != null) {
                 connection.setRequestProperty("X-Forwarded-For", ip);
+            }
+            if (heads != null) {
+                heads.forEach((k, v) -> connection.setRequestProperty(k, v));
             }
             // 建立实际的连接
             connection.connect();
@@ -259,7 +263,50 @@ public class HttpUtils {
         return post(strURL, params, cookie, null, null,1).get("body");
     }
 
+
+    /**
+     * 将请求字段转化成byte数组
+     *
+     * @param params
+     * @return
+     */
+    private static byte[] getParamsByte(Map<String, String> params) {
+        byte[] result = null;
+        StringBuilder postData = new StringBuilder();
+        for (Map.Entry<String, String> param : params.entrySet()) {
+            if (postData.length() != 0) {
+                postData.append('&');
+            }
+            postData.append(encodeParam(param.getKey()));
+            postData.append('=');
+            postData.append(encodeParam(param.getValue()));
+        }
+        try {
+            result = postData.toString().getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    /**
+     * 对键和值进行url编码
+     *
+     * @param data
+     * @return
+     */
+    private static String encodeParam(String data) {
+        String result = "";
+        try {
+            result = URLEncoder.encode(data, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
     public static Map<String,String> post(String strURL, Map<String, String> params, String cookie, Map<String, String> heads, String body, int retry) {
+        return post(strURL, params, null, cookie, heads, body, retry);
+    }
+    public static Map<String,String> post(String strURL, Map<String, String> params, Map<String, String> formParams, String cookie, Map<String, String> heads, String body, int retry) {
         try {
             URL url = new URL(strURL);// 创建连接
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -278,7 +325,7 @@ public class HttpUtils {
             if (heads != null) {
                 heads.forEach((k, v) -> connection.setRequestProperty(k, v));
             }
-            if (!heads.containsKey("Content-Type")) {
+            if (heads == null || !heads.containsKey("Content-Type")) {
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
             }
             connection.connect();
@@ -296,6 +343,10 @@ public class HttpUtils {
             if (body != null) {
                 logger.info("请求主体：" + body);
                 out.write(body);
+            }
+            if(formParams != null){
+                logger.info("form参数：" + formParams);
+                connection.getOutputStream().write(getParamsByte(formParams));
             }
             out.flush();
             out.close();

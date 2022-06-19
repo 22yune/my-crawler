@@ -1,0 +1,7 @@
+curl --location --request GET 'https://tianlangbooks.lanzouf.com/ig1uZ06klj8f'
+
+curl --location --request POST 'https://tianlangbooks.lanzouf.com/ajaxm.php' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'action=downprocess' \
+--data-urlencode 'sign=AmQAPg08ADFWX1doADACPlA9AjRWOwEwCz4BMlA8BjIDJVFyWjoPalU1UDMCYwUyAWlXYVE3CjBVZA_c_c' \
+--data-urlencode 'p=tlsw'

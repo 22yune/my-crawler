@@ -41,15 +41,15 @@ public class CtfileUtil {
     public static void main(String[] args) throws IOException {
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
         List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-19T00:54:12Z"), Charset.defaultCharset());
-        for (int i = 26; i < bl.size(); i++ ){
+        for (int i = 27; i < bl.size(); i++ ){
             TianLangCrawlerByJsoup.Book booku = JSON.parseObject(bl.get(i), TianLangCrawlerByJsoup.Book.class);
-            Book book = doRetry(3,() -> getBook(booku.getUrl1(),booku.getPwd1()));
+            Book book = getBook(booku.getUrl1(),booku.getPwd1());
             books.add(book);
             if(book == null || book.getName() == null || CollectionUtils.isEmpty(book.getUrls())){
                 errorUrls.add(booku.getUrl1());
             }else {
                 int finalI = i;
-                down(finalI,book);
+                //down(finalI,book);
                 futureList.add(CompletableFuture.runAsync(() -> down(finalI,book),executorService));
             }
         }
@@ -76,23 +76,26 @@ public class CtfileUtil {
     }
 
     public static Book getBook(String url,String pwd){
-        JSONObject file = getFileInfo(url,pwd);
-        String folderName = file.getString("folder_name");
-        String dirUrl = file.getString("url");
-        JSONArray dir = getDir(dirUrl);
-        List<BookUrl> urls = dir.stream().map( e -> {
-            Elements f = Jsoup.parse(((JSONArray)e).getString(1)).select(" a");
-            String tempDir = f.attr("href");
-            String name = f.text();
-            String urld = getFilechk(tempDir);
-            return BookUrl.builder().type(name.substring(name.lastIndexOf(".") + 1)).url(urld).build();
-        }).sorted(Comparator.comparing(a -> Type.index(a.getType()))).collect(Collectors.toList());
-        return Book.builder().name(folderName).urls(urls).build();
+        return doRetry(3,() -> {
+                JSONObject file = getFileInfo(url,pwd);
+                String folderName = file.getString("folder_name");
+                String dirUrl = file.getString("url");
+                JSONArray dir = getDir(dirUrl);
+                List<BookUrl> urls = dir.stream().map( e -> {
+                    Elements f = Jsoup.parse(((JSONArray)e).getString(1)).select(" a");
+                    String tempDir = f.attr("href");
+                    String name = f.text();
+                    String urld = getFilechk(tempDir);
+                    return BookUrl.builder().type(name.substring(name.lastIndexOf(".") + 1)).url(urld).build();
+                }).sorted(Comparator.comparing(a -> Type.index(a.getType()))).collect(Collectors.toList());
+                return Book.builder().name(folderName).urls(urls).build();
+            });
     }
 
     public static JSONObject getFileInfo(String url, String pwd){
        // String u = "https://webapi.ctfile.com/getdir.php?path=d&d=18000254-49360899-bb4ee9&passcode=908047";
-        url = url.substring(0,url.lastIndexOf("?")).replace("https://url54.ctfile.com/d/","https://webapi.ctfile.com/getdir.php?path=d&d=");
+        url = url.trim();
+        url = url.substring(0,url.lastIndexOf("?") > 0 ? url.lastIndexOf("?") : url.length() ).replace("https://url54.ctfile.com/d/","https://webapi.ctfile.com/getdir.php?path=d&d=");
         String rurl = url + "&passcode=" + pwd;
         return doRetry(3,() -> {
             Document listPage = Jsoup.connect(rurl).get();

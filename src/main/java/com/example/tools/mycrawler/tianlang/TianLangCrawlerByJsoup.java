@@ -1,7 +1,6 @@
 package com.example.tools.mycrawler.tianlang;
 
 import com.alibaba.fastjson.JSON;
-import com.example.tools.mycrawler.MeBookCrawlerByJsoup;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,17 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.utils.DateUtils;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.DataUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -33,56 +28,107 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class TianLangCrawlerByJsoup {
-    private static ExecutorService executorService = Executors.newFixedThreadPool(10);
+    private static ExecutorService executorService = Executors.newFixedThreadPool(50);
 
     private static List<Book> books = new ArrayList<>();
+    private static List<String> errorUrls = new ArrayList<>();
+    private static List<String> sizeZero = new ArrayList<>();
 
     public static void main(String[] args){
+
+        List<String> a = Arrays.asList("https://www.tianlangbooks.com/8638.html",
+                "https://www.tianlangbooks.com/8920.html",
+                "https://www.tianlangbooks.com/8987.html",
+                "https://www.tianlangbooks.com/9410.html",
+                "https://www.tianlangbooks.com/8803.html",
+                "https://www.tianlangbooks.com/8827.html",
+                "https://www.tianlangbooks.com/9484.html",
+                "https://www.tianlangbooks.com/8674.html",
+                "https://www.tianlangbooks.com/8703.html"
+        );
+        a.forEach( e -> books.add(getBookInfo(e)));
+        String d = DateUtils.formatDate(new Date());
+        save("bookInfo/"+ d, books.stream().map(e -> {
+            String s = JSON.toJSONString(e,false);
+            return s;
+        }).collect(Collectors.toList()));
+
+        //crawlerAll();
+    }
+
+    private static void crawlerAll() {
         String root = "https://www.tianlangbooks.com/articles/page/";
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
         for (int i = 1; i <= 387; i++){
             String url = root+ i + "/";
-            futureList.add(CompletableFuture.runAsync(() -> crawler(url),executorService));
+            futureList.add(CompletableFuture.runAsync(() -> books.addAll(crawler(url)),executorService));
         }
         CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
         future.join();
-        save("bookInfo/"+ DateUtils.formatDate(new Date()));
+        String d = DateUtils.formatDate(new Date());
+        save("bookInfo/"+ d, books.stream().map(e -> {
+            String s = JSON.toJSONString(e,false);
+            return s;
+        }).collect(Collectors.toList()));
+        save("bookInfo/"+ d + "error", errorUrls);
+        save("bookInfo/"+ d + "zero", sizeZero);
     }
 
-
-    public static void crawler(String url){
+    public static List<Book> crawler(String url){
         log.info("开始 {}" ,url);
-        visitPage(url,"#main-wrap-left > div.bloglist-container.clr > article > div.home-blog-entry-text.clr > h3 > a",1, element -> {
+        List<Book> list = new ArrayList<>();
+        visitPage(url,"#main-wrap-left > div.bloglist-container.clr > article > div.home-blog-entry-text.clr > h3 > a",3, element -> {
             String bookUrl = element.attr("href");
-            Book.BookBuilder book = Book.builder();
-            step2(bookUrl,"#main-wrap-left > div.content > div.single-text > div.secret-password-content",1, element1 -> {
-                Function<Element,String> exa = element2 -> {
-                    String a = element2.dataNodes().get(0).toString();
-                    int b = a.indexOf("location.href = ");
-                    int c = a.indexOf("}");
-                    return a.substring(b,c).replace("location.href = ","").trim().replace("\"","").replace(";","");
-                };
-
-                element1.select("> p > a").forEach( e -> {
-                    String name = e.text();
-                    String type = e.parent().select("span").get(0).text();
-                    String rurl = e.attr("href");
-                    String pwd = e.parent().select("span").get(1).text().replace("密码：","");
-                    if(type.contains("城通网盘")){
-                        book.name(name).url1(rurl).pwd1(pwd);
-                        visitPage(rurl,"body > script",1, e2 -> book.url1(exa.apply(e2)));
-                    }else {
-                        book.name(name).url2(rurl).pwd2(pwd);
-                        visitPage(rurl,"body > script",1, e2 -> book.url2(exa.apply(e2)));
-                    }
-                });
-            });
-            books.add(book.build());
+            Book book = getBookInfo(bookUrl);
+            list.add(book);
         });
-        log.info("结束 {}      {}" , url, books.size() );
+        log.info("结束 {}      {}" , url, list.size());
+        if (list.size() == 0){
+            sizeZero.add(url);
+        }
+        return list;
     }
 
-    public static void step2(String url, String select, int restry, Consumer<Element> visit) {
+    private static Book getBookInfo(String bookUrl) {
+        Book.BookBuilder book = Book.builder();
+        step2(bookUrl,"#main-wrap-left > div.content > div.single-text > div.secret-password-content",3, element1 -> {
+            Function<Element,String> exa = element2 -> {
+                String a = element2.dataNodes().get(0).toString();
+                int b = a.indexOf("location.href = ");
+                int c = a.indexOf("}");
+                return a.substring(b,c).replace("location.href = ","").trim().replace("\"","").replace(";","");
+            };
+            Elements elements = element1.select("> p > a");
+            if(elements.size() == 0){
+                elements = element1.parent().select("> p > a");
+            }
+            elements.forEach( e -> {
+                String name = e.text();
+                String type = e.parent().text();
+                String pwd = null;
+                String rurl = e.attr("href");
+                if(e.parent().select("span").size() > 0){
+                    type = e.parent().select("span").get(0).text();
+                    if(e.parent().select("span").size() > 1){
+                        pwd = e.parent().select("span").get(1).text().replace("密码：","");
+                    }
+                }
+                if(type.contains("城通网盘")){
+                    book.name(name).url1(rurl).pwd1(pwd);
+                    visitPage(rurl,"body > script",1, e2 -> book.url1(exa.apply(e2)));
+                }else {
+                    book.name(name).url2(rurl).pwd2(pwd);
+                    visitPage(rurl,"body > script",1, e2 -> book.url2(exa.apply(e2)));
+                }
+            });
+        });
+        if(book.name == null){
+            errorUrls.add(bookUrl);
+        }
+        return book.build();
+    }
+
+    private static void step2(String url, String select, int restry, Consumer<Element> visit) {
         doRetry(restry,() -> {
             Document listPage = Jsoup.connect(url).data("secret_key","359198","Submit","提交").header("Content-Type","application/x-www-form-urlencoded").post();
             Elements links = listPage.select(select);
@@ -109,23 +155,20 @@ public class TianLangCrawlerByJsoup {
         } catch (Exception e) {
             try {
                 Thread.sleep(new Random().nextInt(1000));
-            } catch (InterruptedException e1) {
+            } catch (InterruptedException ignored) {
             }
-            if (restry < 1) {
-                e.printStackTrace();
+            if (restry <= 1) {
+                log.error("=====", e);
                 return;
             }
             doRetry( restry - 1, runnable);
         }
     }
 
-    private static void save(String path) {
+    private static void save(String path,List<String> vs) {
         try {
             log.info("文件保存" + path );
-            FileUtils.writeLines(new File(path),books.stream().map(e -> {
-                String s = JSON.toJSONString(e,false);
-                return s;
-            }).collect(Collectors.toList()));
+            FileUtils.writeLines(new File(path), vs);
         } catch (IOException e) {
             log.error("文件保存异常" + path, e);
         }

@@ -102,8 +102,10 @@ public class TianLangCrawlerByJsoup {
                 downLoadederror.add(booku);
             }
         }
+        taskQueue.add(Book.builder().build());
         CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
         future.join();
+        executorService.shutdown();
 
         String d = DateUtils.formatDate(new Date());
         save("bookInfo/tianlangdowned", downLoaded.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()),true);

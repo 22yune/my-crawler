@@ -80,6 +80,7 @@ public class LanzouUtil {
         String dir = "/Users/hunliji/books/tianlang-lanzou";
         File file = new File(dir,name);
         if(file.exists()){
+            log.info("已下载.{}",name);
             return true;
         }
         Map<String,String> map = HttpUtils.download(url, "down_ip=1", IP.getNewIP(), name, "1", "/Users/hunliji/books/tianlang-lanzou",heads);

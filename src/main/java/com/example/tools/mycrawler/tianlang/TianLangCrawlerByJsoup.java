@@ -75,7 +75,7 @@ public class TianLangCrawlerByJsoup {
             downloadNames.add(booku.getName());
         }
         List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-19T00:54:12Z"), Charset.defaultCharset());
-        for (int i = 26; i < bl.size(); i++ ){
+        for (int i = 28; i < bl.size(); i++ ){
             if(StringUtils.isEmpty(bl.get(i))){
                 continue;
             }
@@ -83,6 +83,10 @@ public class TianLangCrawlerByJsoup {
             if(downloadNames.contains(booku.getName())){
                 log.info("已下载，跳过 {}",booku.getName());
                 continue;
+            }
+
+            if(i % 500 == 0){
+                midDone(futureList);
             }
             int finalI = i;
             try{
@@ -102,15 +106,23 @@ public class TianLangCrawlerByJsoup {
                 downLoadederror.add(booku);
             }
         }
-        taskQueue.add(Book.builder().build());
-        CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
-        future.join();
-        executorService.shutdown();
+        midDone(futureList);
 
-        String d = DateUtils.formatDate(new Date());
-        save("bookInfo/tianlangdowned", downLoaded.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()),true);
-        save("bookInfo/tianlangdownerror" + d, downLoaded.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()));
+        taskQueue.add(Book.builder().build());
+        executorService.shutdown();
     }
+
+    private static void midDone(List<CompletableFuture<Void>> futureList) {
+        CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
+        futureList.clear();
+        future.join();
+        String d = DateUtils.formatDate(new Date());
+        save("bookInfo/tianlangdowned", downLoaded.stream().map(e -> JSON.toJSONString(e, false)).collect(Collectors.toList()), true);
+        downLoaded.clear();
+        save("bookInfo/tianlangdownerror" + d, downLoadederror.stream().map(e -> JSON.toJSONString(e, false)).collect(Collectors.toList()));
+        downLoadederror.clear();
+    }
+
     private static void startCtExecutor(){
         new Thread(() -> {
            Book book = null;

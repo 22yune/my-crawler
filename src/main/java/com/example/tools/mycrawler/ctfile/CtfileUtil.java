@@ -34,11 +34,18 @@ import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
  */
 @Slf4j
 public class CtfileUtil {
+    private static final String dir = "/Users/hunliji/books/tianlang";
     private static final ExecutorService executorService = Executors.newFixedThreadPool(1);
     private static final List<Book> books = new ArrayList<>();
     private static final List<String> errorUrls = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
+
+        FileUtils.writeLines(new File(dir,"files.txt"),
+                FileUtils.listFiles(new File(dir),null,false).stream().map(File::getName).collect(Collectors.toList()));
+
+    }
+    public static void downTianlang() throws IOException {
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
         List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-19T00:54:12Z"), Charset.defaultCharset());
         for (int i = 27; i < bl.size(); i++ ){
@@ -49,7 +56,7 @@ public class CtfileUtil {
                 errorUrls.add(booku.getUrl1());
             }else {
                 down(book);
-               // futureList.add(CompletableFuture.runAsync(() -> down(finalI,book),executorService));
+                // futureList.add(CompletableFuture.runAsync(() -> down(finalI,book),executorService));
             }
         }
         CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
@@ -59,6 +66,7 @@ public class CtfileUtil {
         save("bookInfo/ctfile" + d, books.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()));
         save("bookInfo/ctfile" + d + "error", errorUrls);
     }
+
     public static boolean download(String cturl, String pwd){
         try {
             Book book = getBook(cturl, pwd);
@@ -70,7 +78,6 @@ public class CtfileUtil {
 
     private static boolean down(Book book){
         //log.info("download {}   {}", book.name);
-        String dir = "/Users/hunliji/books/tianlang";
         String url = book.getUrls().get(0).getUrl();
         String name = book.name + "." + book.getUrls().get(0).getType();
         File file = new File(dir,name);

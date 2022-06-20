@@ -111,7 +111,7 @@ public class LanzouUtil {
         String u = "https://tianlangbooks.lanzouf.com/ajaxm.php";
         String[] a = param.split("=|&");
         if(a.length != 5){
-            log.error("error p  {}",param);
+            log.error("error {} {} {}", url, pwd, param);
             return null;
         }
 

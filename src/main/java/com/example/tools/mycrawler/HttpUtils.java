@@ -212,7 +212,7 @@ public class HttpUtils {
                     while (isReading) {
                         endTime = System.currentTimeMillis();
                         String speed = UnitSwitch.calculateSpeed(downloadSize, endTime - startTime);
-                        System.out.println(UnitSwitch.formatSize(downloadSize) + "/" + total + "，平均下载速率：" + speed);
+                       // System.out.println(UnitSwitch.formatSize(downloadSize) + "/" + total + "，平均下载速率：" + speed);
                         try {
                             sleep(2000);
                         } catch (InterruptedException e) {
@@ -233,6 +233,7 @@ public class HttpUtils {
             String total = UnitSwitch.formatSize(Long.parseLong(totalSize));
             System.out.println(UnitSwitch.formatSize(downloadSize) + "/" + total + "，平均下载速率：" + speed);
             System.out.println("下载完成，总耗时：" + (endTime - startTime) / 1000 + "秒");
+            map.put("code", "0");
             return map;
         } catch (Exception e) {
             System.err.println(e.getMessage());

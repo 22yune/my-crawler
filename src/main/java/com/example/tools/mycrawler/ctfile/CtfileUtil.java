@@ -48,9 +48,8 @@ public class CtfileUtil {
             if(book == null || book.getName() == null || CollectionUtils.isEmpty(book.getUrls())){
                 errorUrls.add(booku.getUrl1());
             }else {
-                int finalI = i;
-                //down(finalI,book);
-                futureList.add(CompletableFuture.runAsync(() -> down(finalI,book),executorService));
+                down(book);
+               // futureList.add(CompletableFuture.runAsync(() -> down(finalI,book),executorService));
             }
         }
         CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
@@ -60,10 +59,26 @@ public class CtfileUtil {
         save("bookInfo/ctfile" + d, books.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()));
         save("bookInfo/ctfile" + d + "error", errorUrls);
     }
+    public static boolean download(String cturl, String pwd){
+        try {
+            Book book = getBook(cturl, pwd);
+            return book !=null && down(book);
+        }catch (Exception ignore){
+            return false;
+        }
+    }
 
-    private static void down(int i, Book book){
-        log.info("download {}   {}", i, book.name);
-        HttpUtils.download(book.getUrls().get(0).getUrl(), "", IP.getNewIP(),book.name + "." + book.getUrls().get(0).getType(), "1", "/Users/hunliji/books/tianlang");
+    private static boolean down(Book book){
+        //log.info("download {}   {}", book.name);
+        String dir = "/Users/hunliji/books/tianlang";
+        String url = book.getUrls().get(0).getUrl();
+        String name = book.name + "." + book.getUrls().get(0).getType();
+        File file = new File(dir,name);
+        if(file.exists()){
+            return true;
+        }
+        Map<String,String> map = HttpUtils.download(url, "", IP.getNewIP(),name, "1", dir);
+        return map != null && map.containsKey("code");
     }
 
     private static void save(String path,List<String> vs) {

@@ -17,9 +17,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
@@ -34,16 +36,19 @@ import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
  */
 @Slf4j
 public class TianLangCrawlerByJsoup {
-    private static ExecutorService executorService = Executors.newFixedThreadPool(50);
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(50);
+    private static final ExecutorService ctExecutor = Executors.newFixedThreadPool(1);
+    private static final BlockingQueue<Book> taskQueue = new LinkedBlockingQueue<>();
 
-    private static List<Book> books = new ArrayList<>();
-    private static List<String> errorUrls = new ArrayList<>();
-    private static List<String> sizeZero = new ArrayList<>();
+    private static final List<Book> books = new ArrayList<>();
+    private static final List<Book> downLoaded = new ArrayList<>();
+    private static final List<Book> downLoadederror = new ArrayList<>();
+    private static final List<String> errorUrls = new ArrayList<>();
+    private static final List<String> sizeZero = new ArrayList<>();
 
-    public static void main(String[] args){
-
-
-        crawlerAll();
+    public static void main(String[] args) throws IOException {
+        //crawlerAll();
+        downAll();
     }
 
     private static void crawlerAll() {
@@ -60,13 +65,71 @@ public class TianLangCrawlerByJsoup {
         save("bookInfo/"+ d + "error", errorUrls);
         save("bookInfo/"+ d + "zero", sizeZero);
     }
-    public static void downloadBook(TianLangCrawlerByJsoup.Book booku){
-        if(booku.getUrl2() != null){
-
-        }else {
-            CtfileUtil.Book book =  doRetry(3,() -> CtfileUtil.getBook(booku.getUrl1(),booku.getPwd1()));
-
+    private static void downAll() throws IOException {
+        List<CompletableFuture<Void>> futureList = new ArrayList<>();
+        save("bookInfo/tianlangdowned", downLoaded.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()),true);
+        List<String> downloadList = FileUtils.readLines(new File("bookInfo/tianlangdowned"), Charset.defaultCharset());
+        Set<String> downloadNames = new TreeSet<>();
+        for(String s : downloadList){
+            TianLangCrawlerByJsoup.Book booku = JSON.parseObject(s, TianLangCrawlerByJsoup.Book.class);
+            downloadNames.add(booku.getName());
         }
+        List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-19T00:54:12Z"), Charset.defaultCharset());
+        for (int i = 26; i < bl.size(); i++ ){
+            if(StringUtils.isEmpty(bl.get(i))){
+                continue;
+            }
+            TianLangCrawlerByJsoup.Book booku = JSON.parseObject(bl.get(i), TianLangCrawlerByJsoup.Book.class);
+            if(downloadNames.contains(booku.getName())){
+                log.info("已下载，跳过 {}",booku.getName());
+                continue;
+            }
+            int finalI = i;
+            try{
+                if(!StringUtils.isEmpty(booku.getUrl2())){
+                    futureList.add(CompletableFuture.runAsync(() -> {
+                        log.info("download {}  {}", finalI, booku.name);
+                         if(LanzouUtil.download(booku.getUrl2(), booku.getPwd2())){
+                             downLoaded.add(booku);
+                         }else {
+                             downLoadederror.add(booku);
+                         }
+                    },executorService));
+                }else if(!StringUtils.isEmpty(booku.getName())) {
+                    taskQueue.offer(booku);
+                }
+            }catch (Exception e){
+                downLoadederror.add(booku);
+            }
+        }
+        CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
+        future.join();
+
+        String d = DateUtils.formatDate(new Date());
+        save("bookInfo/tianlangdowned", downLoaded.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()),true);
+        save("bookInfo/tianlangdownerror" + d, downLoaded.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()));
+    }
+    private static void startCtExecutor(){
+        new Thread(() -> {
+           Book book = null;
+           while (book == null){
+               try {
+                   book = taskQueue.poll(1000,TimeUnit.MILLISECONDS);
+                   if(book != null ){
+                       if(book.getUrl1() == null){
+                           break;
+                       }
+                       if(CtfileUtil.download(book.getUrl1(),book.getPwd1())){
+                           downLoaded.add(book);
+                       }else {
+                           downLoadederror.add(book);
+                       }
+                   }
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+           }
+        }).start();
     }
 
     private static void down(int i, String name, String url){
@@ -147,9 +210,12 @@ public class TianLangCrawlerByJsoup {
     }
 
     private static void save(String path,List<String> vs) {
+        save(path, vs,false);
+    }
+    private static void save(String path,List<String> vs,boolean apppend) {
         try {
-            log.info("文件保存" + path );
-            FileUtils.writeLines(new File(path), vs);
+            log.info("文件" + (apppend? "追加到" : "保存到") + path );
+            FileUtils.writeLines(new File(path), vs, apppend);
         } catch (IOException e) {
             log.error("文件保存异常" + path, e);
         }

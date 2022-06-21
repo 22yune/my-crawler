@@ -75,7 +75,7 @@ public class TianLangCrawlerByJsoup {
             downloadNames.add(booku.getName());
         }
         List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-19T00:54:12Z"), Charset.defaultCharset());
-        for (int i = 28; i < bl.size(); i++ ){
+        for (int i = 2800; i < bl.size(); i++ ){
             if(StringUtils.isEmpty(bl.get(i))){
                 continue;
             }

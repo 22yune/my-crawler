@@ -39,10 +39,17 @@ public class CtfileUtil {
     private static final List<Book> books = new ArrayList<>();
     private static final List<String> errorUrls = new ArrayList<>();
 
+    private static final Set<String> fileNames = new TreeSet<>();
+    static {
+        try {
+            fileNames.addAll(FileUtils.readLines(new File(dir, "files.txt"), Charset.defaultCharset()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) throws IOException {
 
-        FileUtils.writeLines(new File(dir,"files.txt"),
-                FileUtils.listFiles(new File(dir),null,false).stream().map(File::getName).collect(Collectors.toList()));
+        //FileUtils.writeLines(new File(dir,"files.txt"), FileUtils.listFiles(new File(dir),null,false).stream().map(File::getName).collect(Collectors.toList()));
 
     }
     public static void downTianlang() throws IOException {
@@ -81,9 +88,9 @@ public class CtfileUtil {
         String url = book.getUrls().get(0).getUrl();
         String name = book.name + "." + book.getUrls().get(0).getType();
         File file = new File(dir,name);
-        if(file.exists()){
-            log.info("已下载.{}",name);
-            return true;
+        if(file.exists() || fileNames.contains(name)){
+       //     log.info("已下载.{}",name);
+       //     return true;
         }
         Map<String,String> map = HttpUtils.download(url, "", IP.getNewIP(),name, "1", dir);
         return map != null && map.containsKey("code");

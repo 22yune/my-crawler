@@ -92,8 +92,8 @@ public class TianLangCrawlerByJsoup {
             try{
                 if(!StringUtils.isEmpty(booku.getUrl2())){
                     futureList.add(CompletableFuture.runAsync(() -> {
-                        log.info("download {}  {}", finalI, booku.name);
-                         if(LanzouUtil.download(booku.getUrl2(), booku.getPwd2())){
+                        log.info("try download {}  {}", finalI, booku.name);
+                         if(LanzouUtil.download(booku.getUrl2().replace("https://wws.lanzous.com","https://tianlangbooks.lanzouf.com"), booku.getPwd2())){
                              downLoaded.add(booku);
                          }else {
                              downLoadederror.add(booku);

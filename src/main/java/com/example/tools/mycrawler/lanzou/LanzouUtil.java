@@ -148,7 +148,7 @@ public class LanzouUtil {
 
     public static Book getFileInfo(String url, String pwd){
         String[] param = getFilePostData(url,pwd);
-        boolean isC = param.length != 10;
+        boolean isC = param.length != 6;
         return isC ? getFilDir(url, param, pwd) : getFile(url,param);
     }
     private static Book getFile(String url,String[] param){

@@ -90,10 +90,14 @@ public class TianLangCrawlerByJsoup {
             }
             int finalI = i;
             try{
-                if(!StringUtils.isEmpty(booku.getUrl2())){
+                if(!StringUtils.isEmpty(booku.getUrl2()) && !booku.getUrl2().contains("ctfile.com")){
                     futureList.add(CompletableFuture.runAsync(() -> {
                         log.info("try download {}  {}", finalI, booku.name);
-                         if(LanzouUtil.download(booku.getUrl2().replace("https://wws.lanzous.com","https://tianlangbooks.lanzouf.com"), booku.getPwd2())){
+                        String url = booku.getUrl2().replace("https://wws.lanzous.com","https://tianlangbooks.lanzouf.com");
+                        if(url.contains("www.tianlangbooks.com/redirect")){
+                            url = redirctInfo(url);
+                        }
+                         if(LanzouUtil.download(url, booku.getPwd2())){
                              downLoaded.add(booku);
                          }else {
                              downLoadederror.add(booku);
@@ -133,7 +137,11 @@ public class TianLangCrawlerByJsoup {
                        if(book.getUrl1() == null){
                            break;
                        }
-                       if(CtfileUtil.download(book.getUrl1(),book.getPwd1())){
+                       String url = book.getUrl1();
+                       if(url.contains("www.tianlangbooks.com/redirect")){
+                           url = redirctInfo(url);
+                       }
+                       if(CtfileUtil.download(url,book.getPwd1())){
                            downLoaded.add(book);
                        }else {
                            downLoadederror.add(book);
@@ -169,12 +177,7 @@ public class TianLangCrawlerByJsoup {
     private static Book getBookInfo(String bookUrl) {
         Book.BookBuilder book = Book.builder();
         step2(bookUrl,"#main-wrap-left > div.content > div.single-text > div.secret-password-content",3, element1 -> {
-            Function<Element,String> exa = element2 -> {
-                String a = element2.dataNodes().get(0).toString();
-                int b = a.indexOf("location.href = ");
-                int c = a.indexOf("}");
-                return a.substring(b,c).replace("location.href = ","").trim().replace("\"","").replace(";","");
-            };
+
             Elements elements = element1.select("> p > a");
             if(elements.size() == 0){
                 elements = element1.parent().select("> p > a");
@@ -191,11 +194,9 @@ public class TianLangCrawlerByJsoup {
                     }
                 }
                 if(type.contains("城通网盘")){
-                    book.name(name).url1(rurl).pwd1(pwd);
-                    visitPage(rurl,"body > script",1, e2 -> book.url1(exa.apply(e2)));
+                    book.name(name).url1(redirctInfo(rurl)).pwd1(pwd);
                 }else {
-                    book.name(name).url2(rurl).pwd2(pwd);
-                    visitPage(rurl,"body > script",1, e2 -> book.url2(exa.apply(e2)));
+                    book.name(name).url2(redirctInfo(rurl)).pwd2(pwd);
                 }
             });
         });
@@ -212,6 +213,18 @@ public class TianLangCrawlerByJsoup {
             links.forEach(visit);
             return null;
         });
+    }
+    private static String redirctInfo(String rurl){
+        Function<Element,String> exa = element2 -> {
+            String a = element2.dataNodes().get(0).toString();
+            int b = a.indexOf("location.href = ");
+            int c = a.indexOf("}");
+            return a.substring(b,c).replace("location.href = ","").trim().replace("\"","").replace(";","");
+        };
+
+        String[] a = new String[1];
+        visitPage(rurl,"body > script",1, e2 -> a[0] = exa.apply(e2));
+        return a[0];
     }
 
     public static void visitPage(String url, String select, int restry, Consumer<Element> visit) {

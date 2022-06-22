@@ -59,7 +59,7 @@ public class LanzouUtil {
         down(22, Book.builder().name("ee").url(a).build());*/
 
         //checkZipFile();
-        download("https://tianlangbooks.lanzouf.com/inTAMj4iphi",null);
+        download("https://tianlangbooks.lanzouf.com/iS8wAkwyp5g",null);
 
       //  download("https://tianlangbooks.lanzouo.com/iU4Nwxe2ghc", "tlsw");
       //  downloadTianlang();
@@ -198,6 +198,9 @@ public class LanzouUtil {
                 if(m.find()) p[9] = m.group(1);
                 return p;
             }else {
+                if(listPage.select("body > div").toString().contains("文件取消分享了")){
+                    return null;
+                }
                 String b = a.substring(a.indexOf("$.ajax") + 8,a.indexOf("dataType"));
                 b = b.substring(b.indexOf("{") + 1,b.indexOf("}"));
                 String c = a.substring(a.indexOf("var pwd;") + 8, a.indexOf("function file"));
@@ -210,6 +213,9 @@ public class LanzouUtil {
                 if(m.find()) p[11] = m.group(1).trim().replace("'","");
                 if(m.find()) p[13] = m.group(1).trim().replace("'","");
                 if(m.find()) p[7] = m.group(1);
+                if(p.length%2 != 0){
+                    p = Arrays.copyOf(p, p.length - 1);
+                }
                 return p;
             }
         });
@@ -217,7 +223,10 @@ public class LanzouUtil {
 
     public static Book getFileInfo(String url, String pwd){
         if(pwd == null){
-            return getFileByIdUrl(url);
+            try {
+                return getFileByIdUrl(url);
+            }catch (Exception ignored){
+            }
         }
         String[] param = getFilePostData(url,pwd);
         boolean isC = param.length != 6;
@@ -256,8 +265,14 @@ public class LanzouUtil {
     private static Book getFileByIdUrl(String url){
         Book book = getUrlbyid(url);
         String urlf = book.url;
-        Book b = getFile(urlf,getFilePostData(urlf,""));
-        b.setName(book.name);
+        String pwd = "tlsw";
+        Book b = getFile(urlf,getFilePostData(urlf,pwd));
+        if(b == null){
+            return getFilDir(url, getFilePostData(url,pwd), pwd);
+        }
+        if(!url.equals(urlf)){
+            b.setName(book.name);
+        }
         return b;
     }
     private static Book getUrlbyid(String url){
@@ -266,7 +281,7 @@ public class LanzouUtil {
             Document listPage = Jsoup.connect(url).get();
             String rurl = root + listPage.select("body > div > div > div > iframe").attr("src");
             String name = listPage.select("body > div.d > div:nth-child(1)").text();
-            return Book.builder().url(rurl).name(name).build();
+            return Book.builder().url(rurl.equals(root) ? url : rurl).name(name).build();
         });
     }
 

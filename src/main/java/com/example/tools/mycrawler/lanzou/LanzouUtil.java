@@ -59,9 +59,9 @@ public class LanzouUtil {
         down(22, Book.builder().name("ee").url(a).build());*/
 
         //checkZipFile();
-        download("https://tianlangbooks.lanzouf.com/iS8wAkwyp5g",null);
+     //   download("https://tianlangbooks.lanzouf.com/iS8wAkwyp5g",null);
 
-      //  download("https://tianlangbooks.lanzouo.com/iU4Nwxe2ghc", "tlsw");
+        download("https://tianlangbooks.lanzouf.com/iJdEB03uws9i", "tlsw");
       //  downloadTianlang();
     }
 
@@ -199,6 +199,7 @@ public class LanzouUtil {
                 return p;
             }else {
                 if(listPage.select("body > div").toString().contains("文件取消分享了")){
+                    log.info("文件取消分享了 {}",url);
                     return null;
                 }
                 String b = a.substring(a.indexOf("$.ajax") + 8,a.indexOf("dataType"));

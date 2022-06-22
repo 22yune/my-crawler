@@ -66,16 +66,20 @@ public class TianLangCrawlerByJsoup {
         save("bookInfo/"+ d + "zero", sizeZero);
     }
     private static void downAll() throws IOException {
+        startCtExecutor();
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
         save("bookInfo/tianlangdowned", downLoaded.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()),true);
         List<String> downloadList = FileUtils.readLines(new File("bookInfo/tianlangdowned"), Charset.defaultCharset());
         Set<String> downloadNames = new TreeSet<>();
         for(String s : downloadList){
+            if(StringUtils.isEmpty(s)){
+                continue;
+            }
             TianLangCrawlerByJsoup.Book booku = JSON.parseObject(s, TianLangCrawlerByJsoup.Book.class);
             downloadNames.add(booku.getName());
         }
         List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-19T00:54:12Z"), Charset.defaultCharset());
-        for (int i = 28; i < bl.size(); i++ ){
+        for (int i = 4000; i < bl.size(); i++ ){
             if(StringUtils.isEmpty(bl.get(i))){
                 continue;
             }
@@ -90,7 +94,7 @@ public class TianLangCrawlerByJsoup {
             }
             int finalI = i;
             try{
-                if(!StringUtils.isEmpty(booku.getUrl2()) && !booku.getUrl2().contains("ctfile.com")){
+                if(!StringUtils.isEmpty(booku.getUrl2()) && !booku.getUrl2().contains("ctfile.com") && !booku.getUrl2().contains("z701.com")){
                     futureList.add(CompletableFuture.runAsync(() -> {
                         log.info("try download {}  {}", finalI, booku.name);
                         String url = booku.getUrl2().replace("https://wws.lanzous.com","https://tianlangbooks.lanzouf.com");
@@ -114,6 +118,18 @@ public class TianLangCrawlerByJsoup {
 
         taskQueue.add(Book.builder().build());
         executorService.shutdown();
+        ctExecutor.shutdown();
+        while (true){
+            try {
+                ctExecutor.awaitTermination(1,TimeUnit.MINUTES);
+                executorService.awaitTermination(1,TimeUnit.MINUTES);
+                if(ctExecutor.isTerminated() && executorService.isTerminated()){
+                    break;
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private static void midDone(List<CompletableFuture<Void>> futureList) {
@@ -128,7 +144,7 @@ public class TianLangCrawlerByJsoup {
     }
 
     private static void startCtExecutor(){
-        new Thread(() -> {
+        ctExecutor.submit(() -> {
            Book book = null;
            while (book == null){
                try {
@@ -137,7 +153,7 @@ public class TianLangCrawlerByJsoup {
                        if(book.getUrl1() == null){
                            break;
                        }
-                       String url = book.getUrl1();
+                       String url = book.getUrl1().replace("z701.com","url54.ctfile.com");
                        if(url.contains("www.tianlangbooks.com/redirect")){
                            url = redirctInfo(url);
                        }
@@ -151,7 +167,7 @@ public class TianLangCrawlerByJsoup {
                    e.printStackTrace();
                }
            }
-        }).start();
+        });
     }
 
     private static void down(int i, String name, String url){

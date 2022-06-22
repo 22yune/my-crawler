@@ -11,7 +11,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.apache.tika.utils.DateUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.util.StringUtils;
@@ -59,9 +58,10 @@ public class LanzouUtil {
         /*String a = "https://develope.lanzoug.com/file/?UDYCPAEwBTRTWgA4AzZcMFZpBj4DugKyVupRs1y4BpFQv1O4D8hS4wX3UaBX5VfuB9hXt1+4C5QH5QCdULEH4VDKAtEBuQXUU7EAsgPtXPxW6QaTA/MC51b1Ue1cLgZ9UDlTdA90UmAFOlFrV2ZXCQc0VzZfPQs+BzMAN1A7BzVQaAJlAW8Fd1NjACUDalxuVjwGMANrAjBWYlFgXCYGd1AgUzkPYFI2BWFRNVcsV2YHa1d9XzELPgcvAGBQbwdjUGkCYwFuBTVTMQBuA2Ncb1Y/BjEDPwJmVjdRM1w3BjRQNVNgD2tSMQViUWNXZ1cwB2hXMF9iC2sHYQAoUHYHb1AgAnMBKQUiU2AAJAM+XDlWMQYyA2oCNFZkUWZcMwY0UHZTcA87UmsFNlFhVz5XZwdtV2JfMAs5By4AKFAqB2BQPAIiAWEFYFMzAGMDYlxrVj4GNQNuAjBWYVFxXHUGd1AnUzkPY1IwBWZRMlc3V2QHZVdmXzMLOgcmAHNQZQd2UG0CZAFuBWRTKwBnA2ZcalYiBjIDZAIuVmBRYlwy";
         down(22, Book.builder().name("ee").url(a).build());*/
 
-        checkZipFile();
-        String url = "https://tianlangbooks.lanzouo.com/iU4Nwxe2ghc";
-      //  download(url, "tlsw");
+        //checkZipFile();
+        download("https://tianlangbooks.lanzouf.com/inTAMj4iphi",null);
+
+      //  download("https://tianlangbooks.lanzouo.com/iU4Nwxe2ghc", "tlsw");
       //  downloadTianlang();
     }
 
@@ -216,6 +216,9 @@ public class LanzouUtil {
     }
 
     public static Book getFileInfo(String url, String pwd){
+        if(pwd == null){
+            return getFileByIdUrl(url);
+        }
         String[] param = getFilePostData(url,pwd);
         boolean isC = param.length != 6;
         return isC ? getFilDir(url, param, pwd) : getFile(url,param);
@@ -244,17 +247,26 @@ public class LanzouUtil {
         JSONObject first = (JSONObject) txt.stream().sorted(Comparator.comparing(ee -> CtfileUtil.Type.index(((JSONObject)ee).getString("icon")))).limit(1).findFirst().orElse(null);
         String name = first.getString("name_all");
         String id = first.getString("id");
-        String urlf = getUrlbyid(id);
-        Book book = getFile(urlf,getFilePostData(urlf,""));
+        String root = "https://tianlangbooks.lanzouf.com";
+        String idu = root+"/"+id;
+        Book book = getFileByIdUrl(idu);
         book.setName(name);
         return book;
     }
-    private static String getUrlbyid(String id){
+    private static Book getFileByIdUrl(String url){
+        Book book = getUrlbyid(url);
+        String urlf = book.url;
+        Book b = getFile(urlf,getFilePostData(urlf,""));
+        b.setName(book.name);
+        return b;
+    }
+    private static Book getUrlbyid(String url){
         String root = "https://tianlangbooks.lanzouf.com";
-        String u = root+"/"+id;
         return doRetry(3, () -> {
-            Document listPage = Jsoup.connect(u).get();
-            return root + listPage.select("body > div > div > div > iframe").attr("src");
+            Document listPage = Jsoup.connect(url).get();
+            String rurl = root + listPage.select("body > div > div > div > iframe").attr("src");
+            String name = listPage.select("body > div.d > div:nth-child(1)").text();
+            return Book.builder().url(rurl).name(name).build();
         });
     }
 

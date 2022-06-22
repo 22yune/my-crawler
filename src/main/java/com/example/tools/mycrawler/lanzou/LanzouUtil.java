@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.tika.utils.DateUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,8 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
 
@@ -56,11 +59,72 @@ public class LanzouUtil {
         /*String a = "https://develope.lanzoug.com/file/?UDYCPAEwBTRTWgA4AzZcMFZpBj4DugKyVupRs1y4BpFQv1O4D8hS4wX3UaBX5VfuB9hXt1+4C5QH5QCdULEH4VDKAtEBuQXUU7EAsgPtXPxW6QaTA/MC51b1Ue1cLgZ9UDlTdA90UmAFOlFrV2ZXCQc0VzZfPQs+BzMAN1A7BzVQaAJlAW8Fd1NjACUDalxuVjwGMANrAjBWYlFgXCYGd1AgUzkPYFI2BWFRNVcsV2YHa1d9XzELPgcvAGBQbwdjUGkCYwFuBTVTMQBuA2Ncb1Y/BjEDPwJmVjdRM1w3BjRQNVNgD2tSMQViUWNXZ1cwB2hXMF9iC2sHYQAoUHYHb1AgAnMBKQUiU2AAJAM+XDlWMQYyA2oCNFZkUWZcMwY0UHZTcA87UmsFNlFhVz5XZwdtV2JfMAs5By4AKFAqB2BQPAIiAWEFYFMzAGMDYlxrVj4GNQNuAjBWYVFxXHUGd1AnUzkPY1IwBWZRMlc3V2QHZVdmXzMLOgcmAHNQZQd2UG0CZAFuBWRTKwBnA2ZcalYiBjIDZAIuVmBRYlwy";
         down(22, Book.builder().name("ee").url(a).build());*/
 
+        checkZipFile();
         String url = "https://tianlangbooks.lanzouo.com/iU4Nwxe2ghc";
-        download(url, "tlsw");
+      //  download(url, "tlsw");
       //  downloadTianlang();
     }
 
+    private static void checkZipFile() throws IOException {
+        List<Book> errorZip = new ArrayList<>();
+        String dir = "/Volumes/Untitled 1/Books/tianlang-lanzou";
+        List<CompletableFuture<Void>> futureList = new ArrayList<>();
+        List<String> downloadList = FileUtils.readLines(new File("bookInfo/tianlangdowned"), Charset.defaultCharset());
+        Set<String> downloadNames = new TreeSet<>();
+        for(String s : downloadList){
+            TianLangCrawlerByJsoup.Book booku = JSON.parseObject(s, TianLangCrawlerByJsoup.Book.class);
+            downloadNames.add(booku.getName());
+        }
+        List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-19T00:54:12Z"), Charset.defaultCharset());
+        for (int i = 28; i < bl.size(); i++ ){
+            if(StringUtils.isEmpty(bl.get(i))){
+                continue;
+            }
+            TianLangCrawlerByJsoup.Book booku = JSON.parseObject(bl.get(i), TianLangCrawlerByJsoup.Book.class);
+            if(!downloadNames.contains(booku.getName())){
+                log.info("未下载，跳过 {}",booku.getName());
+                continue;
+            }
+
+            if(i % 500 == 0){
+                CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
+                futureList.clear();
+                future.join();
+                save(dir + "/errorZip.txt", errorZip.stream().map(JSON::toJSONString).collect(Collectors.toList()));
+                errorZip.clear();
+            }
+            int finalI = i;
+            try {
+                if(!StringUtils.isEmpty(booku.getUrl2()) && !booku.getUrl2().contains("ctfile.com")){
+                    futureList.add(CompletableFuture.runAsync(() -> {
+                        try {
+
+                            String url = booku.getUrl2().replace("https://wws.lanzous.com","https://tianlangbooks.lanzouf.com");
+                            if(url.contains("www.tianlangbooks.com/redirect")){
+                                url = TianLangCrawlerByJsoup.redirctInfo(url);
+                            }
+                            Book b = getFileInfo(url, booku.getPwd2());
+                            if(b.name.toUpperCase().endsWith(".ZIP")){
+                                Boolean r = checkZip(dir,b.name);
+                                if(r != null && !r){
+                                    errorZip.add(new Book(booku.getName(),b.name));
+                                }
+                            }
+                        }catch (Exception ignore){
+                        }
+                    },executorService));
+                }
+            }catch (Exception e){
+
+            }
+        }
+        CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
+        futureList.clear();
+        future.join();
+        save(dir + "/errorZip.txt", errorZip.stream().map(JSON::toJSONString).collect(Collectors.toList()));
+        errorZip.clear();
+        executorService.shutdown();
+    }
     private static void downloadTianlang() throws IOException {
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
         List<String> bl = FileUtils.readLines(new File("bookInfo/tianlangdownerror2022-06-21T11:52:40Z"), Charset.defaultCharset());
@@ -103,7 +167,7 @@ public class LanzouUtil {
     private static void save(String path,List<String> vs) {
         try {
             log.info("文件保存" + path );
-            FileUtils.writeLines(new File(path), vs);
+            FileUtils.writeLines(new File(path), vs, true);
         } catch (IOException e) {
             log.error("文件保存异常" + path, e);
         }
@@ -201,6 +265,24 @@ public class LanzouUtil {
             Map<String,String> a = HttpUtils.get(url,"down_ip=1");
             return a.get("Location");
         });
+    }
+
+    public static Boolean checkZip(String dir,String name){
+        File file1 = new File(dir,name);
+        if(!file1.exists()){
+            return null;
+        }
+        try {
+            ZipFile zipFile = new ZipFile(file1);
+            log.info(" check zip  {} {} {}", name, zipFile.getName(), zipFile.size());
+        } catch (ZipException e){
+            log.error("error {} {}",name,e.getMessage());
+            return false;
+        }catch (IOException e) {
+            log.error("error {} {}",name, e.getMessage());
+            return null;
+        }
+        return true;
     }
 
 

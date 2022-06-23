@@ -49,6 +49,7 @@ public class CtfileUtil {
     }
     public static void main(String[] args) throws IOException {
 
+        TianLangCrawlerByJsoup.downAll(false, -1);
         //FileUtils.writeLines(new File(dir,"files.txt"), FileUtils.listFiles(new File(dir),null,false).stream().map(File::getName).collect(Collectors.toList()));
 
     }
@@ -89,8 +90,10 @@ public class CtfileUtil {
         String name = book.name + "." + book.getUrls().get(0).getType();
         File file = new File(dir,name);
         if(file.exists() || fileNames.contains(name)){
-       //     log.info("已下载.{}",name);
-       //     return true;
+            if(file.length() > 10000000){
+                log.info("已下载.{}",name);
+                return true;
+            }
         }
         Map<String,String> map = HttpUtils.download(url, "", IP.getNewIP(),name, "1", dir);
         return map != null && map.containsKey("code");

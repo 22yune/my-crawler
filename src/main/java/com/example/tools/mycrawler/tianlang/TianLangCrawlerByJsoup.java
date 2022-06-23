@@ -47,11 +47,11 @@ public class TianLangCrawlerByJsoup {
     private static final List<String> sizeZero = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-        //crawlerAll();
-        downAll(false, 1);
+        crawlerAll();
+       // downAll(false, 1);
     }
 
-    private static void crawlerAll() {
+    public static void crawlerAll() {
         String root = "https://www.tianlangbooks.com/articles/page/";
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
         for (int i = 1; i <= 387; i++){
@@ -65,7 +65,7 @@ public class TianLangCrawlerByJsoup {
         save("bookInfo/"+ d + "error", errorUrls);
         save("bookInfo/"+ d + "zero", sizeZero);
     }
-    private static void downAll(boolean check, int onlyLanzou) throws IOException {
+    public static void downAll(boolean check, int onlyLanzou) throws IOException {
         if(onlyLanzou < 1 && !check)  startCtExecutor();
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
         save("bookInfo/tianlangdowned", downLoaded.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()),true);
@@ -78,7 +78,7 @@ public class TianLangCrawlerByJsoup {
             TianLangCrawlerByJsoup.Book booku = JSON.parseObject(s, TianLangCrawlerByJsoup.Book.class);
             downloadNames.add(booku.getName());
         }
-        List<String> bl = FileUtils.readLines(new File("bookInfo/tianlangdownerror2022-06-23T12:40:19Z"), Charset.defaultCharset());
+        List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-19T00:54:12Z"), Charset.defaultCharset());
         for (int i = 0; i < bl.size(); i++ ){
             if(StringUtils.isEmpty(bl.get(i))){
                 continue;
@@ -89,7 +89,7 @@ public class TianLangCrawlerByJsoup {
                 continue;
             }
 
-            if(i != 0 && i % 1000 == 0){
+            if(i != 0 && i % 50 == 0){
                 midDone(futureList);
             }
             int finalI = i;
@@ -153,10 +153,9 @@ public class TianLangCrawlerByJsoup {
 
     private static void startCtExecutor(){
         ctExecutor.submit(() -> {
-           Book book = null;
-           while (book == null){
+           while (true){
                try {
-                   book = taskQueue.poll(1000,TimeUnit.MILLISECONDS);
+                   Book book = taskQueue.poll(1000,TimeUnit.MILLISECONDS);
                    if(book != null ){
                        if(book.getUrl1() == null){
                            break;

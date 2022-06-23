@@ -212,7 +212,7 @@ public class HttpUtils {
                     while (isReading) {
                         endTime = System.currentTimeMillis();
                         String speed = UnitSwitch.calculateSpeed(downloadSize, endTime - startTime);
-                       // System.out.println(UnitSwitch.formatSize(downloadSize) + "/" + total + "，平均下载速率：" + speed);
+                        System.out.println(UnitSwitch.formatSize(downloadSize) + "/" + total + "，平均下载速率：" + speed);
                         try {
                             sleep(2000);
                         } catch (InterruptedException e) {

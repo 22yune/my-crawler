@@ -36,7 +36,7 @@ import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
  */
 @Slf4j
 public class LanzouUtil {
-    private static final String sotreDir = "/Volumes/Untitled 1/Books/tianlang-lanzou";//"/Users/hunliji/books/tianlang-lanzou";
+    private static final String storeDir = "/Volumes/Untitled 1/Books/tianlang-lanzou";//"/Users/hunliji/books/tianlang-lanzou";
     private static final String downDir = "/Users/hunliji/books/tianlang-lanzou";
     private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private static final List<Book> books = new ArrayList<>();
@@ -44,7 +44,7 @@ public class LanzouUtil {
     private static final Set<String> fileNames = new TreeSet<>();
     static {
         try {
-            fileNames.addAll(FileUtils.readLines(new File(sotreDir, "files.txt"), Charset.defaultCharset()));
+            fileNames.addAll(FileUtils.readLines(new File(storeDir, "files.txt"), Charset.defaultCharset()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,7 +68,7 @@ public class LanzouUtil {
 
     private static void checkZipFile() throws IOException {
         List<Book> errorZip = new ArrayList<>();
-        String dir = "/Volumes/Untitled 1/Books/tianlang-lanzou";
+        String dir = storeDir;
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
         List<String> downloadList = FileUtils.readLines(new File("bookInfo/tianlangdowned"), Charset.defaultCharset());
         Set<String> downloadNames = new TreeSet<>();
@@ -156,10 +156,10 @@ public class LanzouUtil {
     }
 
     private static boolean down(String name, String url, boolean check){
-        File file = new File(sotreDir,name);
+        File file = new File(storeDir,name);
         if(file.exists() || fileNames.contains(name)){
             if(check && name.toUpperCase().endsWith(".ZIP")){
-                Boolean r = checkZip(sotreDir,name);
+                Boolean r = checkZip(storeDir,name);
                 if(r != null && !r){
                     return doDown(url, name);
                 }

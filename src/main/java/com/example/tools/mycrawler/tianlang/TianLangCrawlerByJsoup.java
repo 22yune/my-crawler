@@ -36,7 +36,7 @@ import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
  */
 @Slf4j
 public class TianLangCrawlerByJsoup {
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(50);
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private static final ExecutorService ctExecutor = Executors.newFixedThreadPool(1);
     private static final BlockingQueue<Book> taskQueue = new LinkedBlockingQueue<>();
 
@@ -48,7 +48,7 @@ public class TianLangCrawlerByJsoup {
 
     public static void main(String[] args) throws IOException {
         //crawlerAll();
-        downAll();
+        downAll(false, 1);
     }
 
     private static void crawlerAll() {
@@ -65,8 +65,8 @@ public class TianLangCrawlerByJsoup {
         save("bookInfo/"+ d + "error", errorUrls);
         save("bookInfo/"+ d + "zero", sizeZero);
     }
-    private static void downAll() throws IOException {
-      //  startCtExecutor();
+    private static void downAll(boolean check, int onlyLanzou) throws IOException {
+        if(onlyLanzou < 1 && !check)  startCtExecutor();
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
         save("bookInfo/tianlangdowned", downLoaded.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()),true);
         List<String> downloadList = FileUtils.readLines(new File("bookInfo/tianlangdowned"), Charset.defaultCharset());
@@ -78,18 +78,18 @@ public class TianLangCrawlerByJsoup {
             TianLangCrawlerByJsoup.Book booku = JSON.parseObject(s, TianLangCrawlerByJsoup.Book.class);
             downloadNames.add(booku.getName());
         }
-        List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-19T00:54:12Z"), Charset.defaultCharset());
+        List<String> bl = FileUtils.readLines(new File("bookInfo/tianlangdownerror2022-06-23T12:40:19Z"), Charset.defaultCharset());
         for (int i = 0; i < bl.size(); i++ ){
             if(StringUtils.isEmpty(bl.get(i))){
                 continue;
             }
             TianLangCrawlerByJsoup.Book booku = JSON.parseObject(bl.get(i), TianLangCrawlerByJsoup.Book.class);
-            if(downloadNames.contains(booku.getName())){
-                log.info("已下载，跳过 {}",booku.getName());
+            if((check && !downloadNames.contains(booku.getName())) || (!check && downloadNames.contains(booku.getName()))){
+                log.info( (check ? "未" : "已") + "下载，跳过 {} {}", i ,booku.getName());
                 continue;
             }
 
-            if(i != 0 && i % 50000 == 0){
+            if(i != 0 && i % 1000 == 0){
                 midDone(futureList);
             }
             int finalI = i;
@@ -98,16 +98,19 @@ public class TianLangCrawlerByJsoup {
                         && !booku.getUrl2().contains("ctfile.com")
                         && !booku.getUrl2().contains("z701.com")
                         && !booku.getUrl2().contains("306t.com")){
+                    if(onlyLanzou < 0){
+                        continue;
+                    }
                     futureList.add(CompletableFuture.runAsync(() -> {
                         log.info("try download {}  {}", finalI, booku.name);
                         String url = booku.getUrl2().replace("https://wws.lanzous.com","https://tianlangbooks.lanzouf.com");
                         if(url.contains("www.tianlangbooks.com/redirect")){
                             url = redirctInfo(url);
                         }
-                         if(LanzouUtil.download(url, booku.getPwd2())){
-                             downLoaded.add(booku);
+                         if(LanzouUtil.download(url, booku.getPwd2(),check)){
+                             if(!check) downLoaded.add(booku);
                          }else {
-                             downLoadederror.add(booku);
+                             if(!check) downLoadederror.add(booku);
                          }
                     },executorService));
                 }else if(!StringUtils.isEmpty(booku.getName())) {
@@ -158,7 +161,7 @@ public class TianLangCrawlerByJsoup {
                        if(book.getUrl1() == null){
                            break;
                        }
-                       String url = book.getUrl1().replace("z701.com","url54.ctfile.com");
+                       String url = book.getUrl1().replace("z701.com","url54.ctfile.com").replace("306t.com","url54.ctfile.com");
                        if(url.contains("www.tianlangbooks.com/redirect")){
                            url = redirctInfo(url);
                        }

@@ -47,8 +47,8 @@ public class TianLangCrawlerByJsoup {
     private static final List<String> sizeZero = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-        crawlerAll();
-       // downAll(false, 1);
+      //  crawlerAll();
+        downAll(true, 1);
     }
 
     public static void crawlerAll() {
@@ -78,7 +78,7 @@ public class TianLangCrawlerByJsoup {
             TianLangCrawlerByJsoup.Book booku = JSON.parseObject(s, TianLangCrawlerByJsoup.Book.class);
             downloadNames.add(booku.getName());
         }
-        List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-19T00:54:12Z"), Charset.defaultCharset());
+        List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-23T14:12:49Z"), Charset.defaultCharset());
         for (int i = 0; i < bl.size(); i++ ){
             if(StringUtils.isEmpty(bl.get(i))){
                 continue;
@@ -89,7 +89,7 @@ public class TianLangCrawlerByJsoup {
                 continue;
             }
 
-            if(i != 0 && i % 50 == 0){
+            if(i != 0 && i % 100 == 0){
                 midDone(futureList);
             }
             int finalI = i;

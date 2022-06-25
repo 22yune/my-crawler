@@ -165,7 +165,8 @@ public class TianLangCrawlerByJsoup {
                            url = redirctInfo(url);
                        }
                        if(CtfileUtil.download(url,book.getPwd1())){
-                           downLoaded.add(book);
+                          // downLoaded.add(book);// xieru
+                           save("bookInfo/tianlangdowned", Collections.singletonList( JSON.toJSONString(book, false)), true);
                        }else {
                            downLoadederror.add(book);
                        }
@@ -175,11 +176,6 @@ public class TianLangCrawlerByJsoup {
                }
            }
         });
-    }
-
-    private static void down(int i, String name, String url){
-        log.info("download {}   {}", i, name);
-        HttpUtils.download(url, "", IP.getNewIP(), name, "1", "/Users/hunliji/books/tianlang-lanzou");
     }
 
     public static List<Book> crawler(String url){

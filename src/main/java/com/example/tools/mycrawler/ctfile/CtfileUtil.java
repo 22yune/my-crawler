@@ -34,7 +34,8 @@ import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
  */
 @Slf4j
 public class CtfileUtil {
-    private static final String dir = "/Users/hunliji/books/tianlang";
+    private static final String storeDir = "/Users/hunliji/books/tianlang";
+    private static final String downDir = "/Users/hunliji/books/tianlang";
     private static final ExecutorService executorService = Executors.newFixedThreadPool(1);
     private static final List<Book> books = new ArrayList<>();
     private static final List<String> errorUrls = new ArrayList<>();
@@ -42,7 +43,7 @@ public class CtfileUtil {
     private static final Set<String> fileNames = new TreeSet<>();
     static {
         try {
-            fileNames.addAll(FileUtils.readLines(new File(dir, "files.txt"), Charset.defaultCharset()));
+            fileNames.addAll(FileUtils.readLines(new File(storeDir, "files.txt"), Charset.defaultCharset()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,15 +89,25 @@ public class CtfileUtil {
         //log.info("download {}   {}", book.name);
         String url = book.getUrls().get(0).getUrl();
         String name = book.name + "." + book.getUrls().get(0).getType();
-        File file = new File(dir,name);
+        File file = new File(storeDir,name);
         if(file.exists() || fileNames.contains(name)){
-            if(file.length() > 10000000){
+            if(file.length() > 0){
                 log.info("已下载.{}",name);
                 return true;
             }
         }
+        return doDown(url, name, downDir);
+    }
+    private static boolean doDown(String url,String name ,String dir){
         Map<String,String> map = HttpUtils.download(url, "", IP.getNewIP(),name, "1", dir);
-        return map != null && map.containsKey("code");
+        boolean r = map != null && map.containsKey("code");
+        if(!r){
+            File file = new File(dir,name);
+            if(file.exists() && !file.delete()){
+                log.warn("文件删除失败:{}", file.getName());
+            }
+        }
+        return r;
     }
 
     private static void save(String path,List<String> vs) {

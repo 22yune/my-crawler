@@ -179,7 +179,14 @@ public class LanzouUtil {
         Map<String,String> heads = new HashMap<>();
         heads.put("accept-language", "zh-CN,zh;q=0.9");
         Map<String,String> map = HttpUtils.download(url, "down_ip=1", IP.getNewIP(), name, "1", downDir,heads);
-        return map != null && map.containsKey("code");
+        boolean r = map != null && map.containsKey("code");
+        if(!r){
+            File file = new File(downDir,name);
+            if(file.exists() && !file.delete()){
+                log.warn("文件删除失败:{}", file.getName());
+            }
+        }
+        return r;
     }
 
     private static void save(String path,List<String> vs) {

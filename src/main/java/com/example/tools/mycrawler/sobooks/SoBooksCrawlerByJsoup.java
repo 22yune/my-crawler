@@ -91,7 +91,7 @@ public class SoBooksCrawlerByJsoup {
             SoBooksCrawlerByJsoup.Book booku = JSON.parseObject(s, SoBooksCrawlerByJsoup.Book.class);
             downloadNames.add(booku.getName());
         }
-        List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-23T14:12:49Z"), Charset.defaultCharset());
+        List<String> bl = FileUtils.readLines(new File("bookInfo/sobooks2022-07-06T05:38:30Z"), Charset.defaultCharset());
         for (int i = 0; i < bl.size(); i++ ){
             if(StringUtils.isEmpty(bl.get(i))){
                 continue;

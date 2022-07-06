@@ -16,6 +16,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -35,7 +36,7 @@ import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
  */
 @Slf4j
 public class SoBooksCrawlerByJsoup {
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(2);
     private static final ExecutorService ctExecutor = Executors.newFixedThreadPool(1);
     private static final BlockingQueue<Book> taskQueue = new LinkedBlockingQueue<>();
 
@@ -54,15 +55,24 @@ public class SoBooksCrawlerByJsoup {
      //   downAll(true, 1);
     }
 
-    public static void crawlerAll() {
+    public static void crawlerAll() throws IOException {
         String root = "https://sobooks.net/page/";
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
-        for (int i = 1; i <= 387; i++){
+        for (int i = 1; i <= 0; i++){
             String url = root+ i + "/";
             futureList.add(CompletableFuture.runAsync(() -> books.addAll(crawler(url)),executorService));
         }
         CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
         future.join();
+
+        List<String> errors = FileUtils.readLines(new File("bookInfo/sobooks2022-07-06T06:14:07Zerror"), Charset.defaultCharset());
+        errors.forEach( e -> {
+            Book book = getBookInfo(e, null);
+            if(!CollectionUtils.isEmpty(book.getUrls())){
+                books.add(book);
+            }
+        } );
+
         String d = DateUtils.formatDate(new Date());
         save("bookInfo/sobooks"+ d, books.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()));
         save("bookInfo/sobooks"+ d + "error", errorUrls);
@@ -179,7 +189,9 @@ public class SoBooksCrawlerByJsoup {
             String bookUrl = element.parent().attr("href");
             String bookName = element.parent().attr("title");
             Book book = getBookInfo(bookUrl, bookName);
-            list.add(book);
+            if(!CollectionUtils.isEmpty(book.getUrls())){
+                list.add(book);
+            }
         });
         log.info("结束 {}      {}" , url, list.size());
         if (list.size() == 0){
@@ -191,13 +203,37 @@ public class SoBooksCrawlerByJsoup {
     private static Book getBookInfo(String bookUrl,String bookName) {
         Book.BookBuilder book = Book.builder().name(bookName);
         step2(bookUrl,"body > section > div.content-wrap > div > article > div.e-secret",3, element1 -> {
+            if(book.name == null){
+                String n = element1.ownerDocument().select("body > section > div.content-wrap > div > header > h1 > a").text();
+                book.name(n);
+            }
             Elements elements = element1.select("> b > a");
+            String pwdA = null;
+            Function<Element,String> typeF = e -> e.previousSibling().toString();
+            if(elements.size() == 0){
+                elements = element1.parent().select("> a");
+                if(elements.size() == 0){
+                    elements = element1.parent().select("> p > a");
+                    typeF = Element::text;
+                    if(element1.select("b").text().contains("密码")){
+                        pwdA = element1.select("b").text().replace("提取密码：","");
+                    }
+                }
+            }
+            String finalPwdA = pwdA;
+            Function<Element, String> finalTypeF = typeF;
             List<BookUrl> list = Streams.stream(elements).map(e -> {
-                String type = e.previousSibling().toString();
+                String type = finalTypeF.apply(e);
                 String url = e.attr("href").replace("https://sobooks.net/go.html?url=","").trim();
-                String pwd = Optional.ofNullable(e.nextSibling()).map(ee -> ee.toString().replace(" 密码：","").trim()).orElse(null);
+                if(url.contains("books/tag/")){
+                    return null;
+                }
+                String pwd = Optional.ofNullable(e.nextSibling())
+                        .filter( ee -> ee.toString().contains("密码"))
+                        .map(ee -> ee.toString().replace(" 密码：","").replace("密码:","").trim())
+                        .filter(ee -> !ee.contains("<")).orElse(finalPwdA);
                 return BookUrl.builder().url(url).pwd(pwd).type(UrlType.to(type)).build();
-            }).sorted(Comparator.comparing(ee -> ee.getType().ordinal())).collect(Collectors.toList());
+            }).filter(Objects::nonNull).sorted(Comparator.comparing(ee -> ee.getType().ordinal())).collect(Collectors.toList());
             book.urls(list);
         });
         if(book.urls == null || book.urls.size() == 0){

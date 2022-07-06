@@ -51,27 +51,27 @@ public class SoBooksCrawlerByJsoup {
     public static void main(String[] args) throws IOException {
         String url = "https://sobooks.net/page/2";
         //crawler(url);
-        crawlerAll();
-     //   downAll(true, 1);
+      //  crawlerAll();
+        downAll(true, 1);
     }
 
     public static void crawlerAll() throws IOException {
         String root = "https://sobooks.net/page/";
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
-        for (int i = 1; i <= 0; i++){
+        for (int i = 1; i <= 380; i++){
             String url = root+ i + "/";
             futureList.add(CompletableFuture.runAsync(() -> books.addAll(crawler(url)),executorService));
         }
         CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
         future.join();
 
-        List<String> errors = FileUtils.readLines(new File("bookInfo/sobooks2022-07-06T06:14:07Zerror"), Charset.defaultCharset());
+        /*List<String> errors = FileUtils.readLines(new File("bookInfo/sobooks2022-07-06T06:14:07Zerror"), Charset.defaultCharset());
         errors.forEach( e -> {
             Book book = getBookInfo(e, null);
             if(!CollectionUtils.isEmpty(book.getUrls())){
                 books.add(book);
             }
-        } );
+        } );*/
 
         String d = DateUtils.formatDate(new Date());
         save("bookInfo/sobooks"+ d, books.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()));

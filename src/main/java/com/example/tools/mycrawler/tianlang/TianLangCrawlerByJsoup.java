@@ -158,6 +158,7 @@ public class TianLangCrawlerByJsoup {
                    Book book = taskQueue.poll(1000,TimeUnit.MILLISECONDS);
                    if(book != null ){
                        if(book.getUrl1() == null){
+                           log.info("end {}", book);
                            break;
                        }
                        String url = book.getUrl1().replace("z701.com","url54.ctfile.com").replace("306t.com","url54.ctfile.com");

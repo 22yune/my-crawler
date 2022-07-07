@@ -25,9 +25,10 @@ import java.util.stream.Stream;
  */
 @Slf4j
 public class BookLibrary {
-    private String metaFilePath = "bookInfo/library";
-    private Set<String> md5Set;
-    private Set<String> nameSet;
+    private static final String defaultMetaFilePath = "bookInfo/library.txt";
+    private final String metaFilePath;
+    private final Set<String> md5Set;
+    private final Set<String> nameSet;
 
     public BookLibrary(String metaFilePath) {
         this.metaFilePath = metaFilePath;
@@ -37,7 +38,7 @@ public class BookLibrary {
     }
 
     public static void main(String[] args){
-
+        new BookLibrary(defaultMetaFilePath).addStore("/Volumes/android/Books");
     }
 
     public boolean nameContain(String name){
@@ -49,25 +50,31 @@ public class BookLibrary {
     }
 
     public void addStore(String dir){
+        List<String> dupNameFile = new ArrayList<>();
+        dupNameFile.add(dir);
+        List<String> dupMd5File = new ArrayList<>();
+        dupNameFile.add(dir);
         Set<BookMeta> setNew = fileStream(dir).map(e -> {
             String name = e.getName();
-            if(nameSet.contains(name)){
+            if(!nameSet.add(name)){
+                dupNameFile.add(e.getAbsolutePath());
                 return null;
             }
             String md5 = Md5Util.getFileMD5(e);
-            if(md5Set.contains(md5)){
+            if(!md5Set.add(md5)){
+                dupMd5File.add(e.getAbsolutePath());
                 return null;
             }
-            nameSet.add(name);
-            md5Set.add(md5);
             return new BookMeta(name,md5);
         }).filter(Objects::nonNull).collect(Collectors.toSet());
         save(metaFilePath,Streams.stream(setNew).map(JSON::toJSONString).toList(), true);
+        save(metaFilePath+ "dupName",dupNameFile, true);
+        save(metaFilePath+ "dupMd5",dupMd5File, true);
     }
 
     private static Stream<File> fileStream(String path){
         try {
-            return FileUtils.streamFiles(new File(path),true, Arrays.stream(Type.values()).map(t -> "." + t.name()).toArray(String[]::new));
+            return FileUtils.streamFiles(new File(path),true, null);
         } catch (IOException e) {
             e.printStackTrace();
         }

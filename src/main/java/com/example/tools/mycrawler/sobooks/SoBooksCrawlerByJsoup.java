@@ -24,8 +24,10 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
@@ -37,16 +39,14 @@ import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
 @Slf4j
 public class SoBooksCrawlerByJsoup {
     private static final ExecutorService executorService = Executors.newFixedThreadPool(2);
-    private static final ExecutorService ctExecutor = Executors.newFixedThreadPool(1);
-    private static final BlockingQueue<Book> taskQueue = new LinkedBlockingQueue<>();
 
     private static final String downPath = "bookInfo/sobooksdowned";
 
     private static final List<Book> books = new ArrayList<>();
-    private static final List<Book> downLoaded = new ArrayList<>();
-    private static final List<Book> downLoadederror = new ArrayList<>();
     private static final List<String> errorUrls = new ArrayList<>();
     private static final List<String> sizeZero = new ArrayList<>();
+
+    private static final List<Book> downLoadederror = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         String url = "https://sobooks.net/page/2";
@@ -78,19 +78,13 @@ public class SoBooksCrawlerByJsoup {
         save("bookInfo/sobooks"+ d + "error", errorUrls);
         save("bookInfo/sobooks"+ d + "zero", sizeZero);
     }
+
     public static void downAll(boolean check, int onlyLanzou) throws IOException {
-        if(onlyLanzou < 1 && !check)  startCtExecutor();
-        List<CompletableFuture<Void>> futureList = new ArrayList<>();
-        save(downPath, downLoaded.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()),true);
+        save(downPath, Collections.emptyList(),true);
         List<String> downloadList = FileUtils.readLines(new File(downPath), Charset.defaultCharset());
-        Set<String> downloadNames = new TreeSet<>();
-        for(String s : downloadList){
-            if(StringUtils.isEmpty(s)){
-                continue;
-            }
-            SoBooksCrawlerByJsoup.Book booku = JSON.parseObject(s, SoBooksCrawlerByJsoup.Book.class);
-            downloadNames.add(booku.getName());
-        }
+        Set<String> downloadNames = Streams.stream(downloadList).filter(e -> !StringUtils.isEmpty(e)).map(e -> JSON.parseObject(e, SoBooksCrawlerByJsoup.Book.class).getName()).toSet();
+        LanzouUtil lanzouUtil = new LanzouUtil(10);
+        List<CompletableFuture<Boolean>> futureList = new ArrayList<>();
         List<String> bl = FileUtils.readLines(new File("bookInfo/sobooks2022-07-06T05:38:30Z"), Charset.defaultCharset());
         for (int i = 0; i < bl.size(); i++ ){
             if(StringUtils.isEmpty(bl.get(i))){
@@ -102,84 +96,44 @@ public class SoBooksCrawlerByJsoup {
                 continue;
             }
 
-            if(i != 0 && i % 100 == 0){
-                midDone(futureList);
-            }
             int finalI = i;
-            try{
-                BookUrl bookUrl = booku.getUrls().get(0);
-                if(bookUrl.getType() == UrlType.LZ && !StringUtils.isEmpty(bookUrl.getUrl())){
-                    if(onlyLanzou < 0){
-                        continue;
+            BookUrl bookUrl = booku.getUrls().get(0);
+
+            BiConsumer<? super Boolean,? super Throwable> onComplete = (r, e) -> {
+                if(!check && e == null){
+                    if(r){
+                        save(downPath, Collections.singletonList( JSON.toJSONString(booku, false)), true);
+                    }else{
+                        downLoadederror.add(booku);
                     }
-                    futureList.add(CompletableFuture.runAsync(() -> {
-                        log.info("try download {}  {}", finalI, booku.name);
-                        String url = bookUrl.getUrl();
-                         if(LanzouUtil.download(url, bookUrl.getPwd(),check)){
-                             if(!check) downLoaded.add(booku);
-                         }else {
-                             if(!check) downLoadederror.add(booku);
-                         }
-                    },executorService));
-                }else if(bookUrl.getType() == UrlType.CT && !StringUtils.isEmpty(bookUrl.getUrl())) {
-                    taskQueue.offer(booku);
                 }
+            };
+            try{
+                boolean lanzou = bookUrl.getType() == UrlType.LZ
+                        && !StringUtils.isEmpty(bookUrl.getUrl())
+                        && onlyLanzou >= 0;
+                boolean ct = !lanzou && bookUrl.getType() == UrlType.CT && !StringUtils.isEmpty(bookUrl.getUrl()) && !check;
+                if(!lanzou && !ct){
+                    continue;
+                }
+                Supplier<String> getUrl = () -> {
+                    log.info("try download {}  {}", finalI, booku.name);
+                    return lanzou ? bookUrl.getUrl() : bookUrl.getUrl().replace("z701.com","url54.ctfile.com").replace("306t.com","url54.ctfile.com");
+                };
+                CompletableFuture<Boolean> future =  lanzou
+                        ? lanzouUtil.submitDownTask(getUrl,bookUrl.getPwd(),check).whenComplete(onComplete)
+                        : CtfileUtil.submitDownTask(getUrl,bookUrl.getPwd()).whenComplete(onComplete);
+                futureList.add(future);
             }catch (Exception e){
                 downLoadederror.add(booku);
             }
         }
-        midDone(futureList);
-
-        taskQueue.add(Book.builder().build());
-        executorService.shutdown();
-        ctExecutor.shutdown();
-        while (true){
-            try {
-                ctExecutor.awaitTermination(1,TimeUnit.MINUTES);
-                executorService.awaitTermination(1,TimeUnit.MINUTES);
-                if(ctExecutor.isTerminated() && executorService.isTerminated()){
-                    break;
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        midDone(futureList);
-
-    }
-
-    private static void midDone(List<CompletableFuture<Void>> futureList) {
         CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
-        futureList.clear();
         future.join();
+        futureList.clear();
         String d = DateUtils.formatDate(new Date());
-        save(downPath, downLoaded.stream().map(e -> JSON.toJSONString(e, false)).collect(Collectors.toList()), true);
-        downLoaded.clear();
-        save("bookInfo/tianlangdownerror" + d, downLoadederror.stream().map(e -> JSON.toJSONString(e, false)).collect(Collectors.toList()));
+        save("bookInfo/sobooksdownerror" + d, downLoadederror.stream().map(e -> JSON.toJSONString(e, false)).collect(Collectors.toList()));
         downLoadederror.clear();
-    }
-
-    private static void startCtExecutor(){
-        ctExecutor.submit(() -> {
-           while (true){
-               try {
-                   Book book = taskQueue.poll(1000,TimeUnit.MILLISECONDS);
-                   if(book != null ){
-                       if(book.getUrls().get(0).getUrl() == null){
-                           break;
-                       }
-                       String url = book.getUrls().get(0).getUrl().replace("z701.com","url54.ctfile.com").replace("306t.com","url54.ctfile.com");
-                       if(CtfileUtil.download(url,book.getUrls().get(0).getPwd())){
-                           save(downPath, Collections.singletonList( JSON.toJSONString(book, false)), true);
-                       }else {
-                           downLoadederror.add(book);
-                       }
-                   }
-               } catch (InterruptedException e) {
-                   e.printStackTrace();
-               }
-           }
-        });
     }
 
     public static List<Book> crawler(String url){

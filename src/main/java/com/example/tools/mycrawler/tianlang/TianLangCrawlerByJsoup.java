@@ -5,6 +5,7 @@ import com.example.tools.mycrawler.HttpUtils;
 import com.example.tools.mycrawler.ctfile.CtfileUtil;
 import com.example.tools.mycrawler.epubee.IP;
 import com.example.tools.mycrawler.lanzou.LanzouUtil;
+import com.example.tools.mycrawler.util.Streams;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,8 +25,10 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
@@ -37,14 +40,12 @@ import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
 @Slf4j
 public class TianLangCrawlerByJsoup {
     private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
-    private static final ExecutorService ctExecutor = Executors.newFixedThreadPool(1);
-    private static final BlockingQueue<Book> taskQueue = new LinkedBlockingQueue<>();
 
     private static final List<Book> books = new ArrayList<>();
-    private static final List<Book> downLoaded = new ArrayList<>();
-    private static final List<Book> downLoadederror = new ArrayList<>();
     private static final List<String> errorUrls = new ArrayList<>();
     private static final List<String> sizeZero = new ArrayList<>();
+
+    private static final List<Book> downLoadederror = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
       //  crawlerAll();
@@ -66,18 +67,11 @@ public class TianLangCrawlerByJsoup {
         save("bookInfo/"+ d + "zero", sizeZero);
     }
     public static void downAll(boolean check, int onlyLanzou) throws IOException {
-        if(onlyLanzou < 1 && !check)  startCtExecutor();
-        List<CompletableFuture<Void>> futureList = new ArrayList<>();
-        save("bookInfo/tianlangdowned", downLoaded.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()),true);
+        save("bookInfo/tianlangdowned", Collections.emptyList(),true);
         List<String> downloadList = FileUtils.readLines(new File("bookInfo/tianlangdowned"), Charset.defaultCharset());
-        Set<String> downloadNames = new TreeSet<>();
-        for(String s : downloadList){
-            if(StringUtils.isEmpty(s)){
-                continue;
-            }
-            TianLangCrawlerByJsoup.Book booku = JSON.parseObject(s, TianLangCrawlerByJsoup.Book.class);
-            downloadNames.add(booku.getName());
-        }
+        Set<String> downloadNames = Streams.stream(downloadList).filter(e -> !StringUtils.isEmpty(e)).map(e -> JSON.parseObject(e, TianLangCrawlerByJsoup.Book.class).getName()).toSet();
+        LanzouUtil lanzouUtil = new LanzouUtil(10);
+        List<CompletableFuture<Boolean>> futureList = new ArrayList<>();
         List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-23T14:12:49Z"), Charset.defaultCharset());
         for (int i = 0; i < bl.size(); i++ ){
             if(StringUtils.isEmpty(bl.get(i))){
@@ -89,94 +83,51 @@ public class TianLangCrawlerByJsoup {
                 continue;
             }
 
-            if(i != 0 && i % 100 == 0){
-                midDone(futureList);
-            }
             int finalI = i;
+
+            BiConsumer<? super Boolean,? super Throwable> onComplete = (r,e) -> {
+                if(!check && e == null){
+                    if(r){
+                        save("bookInfo/tianlangdowned", Collections.singletonList( JSON.toJSONString(booku, false)), true);
+                    }else{
+                        downLoadederror.add(booku);
+                    }
+                }
+            };
             try{
-                if(!StringUtils.isEmpty(booku.getUrl2())
+                boolean lanzou = !StringUtils.isEmpty(booku.getUrl2())
                         && !booku.getUrl2().contains("ctfile.com")
                         && !booku.getUrl2().contains("z701.com")
-                        && !booku.getUrl2().contains("306t.com")){
-                    if(onlyLanzou < 0){
-                        continue;
-                    }
-                    futureList.add(CompletableFuture.runAsync(() -> {
-                        log.info("try download {}  {}", finalI, booku.name);
-                        String url = booku.getUrl2().replace("https://wws.lanzous.com","https://tianlangbooks.lanzouf.com");
-                        if(url.contains("www.tianlangbooks.com/redirect")){
-                            url = redirctInfo(url);
-                        }
-                         if(LanzouUtil.download(url, booku.getPwd2(),check)){
-                             if(!check) downLoaded.add(booku);
-                         }else {
-                             if(!check) downLoadederror.add(booku);
-                         }
-                    },executorService));
-                }else if(!StringUtils.isEmpty(booku.getName())) {
-                    taskQueue.offer(booku);
+                        && !booku.getUrl2().contains("306t.com")
+                        && onlyLanzou >= 0;
+                boolean ct = !lanzou && !StringUtils.isEmpty(booku.getName()) && !check;
+                if(!lanzou && !ct){
+                    continue;
                 }
+                Supplier<String> getUrl = () -> {
+                    log.info("try download {}  {}", finalI, booku.name);
+                    String url = lanzou
+                            ? booku.getUrl2().replace("https://wws.lanzous.com","https://tianlangbooks.lanzouf.com")
+                            : booku.getUrl1().replace("z701.com","url54.ctfile.com").replace("306t.com","url54.ctfile.com");
+                    if(url.contains("www.tianlangbooks.com/redirect")){
+                        url = redirctInfo(url);
+                    }
+                    return url;
+                };
+                CompletableFuture<Boolean> future =  lanzou
+                        ? lanzouUtil.submitDownTask(getUrl,booku.getPwd2(),check).whenComplete(onComplete)
+                        : CtfileUtil.submitDownTask(getUrl,booku.getPwd1()).whenComplete(onComplete);
+                futureList.add(future);
             }catch (Exception e){
                 downLoadederror.add(booku);
             }
         }
-        midDone(futureList);
-
-        taskQueue.add(Book.builder().build());
-        executorService.shutdown();
-        ctExecutor.shutdown();
-        while (true){
-            try {
-                ctExecutor.awaitTermination(1,TimeUnit.MINUTES);
-                executorService.awaitTermination(1,TimeUnit.MINUTES);
-                if(ctExecutor.isTerminated() && executorService.isTerminated()){
-                    break;
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        midDone(futureList);
-
-    }
-
-    private static void midDone(List<CompletableFuture<Void>> futureList) {
         CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
-        futureList.clear();
         future.join();
+        futureList.clear();
         String d = DateUtils.formatDate(new Date());
-        save("bookInfo/tianlangdowned", downLoaded.stream().map(e -> JSON.toJSONString(e, false)).collect(Collectors.toList()), true);
-        downLoaded.clear();
         save("bookInfo/tianlangdownerror" + d, downLoadederror.stream().map(e -> JSON.toJSONString(e, false)).collect(Collectors.toList()));
         downLoadederror.clear();
-    }
-
-    private static void startCtExecutor(){
-        ctExecutor.submit(() -> {
-           while (true){
-               try {
-                   Book book = taskQueue.poll(1000,TimeUnit.MILLISECONDS);
-                   if(book != null ){
-                       if(book.getUrl1() == null){
-                           log.info("end {}", book);
-                           break;
-                       }
-                       String url = book.getUrl1().replace("z701.com","url54.ctfile.com").replace("306t.com","url54.ctfile.com");
-                       if(url.contains("www.tianlangbooks.com/redirect")){
-                           url = redirctInfo(url);
-                       }
-                       if(CtfileUtil.download(url,book.getPwd1())){
-                          // downLoaded.add(book);// xieru
-                           save("bookInfo/tianlangdowned", Collections.singletonList( JSON.toJSONString(book, false)), true);
-                       }else {
-                           downLoadederror.add(book);
-                       }
-                   }
-               } catch (InterruptedException e) {
-                   e.printStackTrace();
-               }
-           }
-        });
     }
 
     public static List<Book> crawler(String url){

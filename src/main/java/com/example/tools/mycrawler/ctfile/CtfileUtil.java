@@ -24,6 +24,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
@@ -54,26 +55,9 @@ public class CtfileUtil {
         //FileUtils.writeLines(new File(dir,"files.txt"), FileUtils.listFiles(new File(dir),null,false).stream().map(File::getName).collect(Collectors.toList()));
 
     }
-    public static void downTianlang() throws IOException {
-        List<CompletableFuture<Void>> futureList = new ArrayList<>();
-        List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-19T00:54:12Z"), Charset.defaultCharset());
-        for (int i = 27; i < bl.size(); i++ ){
-            TianLangCrawlerByJsoup.Book booku = JSON.parseObject(bl.get(i), TianLangCrawlerByJsoup.Book.class);
-            Book book = getBook(booku.getUrl1(),booku.getPwd1());
-            books.add(book);
-            if(book == null || book.getName() == null || CollectionUtils.isEmpty(book.getUrls())){
-                errorUrls.add(booku.getUrl1());
-            }else {
-                down(book);
-                // futureList.add(CompletableFuture.runAsync(() -> down(finalI,book),executorService));
-            }
-        }
-        CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
-        future.join();
 
-        String d = DateUtils.formatDate(new Date());
-        save("bookInfo/ctfile" + d, books.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()));
-        save("bookInfo/ctfile" + d + "error", errorUrls);
+    public static CompletableFuture<Boolean> submitDownTask(Supplier<String> lanzUrl, String pwd){
+        return CompletableFuture.supplyAsync(() -> download(lanzUrl.get(), pwd), executorService);
     }
 
     public static boolean download(String cturl, String pwd){

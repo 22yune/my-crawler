@@ -38,7 +38,21 @@ public class BookLibrary {
     }
 
     public static void main(String[] args){
-        new BookLibrary(defaultMetaFilePath).addStore("/Volumes/android/l4");
+        BookLibrary library = new BookLibrary(defaultMetaFilePath);
+        library.addStore("/Volumes/Untitled/Books");
+    }
+
+    public void remove(){
+        List<String> a = new ArrayList<>();
+        load("bookInfo/library.txtdupMd5").forEach(e -> {
+            String md5 = Md5Util.getFileMD5(new File(e));
+            if(md5Contain(md5)){
+                log.warn("delete {}, {}",e, new File(e).delete());
+            }else {
+                a.add(e);
+            }
+        });
+        log.info("[{}}]", JSON.toJSONString(a));
     }
 
     public boolean nameContain(String name){
@@ -56,16 +70,17 @@ public class BookLibrary {
         dupNameFile.add(dir);
         Set<BookMeta> setNew = fileStream(dir).map(e -> {
             String md5 = Md5Util.getFileMD5(e);
-            if(!md5Set.add(md5)){
-                dupMd5File.add(e.getAbsolutePath());
-                return null;
-            }
             String name = e.getName();
-            if(!nameSet.add(name)){
-                dupNameFile.add(e.getAbsolutePath());
+            BookMeta meta = new BookMeta(name,md5,e.getAbsolutePath());
+            if(!md5Set.add(md5)){
+                dupMd5File.add(JSON.toJSONString(meta));
                 return null;
             }
-            return new BookMeta(name,md5);
+            if(!nameSet.add(name)){
+                dupNameFile.add(JSON.toJSONString(meta));
+                return null;
+            }
+            return meta;
         }).filter(Objects::nonNull).collect(Collectors.toSet());
         log.info("end size new{} md5 {} name {}", setNew.size(), dupMd5File.size(), dupNameFile.size());
         save(metaFilePath,Streams.stream(setNew).map(JSON::toJSONString).toList(), true);
@@ -104,6 +119,7 @@ public class BookLibrary {
     public static class BookMeta{
         private String name;
         private String md5;
+        private String path;
     }
 
     public enum Type{

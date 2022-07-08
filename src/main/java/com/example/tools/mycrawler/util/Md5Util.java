@@ -133,4 +133,11 @@ public class Md5Util {
         }
     }
 
+    public static void main(String[] args){
+        String a = "/Volumes/android/Books/tianlang-lanzou/Z Guo Jing Ji Wen Ti Cong S - Wen Yu Yuan.azw3";
+        String b = "/Volumes/android/l4/中国经济问题丛书精选（套装共13册.azw3";
+        System.out.println(getFileMD5(new File(a)));
+        System.out.println(getFileMD5(new File(b)));
+    }
+
 }

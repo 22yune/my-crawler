@@ -38,7 +38,7 @@ public class BookLibrary {
     }
 
     public static void main(String[] args){
-        new BookLibrary(defaultMetaFilePath).addStore("/Volumes/android/Books");
+        new BookLibrary(defaultMetaFilePath).addStore("/Volumes/android/l4");
     }
 
     public boolean nameContain(String name){
@@ -55,18 +55,19 @@ public class BookLibrary {
         List<String> dupMd5File = new ArrayList<>();
         dupNameFile.add(dir);
         Set<BookMeta> setNew = fileStream(dir).map(e -> {
-            String name = e.getName();
-            if(!nameSet.add(name)){
-                dupNameFile.add(e.getAbsolutePath());
-                return null;
-            }
             String md5 = Md5Util.getFileMD5(e);
             if(!md5Set.add(md5)){
                 dupMd5File.add(e.getAbsolutePath());
                 return null;
             }
+            String name = e.getName();
+            if(!nameSet.add(name)){
+                dupNameFile.add(e.getAbsolutePath());
+                return null;
+            }
             return new BookMeta(name,md5);
         }).filter(Objects::nonNull).collect(Collectors.toSet());
+        log.info("end size new{} md5 {} name {}", setNew.size(), dupMd5File.size(), dupNameFile.size());
         save(metaFilePath,Streams.stream(setNew).map(JSON::toJSONString).toList(), true);
         save(metaFilePath+ "dupName",dupNameFile, true);
         save(metaFilePath+ "dupMd5",dupMd5File, true);

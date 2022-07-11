@@ -39,7 +39,7 @@ public class BookLibrary {
 
     public static void main(String[] args){
         BookLibrary library = new BookLibrary(defaultMetaFilePath);
-        library.addStore("/Volumes/Untitled/Books");
+        library.addStore("/Volumes/android/Books");//Untitled
     }
 
     public void remove(){

@@ -39,16 +39,16 @@ public class LanzouUtil {
     private static final String defaultStoreDir = "/Volumes/Untitled/Books/tianlang-lanzou";//"/Users/hunliji/books/tianlang-lanzou";
     private static final String defaultDownDir = "/Users/hunliji/books/tianlang-lanzou";
 
-    private   String storeDir;
-    private   String downDir;
-    private   ExecutorService executorService;
-    private  final List<Book> books = new ArrayList<>();
-    private  final List<String> errorUrls = new ArrayList<>();
-    private  final Set<String> fileNames = new TreeSet<>();
+    private final String storeDir;
+    private final String downDir;
+    private final ExecutorService executorService;
+    private final List<Book> books = new ArrayList<>();
+    private final List<String> errorUrls = new ArrayList<>();
+    private final Set<String> fileNames = new TreeSet<>();
 
 
     public LanzouUtil(int threadSize) {
-        new LanzouUtil(defaultStoreDir,defaultDownDir,threadSize);
+        this(defaultStoreDir,defaultDownDir,threadSize);
     }
     public LanzouUtil(String storeDir, String downDir, int threadSize) {
         this.storeDir = storeDir;

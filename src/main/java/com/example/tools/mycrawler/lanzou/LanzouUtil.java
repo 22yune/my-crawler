@@ -168,17 +168,21 @@ public class LanzouUtil {
             Book book = getFileInfo(userName,lanzUrl, pwd);
             if(book != null){
                 boolean r = down(book.name, book.url, check);
-                if(r){
-                    File f = new File(downDir, book.name);
-                    if(check && book.name.toUpperCase().endsWith(".ZIP")) {
-                        String rz = upZip(f, downDir + "unzip");
-                        if(rz != null && rz.length() > 0){
-                            boolean d = f.delete();
-                            log.info("移除文件{}  {}", d ? "成功" : "失败", f.getAbsolutePath());
-                            f = new File(rz);
+                try {
+                    if(r){
+                        File f = new File(downDir, book.name);
+                        if(book.name.toUpperCase().endsWith(".ZIP")) {
+                            String rz = upZip(f, downDir + "unzip");
+                            if(rz != null && rz.length() > 0){
+                                boolean d = f.delete();
+                                log.info("移除文件{}  {}", d ? "成功" : "失败", f.getAbsolutePath());
+                                f = new File(rz);
+                            }
                         }
+                        bookLibrary.addFile(f);
                     }
-                    bookLibrary.addFile(f);
+                }catch (Exception e){
+                    log.error("添加到数据出错", e);
                 }
                 return r;
             }
@@ -236,7 +240,7 @@ public class LanzouUtil {
             Document listPage = Jsoup.connect(url).get();
             String a = listPage.select("body > script").toString();
             int i = a.indexOf("data : '");
-            int mi = a.indexOf("data : {");
+            int mi = a.indexOf("data : {",a.lastIndexOf("//data : {") + 3);
             int fi = a.indexOf("function file");
             if(i > 0 ){
                 int j = a.indexOf("'", i + 8);

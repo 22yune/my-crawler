@@ -3,6 +3,7 @@ package com.example.tools.mycrawler.sobooks;
 import com.alibaba.fastjson.JSON;
 import com.example.tools.mycrawler.ctfile.CtfileUtil;
 import com.example.tools.mycrawler.lanzou.LanzouUtil;
+import com.example.tools.mycrawler.library.BookLibrary;
 import com.example.tools.mycrawler.util.Streams;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -83,7 +84,10 @@ public class SoBooksCrawlerByJsoup {
         save(downPath, Collections.emptyList(),true);
         List<String> downloadList = FileUtils.readLines(new File(downPath), Charset.defaultCharset());
         Set<String> downloadNames = Streams.stream(downloadList).filter(e -> !StringUtils.isEmpty(e)).map(e -> JSON.parseObject(e, SoBooksCrawlerByJsoup.Book.class).getName()).toSet();
-        LanzouUtil lanzouUtil = new LanzouUtil("sobooks", 10);
+        String defaultStoreDir = "/Volumes/Untitled/Books/sobooks-lanzou";//"/Users/hunliji/books/tianlang-lanzou";
+        String defaultDownDir = "/Users/hunliji/books/sobooks-lanzou";
+        LanzouUtil lanzouUtil = new LanzouUtil("sobooks", defaultStoreDir,defaultDownDir,10);
+        lanzouUtil.setBookLibrary(new BookLibrary());
         List<CompletableFuture<Boolean>> futureList = new ArrayList<>();
         List<String> bl = FileUtils.readLines(new File("bookInfo/sobooks2022-07-06T05:38:30Z"), Charset.defaultCharset());
         for (int i = 0; i < bl.size() && i < 1000; i++ ){

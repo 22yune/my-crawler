@@ -30,6 +30,9 @@ public class BookLibrary {
     private final Set<String> md5Set;
     private final Set<String> nameSet;
 
+    public BookLibrary() {
+        this(defaultMetaFilePath);
+    }
     public BookLibrary(String metaFilePath) {
         this.metaFilePath = metaFilePath;
         Set<BookMeta> list = Streams.stream(load(metaFilePath)).map(e -> JSON.parseObject(e,BookMeta.class)).toSet();

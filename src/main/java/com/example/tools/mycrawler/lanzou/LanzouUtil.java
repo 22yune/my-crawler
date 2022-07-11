@@ -6,9 +6,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.tools.mycrawler.HttpUtils;
 import com.example.tools.mycrawler.ctfile.CtfileUtil;
 import com.example.tools.mycrawler.epubee.IP;
+import com.example.tools.mycrawler.library.BookLibrary;
 import com.example.tools.mycrawler.tianlang.TianLangCrawlerByJsoup;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -45,7 +47,8 @@ public class LanzouUtil {
     private final List<Book> books = new ArrayList<>();
     private final List<String> errorUrls = new ArrayList<>();
     private final Set<String> fileNames = new TreeSet<>();
-
+    @Setter
+    private BookLibrary bookLibrary;
 
     public LanzouUtil(int threadSize) {
         this(defaultStoreDir,defaultDownDir,threadSize);
@@ -100,7 +103,7 @@ public class LanzouUtil {
                 save(dir + "/errorZip.txt", errorZip.stream().map(JSON::toJSONString).collect(Collectors.toList()));
                 errorZip.clear();
             }
-            int finalI = i;
+
             try {
                 if(!StringUtils.isEmpty(booku.getUrl2())
                         && !booku.getUrl2().contains("ctfile.com")
@@ -146,8 +149,8 @@ public class LanzouUtil {
             return;
         }
         Arrays.stream(files).forEach( file -> {
-            Boolean r = upZip(file,outDir);
-            if(r != null && r){
+            String r = upZip(file,outDir);
+            if(r != null && r.length() > 0){
                 boolean d = file.delete();
                 log.info("移除文件{}  {}", d ? "成功" : "失败", file.getAbsolutePath());
             }
@@ -161,10 +164,26 @@ public class LanzouUtil {
     public boolean download(String lanzUrl, String pwd, boolean check){
         try {
             Book book = getFileInfo(lanzUrl, pwd);
-            return book != null && down(book.name, book.url, check);
+            if(book != null){
+                boolean r = down(book.name, book.url, check);
+                if(r){
+                    File f = new File(downDir, book.name);
+                    if(check && book.name.toUpperCase().endsWith(".ZIP")) {
+                        String rz = upZip(f, downDir + "unzip");
+                        if(rz != null && rz.length() > 0){
+                            boolean d = f.delete();
+                            log.info("移除文件{}  {}", d ? "成功" : "失败", f.getAbsolutePath());
+                            f = new File(rz);
+                        }
+                    }
+                    bookLibrary.addFile(f);
+                }
+                return r;
+            }
         }catch (Exception ignore){
-            return false;
+            log.error("",ignore);
         }
+        return false;
     }
 
     private boolean down(String name, String url, boolean check){
@@ -353,7 +372,7 @@ public class LanzouUtil {
         return true;
     }
 
-    public static Boolean upZip(File zipFile,String outDir){
+    public static String upZip(File zipFile,String outDir){
         if(!zipFile.exists()){
             return null;
         }
@@ -391,11 +410,11 @@ public class LanzouUtil {
                 _out.flush();
                 _out.close();
                 log.info(" unziped  {} to {} ", zipFile.getName(), _file.getName() );
-                return true;
+                return _file.getAbsolutePath();
             }
         } catch (ZipException e){
             log.error("unzip error {} {}",zipFile.getName(),e.getMessage());
-            return false;
+            return "";
         }catch (IOException e) {
             log.error("unzip error {} {}",zipFile.getName(), e.getMessage());
             return null;

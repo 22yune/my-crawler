@@ -52,7 +52,7 @@ public class SoBooksCrawlerByJsoup {
         String url = "https://sobooks.net/page/2";
         //crawler(url);
       //  crawlerAll();
-        downAll(true, 1);
+        downAll(false, 1);
     }
 
     public static void crawlerAll() throws IOException {
@@ -86,7 +86,7 @@ public class SoBooksCrawlerByJsoup {
         LanzouUtil lanzouUtil = new LanzouUtil(10);
         List<CompletableFuture<Boolean>> futureList = new ArrayList<>();
         List<String> bl = FileUtils.readLines(new File("bookInfo/sobooks2022-07-06T05:38:30Z"), Charset.defaultCharset());
-        for (int i = 0; i < bl.size(); i++ ){
+        for (int i = 0; i < bl.size() && i < 1000; i++ ){
             if(StringUtils.isEmpty(bl.get(i))){
                 continue;
             }
@@ -110,15 +110,15 @@ public class SoBooksCrawlerByJsoup {
             };
             try{
                 boolean lanzou = bookUrl.getType() == UrlType.LZ
-                        && !StringUtils.isEmpty(bookUrl.getUrl())
-                        && onlyLanzou >= 0;
-                boolean ct = !lanzou && bookUrl.getType() == UrlType.CT && !StringUtils.isEmpty(bookUrl.getUrl()) && !check;
+                        && !StringUtils.isEmpty(bookUrl.getUrl());
+                boolean ct = !lanzou && bookUrl.getType() == UrlType.CT && !StringUtils.isEmpty(bookUrl.getUrl()) && !check && onlyLanzou <= 0;;
+                lanzou = lanzou && onlyLanzou >= 0;
                 if(!lanzou && !ct){
                     continue;
                 }
                 Supplier<String> getUrl = () -> {
                     log.info("try download {}  {}", finalI, booku.name);
-                    return lanzou ? bookUrl.getUrl() : bookUrl.getUrl().replace("z701.com","url54.ctfile.com").replace("306t.com","url54.ctfile.com");
+                    return !ct ? bookUrl.getUrl() : bookUrl.getUrl().replace("z701.com","url54.ctfile.com").replace("306t.com","url54.ctfile.com");
                 };
                 CompletableFuture<Boolean> future =  lanzou
                         ? lanzouUtil.submitDownTask(getUrl,bookUrl.getPwd(),check).whenComplete(onComplete)

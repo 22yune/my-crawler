@@ -70,24 +70,39 @@ public class BookLibrary {
         dupNameFile.add(dir);
         List<String> dupMd5File = new ArrayList<>();
         dupNameFile.add(dir);
-        Set<BookMeta> setNew = fileStream(dir).map(e -> {
+        Set<String> setNew = fileStream(dir).map(e -> {
             String md5 = Md5Util.getFileMD5(e);
             String name = e.getName();
             BookMeta meta = new BookMeta(name,md5,e.getAbsolutePath());
+            String s = JSON.toJSONString(meta);
             if(!md5Set.add(md5)){
-                dupMd5File.add(JSON.toJSONString(meta));
+                dupMd5File.add(s);
                 return null;
             }
             if(!nameSet.add(name)){
-                dupNameFile.add(JSON.toJSONString(meta));
+                dupNameFile.add(s);
                 return null;
             }
-            return meta;
+            return s;
         }).filter(Objects::nonNull).collect(Collectors.toSet());
         log.info("end size new{} md5 {} name {}", setNew.size(), dupMd5File.size(), dupNameFile.size());
-        save(metaFilePath,Streams.stream(setNew).map(JSON::toJSONString).toList(), true);
+        save(metaFilePath, new ArrayList<>(setNew) , true);
         save(metaFilePath+ "dupName",dupNameFile, true);
         save(metaFilePath+ "dupMd5",dupMd5File, true);
+    }
+
+    public void addFile(File e){
+        String md5 = Md5Util.getFileMD5(e);
+        String name = e.getName();
+        BookMeta meta = new BookMeta(name,md5,e.getAbsolutePath());
+        if(!md5Set.add(md5)){
+            save(metaFilePath+ "dupMd5",Collections.singletonList(JSON.toJSONString(meta)), true);
+            log.warn("delete {}, {}", e.getAbsolutePath(), e.delete());
+        }else if(!nameSet.add(name)){
+            save(metaFilePath+ "dupName", Collections.singletonList(JSON.toJSONString(meta)), true);
+        }else {
+            save(metaFilePath, Collections.singletonList(JSON.toJSONString(meta)), true);
+        }
     }
 
     private static Stream<File> fileStream(String path){

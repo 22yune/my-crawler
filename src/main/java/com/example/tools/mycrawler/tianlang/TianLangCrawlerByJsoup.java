@@ -49,7 +49,7 @@ public class TianLangCrawlerByJsoup {
 
     public static void main(String[] args) throws IOException {
       //  crawlerAll();
-        downAll(true, 1);
+        downAll(false, 0);
     }
 
     public static void crawlerAll() {
@@ -98,15 +98,15 @@ public class TianLangCrawlerByJsoup {
                 boolean lanzou = !StringUtils.isEmpty(booku.getUrl2())
                         && !booku.getUrl2().contains("ctfile.com")
                         && !booku.getUrl2().contains("z701.com")
-                        && !booku.getUrl2().contains("306t.com")
-                        && onlyLanzou >= 0;
-                boolean ct = !lanzou && !StringUtils.isEmpty(booku.getName()) && !check;
+                        && !booku.getUrl2().contains("306t.com");
+                boolean ct = !lanzou && !StringUtils.isEmpty(booku.getName()) && !check && onlyLanzou <= 0;
+                lanzou = lanzou && onlyLanzou >= 0;
                 if(!lanzou && !ct){
                     continue;
                 }
                 Supplier<String> getUrl = () -> {
                     log.info("try download {}  {}", finalI, booku.name);
-                    String url = lanzou
+                    String url = !ct
                             ? booku.getUrl2().replace("https://wws.lanzous.com","https://tianlangbooks.lanzouf.com")
                             : booku.getUrl1().replace("z701.com","url54.ctfile.com").replace("306t.com","url54.ctfile.com");
                     if(url.contains("www.tianlangbooks.com/redirect")){

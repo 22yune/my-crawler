@@ -83,7 +83,7 @@ public class SoBooksCrawlerByJsoup {
         save(downPath, Collections.emptyList(),true);
         List<String> downloadList = FileUtils.readLines(new File(downPath), Charset.defaultCharset());
         Set<String> downloadNames = Streams.stream(downloadList).filter(e -> !StringUtils.isEmpty(e)).map(e -> JSON.parseObject(e, SoBooksCrawlerByJsoup.Book.class).getName()).toSet();
-        LanzouUtil lanzouUtil = new LanzouUtil(10);
+        LanzouUtil lanzouUtil = new LanzouUtil("sobooks", 10);
         List<CompletableFuture<Boolean>> futureList = new ArrayList<>();
         List<String> bl = FileUtils.readLines(new File("bookInfo/sobooks2022-07-06T05:38:30Z"), Charset.defaultCharset());
         for (int i = 0; i < bl.size() && i < 1000; i++ ){
@@ -120,9 +120,10 @@ public class SoBooksCrawlerByJsoup {
                     log.info("try download {}  {}", finalI, booku.name);
                     return !ct ? bookUrl.getUrl() : bookUrl.getUrl().replace("z701.com","url54.ctfile.com").replace("306t.com","url54.ctfile.com");
                 };
+                String pwd = bookUrl.getPwd().replace("×","x");
                 CompletableFuture<Boolean> future =  lanzou
-                        ? lanzouUtil.submitDownTask(getUrl,bookUrl.getPwd(),check).whenComplete(onComplete)
-                        : CtfileUtil.submitDownTask(getUrl,bookUrl.getPwd()).whenComplete(onComplete);
+                        ? lanzouUtil.submitDownTask(getUrl, pwd,check).whenComplete(onComplete)
+                        : CtfileUtil.submitDownTask(getUrl, pwd).whenComplete(onComplete);
                 futureList.add(future);
             }catch (Exception e){
                 downLoadederror.add(booku);

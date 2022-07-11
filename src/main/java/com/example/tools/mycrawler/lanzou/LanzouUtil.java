@@ -41,6 +41,7 @@ public class LanzouUtil {
     private static final String defaultStoreDir = "/Volumes/Untitled/Books/tianlang-lanzou";//"/Users/hunliji/books/tianlang-lanzou";
     private static final String defaultDownDir = "/Users/hunliji/books/tianlang-lanzou";
 
+    private final String userName;
     private final String storeDir;
     private final String downDir;
     private final ExecutorService executorService;
@@ -50,10 +51,11 @@ public class LanzouUtil {
     @Setter
     private BookLibrary bookLibrary;
 
-    public LanzouUtil(int threadSize) {
-        this(defaultStoreDir,defaultDownDir,threadSize);
+    public LanzouUtil(String userName, int threadSize) {
+        this(userName, defaultStoreDir,defaultDownDir,threadSize);
     }
-    public LanzouUtil(String storeDir, String downDir, int threadSize) {
+    public LanzouUtil(String userName, String storeDir, String downDir, int threadSize) {
+        this.userName = userName;
         this.storeDir = storeDir;
         this.downDir = downDir;
         this.executorService = Executors.newFixedThreadPool(threadSize);
@@ -115,7 +117,7 @@ public class LanzouUtil {
                             if(url.contains("www.tianlangbooks.com/redirect")){
                                 url = TianLangCrawlerByJsoup.redirctInfo(url);
                             }
-                            Book b = getFileInfo(url, booku.getPwd2());
+                            Book b = getFileInfo("tianlangbooks",url, booku.getPwd2());
                             if(b.name.toUpperCase().endsWith(".ZIP")){
                                 Boolean r = checkZip(dir,b.name);
                                 if(r != null && !r){
@@ -163,7 +165,7 @@ public class LanzouUtil {
 
     public boolean download(String lanzUrl, String pwd, boolean check){
         try {
-            Book book = getFileInfo(lanzUrl, pwd);
+            Book book = getFileInfo(userName,lanzUrl, pwd);
             if(book != null){
                 boolean r = down(book.name, book.url, check);
                 if(r){
@@ -278,19 +280,19 @@ public class LanzouUtil {
         });
     }
 
-    public static Book getFileInfo(String url, String pwd){
+    private static Book getFileInfo(String userName, String url, String pwd){
         if(pwd == null){
             try {
-                return getFileByIdUrl(url);
+                return getFileByIdUrl(userName, url);
             }catch (Exception ignored){
             }
         }
         String[] param = getFilePostData(url,pwd);
         boolean isC = param.length != 6;
-        return isC ? getFilDir(url, param, pwd) : getFile(url,param);
+        return isC ? getFilDir(userName, url, param, pwd) : getFile(userName,url,param);
     }
-    private static Book getFile(String url,String[] param){
-        String u = "https://tianlangbooks.lanzouf.com/ajaxm.php";
+    private static Book getFile(String userName, String url,String[] param){
+        String u = "https://"+ userName +".lanzouf.com/ajaxm.php";
         return doRetry(3,() -> {
             Document listPage = Jsoup.connect(u).data(param).header("Content-Type","application/x-www-form-urlencoded").header("referer", url).post();
             JSONObject object = JSON.parseObject(listPage.text());
@@ -301,42 +303,42 @@ public class LanzouUtil {
             return Book.builder().name(object.getString("inf")).url(urll).build();
         });
     }
-    private static Book getFilDir(String url,String[] param, String pwd){
+    private static Book getFilDir(String userName, String url,String[] param, String pwd){
         try{
-            return doGetFilDir(url,param);
+            return doGetFilDir(userName,url,param);
         }catch (Exception e){
-            return doRetry(2, () -> doGetFilDir(url, getFilePostData(url,pwd)));
+            return doRetry(2, () -> doGetFilDir(userName, url, getFilePostData(url,pwd)));
         }
     }
-    private static Book doGetFilDir(String url,String[] param) throws IOException{
-        String u = "https://tianlangbooks.lanzouf.com/filemoreajax.php";
+    private static Book doGetFilDir(String userName, String url,String[] param) throws IOException{
+        String u = "https://" + userName + ".lanzouf.com/filemoreajax.php";
         Document listPage = Jsoup.connect(u).data(param).header("Content-Type","application/x-www-form-urlencoded").header("referer", url).post();
         JSONObject object = JSON.parseObject(listPage.text());
         JSONArray txt = object.getJSONArray("text");
         JSONObject first = (JSONObject) txt.stream().sorted(Comparator.comparing(ee -> CtfileUtil.Type.index(((JSONObject)ee).getString("icon")))).limit(1).findFirst().orElse(null);
         String name = first.getString("name_all");
         String id = first.getString("id");
-        String root = "https://tianlangbooks.lanzouf.com";
+        String root = "https://" + userName + ".lanzouf.com";
         String idu = root+"/"+id;
-        Book book = getFileByIdUrl(idu);
+        Book book = getFileByIdUrl(userName, idu);
         book.setName(name);
         return book;
     }
-    private static Book getFileByIdUrl(String url){
-        Book book = getUrlbyid(url);
+    private static Book getFileByIdUrl(String userName, String url){
+        Book book = getUrlbyid(userName, url);
         String urlf = book.url;
         String pwd = "tlsw";
-        Book b = getFile(urlf,getFilePostData(urlf,pwd));
+        Book b = getFile(userName,urlf,getFilePostData(urlf,pwd));
         if(b == null){
-            return getFilDir(url, getFilePostData(url,pwd), pwd);
+            return getFilDir(userName,url, getFilePostData(url,pwd), pwd);
         }
         if(!url.equals(urlf)){
             b.setName(book.name);
         }
         return b;
     }
-    private static Book getUrlbyid(String url){
-        String root = "https://tianlangbooks.lanzouf.com";
+    private static Book getUrlbyid(String userName, String url){
+        String root = "https://" + userName + ".lanzouf.com";
         return doRetry(3, () -> {
             Document listPage = Jsoup.connect(url).get();
             String rurl = root + listPage.select("body > div > div > div > iframe").attr("src");

@@ -1,9 +1,7 @@
 package com.example.tools.mycrawler.tianlang;
 
 import com.alibaba.fastjson.JSON;
-import com.example.tools.mycrawler.HttpUtils;
 import com.example.tools.mycrawler.ctfile.CtfileUtil;
-import com.example.tools.mycrawler.epubee.IP;
 import com.example.tools.mycrawler.lanzou.LanzouUtil;
 import com.example.tools.mycrawler.util.Streams;
 import lombok.AllArgsConstructor;
@@ -70,7 +68,7 @@ public class TianLangCrawlerByJsoup {
         save("bookInfo/tianlangdowned", Collections.emptyList(),true);
         List<String> downloadList = FileUtils.readLines(new File("bookInfo/tianlangdowned"), Charset.defaultCharset());
         Set<String> downloadNames = Streams.stream(downloadList).filter(e -> !StringUtils.isEmpty(e)).map(e -> JSON.parseObject(e, TianLangCrawlerByJsoup.Book.class).getName()).toSet();
-        LanzouUtil lanzouUtil = new LanzouUtil(10);
+        LanzouUtil lanzouUtil = new LanzouUtil("tianlangbooks",10);
         List<CompletableFuture<Boolean>> futureList = new ArrayList<>();
         List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-23T14:12:49Z"), Charset.defaultCharset());
         for (int i = 0; i < bl.size(); i++ ){

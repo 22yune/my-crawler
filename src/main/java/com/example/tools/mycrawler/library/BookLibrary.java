@@ -39,15 +39,17 @@ public class BookLibrary {
 
     public static void main(String[] args){
         BookLibrary library = new BookLibrary(defaultMetaFilePath);
-        library.addStore("/Volumes/android/Books");//Untitled
+      //  library.addStore("/Volumes/android/Books");//Untitled
+        library.remove("bookInfo/library.txtdupMd5");
+        library.remove("bookInfo/library.txtdupName");
     }
 
-    public void remove(){
+    public void remove(String path){
         List<String> a = new ArrayList<>();
-        load("bookInfo/library.txtdupMd5").forEach(e -> {
-            String md5 = Md5Util.getFileMD5(new File(e));
-            if(md5Contain(md5)){
-                log.warn("delete {}, {}",e, new File(e).delete());
+        load(path).forEach(e -> {
+            BookMeta b = JSON.parseObject(e,BookMeta.class);
+            if(md5Contain(b.getMd5()) || nameContain(b.getName())){
+                log.warn("delete {}, {}",e, new File(b.getPath()).delete());
             }else {
                 a.add(e);
             }

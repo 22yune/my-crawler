@@ -49,7 +49,7 @@ public class TianLangCrawlerByJsoup {
 
     public static void main(String[] args) throws IOException {
       //  crawlerAll();
-        downAll(false, 0);
+        downAll(false, -1);
     }
 
     public static void crawlerAll() {
@@ -99,8 +99,8 @@ public class TianLangCrawlerByJsoup {
                         && !booku.getUrl2().contains("ctfile.com")
                         && !booku.getUrl2().contains("z701.com")
                         && !booku.getUrl2().contains("306t.com");
-                boolean ct = !lanzou && !StringUtils.isEmpty(booku.getName()) && !check && onlyLanzou <= 0;
                 lanzou = lanzou && onlyLanzou >= 0;
+                boolean ct = !lanzou && !StringUtils.isEmpty(booku.getName())  && !StringUtils.isEmpty(booku.getUrl1()) && !check && onlyLanzou <= 0;
                 if(!lanzou && !ct){
                     continue;
                 }

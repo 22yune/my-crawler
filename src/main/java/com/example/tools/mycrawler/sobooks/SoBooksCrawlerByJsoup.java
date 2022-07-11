@@ -41,6 +41,8 @@ import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
 public class SoBooksCrawlerByJsoup {
     private static final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
+    private static final String defaultStoreDir = "/Volumes/Untitled/Books/sobooks-lanzou";//"/Users/hunliji/books/tianlang-lanzou";
+    private static final String defaultDownDir = "/Users/hunliji/books/sobooks-lanzou";
     private static final String downPath = "bookInfo/sobooksdowned";
 
     private static final List<Book> books = new ArrayList<>();
@@ -53,6 +55,7 @@ public class SoBooksCrawlerByJsoup {
         String url = "https://sobooks.net/page/2";
         //crawler(url);
       //  crawlerAll();
+      //  LanzouUtil.unZipDir(defaultDownDir,defaultDownDir + "/unzip");
         downAll(false, 1);
     }
 
@@ -84,8 +87,6 @@ public class SoBooksCrawlerByJsoup {
         save(downPath, Collections.emptyList(),true);
         List<String> downloadList = FileUtils.readLines(new File(downPath), Charset.defaultCharset());
         Set<String> downloadNames = Streams.stream(downloadList).filter(e -> !StringUtils.isEmpty(e)).map(e -> JSON.parseObject(e, SoBooksCrawlerByJsoup.Book.class).getName()).toSet();
-        String defaultStoreDir = "/Volumes/Untitled/Books/sobooks-lanzou";//"/Users/hunliji/books/tianlang-lanzou";
-        String defaultDownDir = "/Users/hunliji/books/sobooks-lanzou";
         LanzouUtil lanzouUtil = new LanzouUtil("sobooks", defaultStoreDir,defaultDownDir,10);
         lanzouUtil.setBookLibrary(new BookLibrary());
         List<CompletableFuture<Boolean>> futureList = new ArrayList<>();

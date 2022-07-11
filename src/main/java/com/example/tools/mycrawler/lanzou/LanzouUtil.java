@@ -172,7 +172,7 @@ public class LanzouUtil {
                     if(r){
                         File f = new File(downDir, book.name);
                         if(book.name.toUpperCase().endsWith(".ZIP")) {
-                            String rz = upZip(f, downDir + "unzip");
+                            String rz = upZip(f, downDir + "/unzip");
                             if(rz != null && rz.length() > 0){
                                 boolean d = f.delete();
                                 log.info("移除文件{}  {}", d ? "成功" : "失败", f.getAbsolutePath());

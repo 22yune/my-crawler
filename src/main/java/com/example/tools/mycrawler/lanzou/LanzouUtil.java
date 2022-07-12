@@ -160,13 +160,36 @@ public class LanzouUtil {
     }
 
     public CompletableFuture<Boolean> submitDownTask(Supplier<String> lanzUrl, String pwd, boolean check){
-        return CompletableFuture.supplyAsync(() -> download(lanzUrl.get(), pwd, check), executorService);
+        return submitDownTask(lanzUrl, pwd, check, null);
+    }
+    public CompletableFuture<Boolean> submitDownTask(Supplier<String> lanzUrl, String pwd, boolean check, String bookName){
+        return CompletableFuture.supplyAsync(() -> download(lanzUrl.get(), pwd, check, bookName), executorService);
     }
 
     public boolean download(String lanzUrl, String pwd, boolean check){
+        return download(lanzUrl, pwd, check, null);
+    }
+    public boolean download(String lanzUrl, String pwd, boolean check, String bookName){
         try {
             Book book = getFileInfo(userName,lanzUrl, pwd);
             if(book != null){
+                if(check && !StringUtils.isEmpty(bookName) && false){
+                    String old = book.getName().substring(0, book.getName().lastIndexOf("."));
+                    String end = ".azw3";
+                    File f = new File(downDir, old + end);
+                    if(!f.exists()){
+                        end = ".epub";
+                        f = new File(downDir, old + end);
+                    }
+                    if(f.exists()){
+                        f.renameTo(new File(downDir, bookName + end));
+                    }
+                    return true;
+                }
+
+                if(!StringUtils.isEmpty(bookName)){
+                    book.setName(bookName + book.getName().substring(book.getName().lastIndexOf(".")));
+                }
                 boolean r = down(book.name, book.url, check);
                 try {
                     if(r){

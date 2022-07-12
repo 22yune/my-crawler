@@ -41,12 +41,12 @@ public class Download {
         try {
             boolean rname = !StringUtils.isEmpty(bookName) && !isContainChinese(book.getName());
             if (rename) {
-                return rname && tryRenameDownloadedFile(book.getName(), downDir, bookName);
+                return rname && tryRenameDownloadedFile(book.getName(), storeDir, bookName);
             }
             if (rname) {
                 book.setName(bookName + book.getName().substring(book.getName().lastIndexOf(".")));
             }
-            boolean r = tryCheckZip(check, downDir, storeDir);
+            boolean r = tryCheckZip(check, book.getName(), storeDir);
             if (r) {
                 doDown.apply(book);
             }

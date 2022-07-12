@@ -63,7 +63,7 @@ public class CtfileUtil {
             if(book != null){
                 String url = book.getUrls().get(0).getUrl();
                 String name = book.name + "." + book.getUrls().get(0).getType();
-                return Download.download(new Download.BookFile(name,url,downDir), e -> doDown(e.getUrl(),e.getName(),e.getDownDir()),true,bookName,true,storeDir, bookLibrary);
+                return Download.download(new Download.BookFile(name,url,downDir), e -> doDown(e.getUrl(),e.getName(),e.getDownDir()),false,bookName,check,storeDir, bookLibrary);
             }
         }catch (Exception ignore){
         }

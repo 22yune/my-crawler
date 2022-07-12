@@ -42,9 +42,9 @@ public class BookLibrary {
 
     public static void main(String[] args){
         BookLibrary library = new BookLibrary(defaultMetaFilePath);
-      //  library.addStore("/Volumes/android/Books");//Untitled
-        library.remove("bookInfo/library.txtdupMd5");
-        library.remove("bookInfo/library.txtdupName");
+        library.addStore("/Users/hunliji/books/sobooks-lanzou");//Untitled  /Volumes/android/Books
+      //  library.remove("bookInfo/library.txtdupMd5");
+      //  library.remove("bookInfo/library.txtdupName");
     }
 
     public void remove(String path){
@@ -100,7 +100,7 @@ public class BookLibrary {
         BookMeta meta = new BookMeta(name,md5,e.getAbsolutePath());
         if(!md5Set.add(md5)){
             save(metaFilePath+ "dupMd5",Collections.singletonList(JSON.toJSONString(meta)), true);
-            log.warn("delete {}, {}", e.getAbsolutePath(), e.delete());
+            log.warn("delete 删除 {}, {}", e.getAbsolutePath(), e.delete());
         }else if(!nameSet.add(name)){
             save(metaFilePath+ "dupName", Collections.singletonList(JSON.toJSONString(meta)), true);
         }else {

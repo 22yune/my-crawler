@@ -40,8 +40,8 @@ public class Download {
         String downDir = book.getDownDir();
         try {
             boolean rname = !StringUtils.isEmpty(bookName) && !isContainChinese(book.getName());
-            if (rename && rname) {
-                return tryRenameDownloadedFile(book.getName(), downDir, bookName);
+            if (rename) {
+                return rname && tryRenameDownloadedFile(book.getName(), downDir, bookName);
             }
             if (rname) {
                 book.setName(bookName + book.getName().substring(book.getName().lastIndexOf(".")));

@@ -3,11 +3,14 @@ package com.example.tools.mycrawler.ctfile;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.tools.mycrawler.Download;
 import com.example.tools.mycrawler.HttpUtils;
 import com.example.tools.mycrawler.epubee.IP;
+import com.example.tools.mycrawler.library.BookLibrary;
 import com.example.tools.mycrawler.tianlang.TianLangCrawlerByJsoup;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.utils.DateUtils;
@@ -40,15 +43,9 @@ public class CtfileUtil {
     private static final ExecutorService executorService = Executors.newFixedThreadPool(1);
     private static final List<Book> books = new ArrayList<>();
     private static final List<String> errorUrls = new ArrayList<>();
+    @Setter
+    private static BookLibrary bookLibrary = new BookLibrary();
 
-    private static final Set<String> fileNames = new TreeSet<>();
-    static {
-        try {
-            fileNames.addAll(FileUtils.readLines(new File(storeDir, "files.txt"), Charset.defaultCharset()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     public static void main(String[] args) throws IOException {
 
         TianLangCrawlerByJsoup.downAll(false, -1);
@@ -56,32 +53,23 @@ public class CtfileUtil {
 
     }
 
-    public static CompletableFuture<Boolean> submitDownTask(Supplier<String> lanzUrl, String pwd){
-        return CompletableFuture.supplyAsync(() -> download(lanzUrl.get(), pwd), executorService);
+    public static CompletableFuture<Boolean> submitDownTask(Supplier<String> lanzUrl, String pwd, boolean check, String bookName){
+        return CompletableFuture.supplyAsync(() -> download(lanzUrl.get(), pwd, check, bookName), executorService);
     }
 
-    public static boolean download(String cturl, String pwd){
+    public static boolean download(String cturl, String pwd, boolean check, String bookName){
         try {
             Book book = getBook(cturl, pwd);
-            return book !=null && down(book);
+            if(book != null){
+                String url = book.getUrls().get(0).getUrl();
+                String name = book.name + "." + book.getUrls().get(0).getType();
+                return Download.download(new Download.BookFile(name,url,downDir), e -> doDown(e.getUrl(),e.getName(),e.getDownDir()),true,bookName,true,storeDir, bookLibrary);
+            }
         }catch (Exception ignore){
-            return false;
         }
+        return false;
     }
 
-    private static boolean down(Book book){
-        //log.info("download {}   {}", book.name);
-        String url = book.getUrls().get(0).getUrl();
-        String name = book.name + "." + book.getUrls().get(0).getType();
-        File file = new File(storeDir,name);
-        if(file.exists() || fileNames.contains(name)){
-            if(file.length() > 0){
-                log.info("已下载.{}",name);
-                return true;
-            }
-        }
-        return doDown(url, name, downDir);
-    }
     private static boolean doDown(String url,String name ,String dir){
         Map<String,String> map = HttpUtils.download(url, "", IP.getNewIP(),name, "1", dir);
         boolean r = map != null && map.containsKey("code");

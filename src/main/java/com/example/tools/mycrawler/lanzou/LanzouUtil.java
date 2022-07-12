@@ -3,6 +3,7 @@ package com.example.tools.mycrawler.lanzou;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.tools.mycrawler.Download;
 import com.example.tools.mycrawler.HttpUtils;
 import com.example.tools.mycrawler.ctfile.CtfileUtil;
 import com.example.tools.mycrawler.epubee.IP;
@@ -30,6 +31,8 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import static com.example.tools.mycrawler.Download.checkZip;
+import static com.example.tools.mycrawler.Download.upZip;
 import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
 
 /**
@@ -38,8 +41,6 @@ import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
  */
 @Slf4j
 public class LanzouUtil {
-    private static final String defaultStoreDir = "/Volumes/Untitled/Books/tianlang-lanzou";//"/Users/hunliji/books/tianlang-lanzou";
-    private static final String defaultDownDir = "/Users/hunliji/books/tianlang-lanzou";
 
     private final String userName;
     private final String storeDir;
@@ -47,23 +48,14 @@ public class LanzouUtil {
     private final ExecutorService executorService;
     private final List<Book> books = new ArrayList<>();
     private final List<String> errorUrls = new ArrayList<>();
-    private final Set<String> fileNames = new TreeSet<>();
     @Setter
     private BookLibrary bookLibrary;
 
-    public LanzouUtil(String userName, int threadSize) {
-        this(userName, defaultStoreDir,defaultDownDir,threadSize);
-    }
     public LanzouUtil(String userName, String storeDir, String downDir, int threadSize) {
         this.userName = userName;
         this.storeDir = storeDir;
         this.downDir = downDir;
         this.executorService = Executors.newFixedThreadPool(threadSize);
-        try {
-            fileNames.addAll(FileUtils.readLines(new File(storeDir, "files.txt"), Charset.defaultCharset()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -122,7 +114,7 @@ public class LanzouUtil {
                                 Boolean r = checkZip(dir,b.name);
                                 if(r != null && !r){
                                     errorZip.add(new Book(booku.getName(),b.name));
-                                    down(b.name, b.url,false);
+                                    doDown(b.name, b.url,downDir);
                                 }
                             }
                         }catch (Exception ignore){
@@ -173,68 +165,14 @@ public class LanzouUtil {
         try {
             Book book = getFileInfo(userName,lanzUrl, pwd);
             if(book != null){
-                if(check && !StringUtils.isEmpty(bookName) && false){
-                    String old = book.getName().substring(0, book.getName().lastIndexOf("."));
-                    String end = ".azw3";
-                    File f = new File(downDir, old + end);
-                    if(!f.exists()){
-                        end = ".epub";
-                        f = new File(downDir, old + end);
-                    }
-                    if(f.exists()){
-                        f.renameTo(new File(downDir, bookName + end));
-                    }
-                    return true;
-                }
-
-                if(!StringUtils.isEmpty(bookName)){
-                    book.setName(bookName + book.getName().substring(book.getName().lastIndexOf(".")));
-                }
-                boolean r = down(book.name, book.url, check);
-                try {
-                    if(r){
-                        File f = new File(downDir, book.name);
-                        if(book.name.toUpperCase().endsWith(".ZIP")) {
-                            String rz = upZip(f, downDir + "/unzip");
-                            if(rz != null && rz.length() > 0){
-                                boolean d = f.delete();
-                                log.info("移除文件{}  {}", d ? "成功" : "失败", f.getAbsolutePath());
-                                f = new File(rz);
-                            }
-                        }
-                        bookLibrary.addFile(f);
-                    }
-                }catch (Exception e){
-                    log.error("添加到数据出错", e);
-                }
-                return r;
+                return Download.download(new Download.BookFile(book.name,book.url,downDir),e -> doDown(e.getUrl(),e.getName(),e.getDownDir()),true,bookName,check,storeDir,bookLibrary);
             }
         }catch (Exception ignore){
-            log.error("",ignore);
         }
         return false;
     }
 
-    private boolean down(String name, String url, boolean check){
-        File file = new File(storeDir,name);
-        if(file.exists() || fileNames.contains(name)){
-            if(check && name.toUpperCase().endsWith(".ZIP")){
-                Boolean r = checkZip(storeDir,name);
-                if(r != null && !r){
-                    return doDown(url, name);
-                }
-            }
-            return true;
-        }else {
-            if(!check){
-                return doDown(url, name);
-            }else {
-                log.info("not exsist {}",name);
-            }
-            return true;
-        }
-    }
-    private boolean doDown(String url, String name){
+    private boolean doDown(String url, String name, String downDir){
         log.info(" dodownload  {}", name);
         Map<String,String> heads = new HashMap<>();
         heads.put("accept-language", "zh-CN,zh;q=0.9");
@@ -383,75 +321,6 @@ public class LanzouUtil {
         });
     }
 
-    public static Boolean checkZip(String dir,String name){
-        File file1 = new File(dir,name);
-        if(!file1.exists()){
-            return null;
-        }
-        try {
-            ZipFile zipFile = new ZipFile(file1);
-            log.info(" check zip  {} {} {}", name, zipFile.getName(), zipFile.size());
-        } catch (ZipException e){
-            log.error("error {} {}",name,e.getMessage());
-            return false;
-        }catch (IOException e) {
-            log.error("error {} {}",name, e.getMessage());
-            return null;
-        }
-        return true;
-    }
-
-    public static String upZip(File zipFile,String outDir){
-        if(!zipFile.exists()){
-            return null;
-        }
-        try {
-            org.apache.tools.zip.ZipFile _zipFile = new org.apache.tools.zip.ZipFile(zipFile , "GBK") ;
-            org.apache.tools.zip.ZipEntry entry = null;
-            Comparator<org.apache.tools.zip.ZipEntry> comparator = Comparator.nullsLast(Comparator.comparing(e -> Type.indexName(e.getName())));
-            for( Enumeration entries = _zipFile.getEntries() ; entries.hasMoreElements() ; ){
-                org.apache.tools.zip.ZipEntry temp = (org.apache.tools.zip.ZipEntry)entries.nextElement() ;
-                entry = comparator.compare(entry,temp) > 0 ? temp : entry;
-
-            }
-            if(entry == null){
-                return null;
-            }
-            String enName = entry.getName();
-            String name = zipFile.getName().toLowerCase().replace("zip", enName.substring(enName.lastIndexOf(".") + 1));
-            File _file = new File(outDir + File.separator + name) ;
-            if(entry.isDirectory() ){
-                _file.mkdirs() ;
-                return null;
-            }else{
-                File _parent = _file.getParentFile() ;
-                if( !_parent.exists() ){
-                    _parent.mkdirs() ;
-                }
-                InputStream _in = _zipFile.getInputStream(entry);
-                OutputStream _out = new FileOutputStream(_file) ;
-                int len = 0 ;
-                byte[] _byte = new byte[1024];
-                while( (len = _in.read(_byte)) > 0){
-                    _out.write(_byte, 0, len);
-                }
-                _in.close();
-                _out.flush();
-                _out.close();
-                log.info(" unziped  {} to {} ", zipFile.getName(), _file.getName() );
-                return _file.getAbsolutePath();
-            }
-        } catch (ZipException e){
-            log.error("unzip error {} {}",zipFile.getName(),e.getMessage());
-            return "";
-        }catch (IOException e) {
-            log.error("unzip error {} {}",zipFile.getName(), e.getMessage());
-            return null;
-        }catch (Throwable throwable){
-            log.error("unzip error ", throwable);
-            return null;
-        }
-    }
 
 
     @Data

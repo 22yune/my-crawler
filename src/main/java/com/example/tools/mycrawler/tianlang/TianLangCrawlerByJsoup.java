@@ -38,6 +38,8 @@ import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
  */
 @Slf4j
 public class TianLangCrawlerByJsoup {
+    private static final String defaultStoreDir = "/Volumes/Untitled/Books/tianlang-lanzou";//"/Users/hunliji/books/tianlang-lanzou";
+    private static final String defaultDownDir = "/Users/hunliji/books/tianlang-lanzou";
     private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     private static final List<Book> books = new ArrayList<>();
@@ -48,7 +50,7 @@ public class TianLangCrawlerByJsoup {
 
     public static void main(String[] args) throws IOException {
       //  crawlerAll();
-        downAll(false, -1);
+        downAll(true, 1);
     }
 
     public static void crawlerAll() {
@@ -69,7 +71,7 @@ public class TianLangCrawlerByJsoup {
         save("bookInfo/tianlangdowned", Collections.emptyList(),true);
         List<String> downloadList = FileUtils.readLines(new File("bookInfo/tianlangdowned"), Charset.defaultCharset());
         Set<String> downloadNames = Streams.stream(downloadList).filter(e -> !StringUtils.isEmpty(e)).map(e -> JSON.parseObject(e, TianLangCrawlerByJsoup.Book.class).getName()).toSet();
-        LanzouUtil lanzouUtil = new LanzouUtil("tianlangbooks",10);
+        LanzouUtil lanzouUtil = new LanzouUtil("tianlangbooks", defaultStoreDir, defaultDownDir,10);
         lanzouUtil.setBookLibrary(new BookLibrary());
         List<CompletableFuture<Boolean>> futureList = new ArrayList<>();
         List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-23T14:12:49Z"), Charset.defaultCharset());
@@ -100,7 +102,7 @@ public class TianLangCrawlerByJsoup {
                         && !booku.getUrl2().contains("z701.com")
                         && !booku.getUrl2().contains("306t.com");
                 lanzou = lanzou && onlyLanzou >= 0;
-                boolean ct = !lanzou && !StringUtils.isEmpty(booku.getName())  && !StringUtils.isEmpty(booku.getUrl1()) && !check && onlyLanzou <= 0;
+                boolean ct = !lanzou && !StringUtils.isEmpty(booku.getName())  && !StringUtils.isEmpty(booku.getUrl1()) && onlyLanzou <= 0;
                 if(!lanzou && !ct){
                     continue;
                 }
@@ -115,8 +117,8 @@ public class TianLangCrawlerByJsoup {
                     return url;
                 };
                 CompletableFuture<Boolean> future =  lanzou
-                        ? lanzouUtil.submitDownTask(getUrl,booku.getPwd2(),check).whenComplete(onComplete)
-                        : CtfileUtil.submitDownTask(getUrl,booku.getPwd1()).whenComplete(onComplete);
+                        ? lanzouUtil.submitDownTask(getUrl,booku.getPwd2(),check,booku.getName()).whenComplete(onComplete)
+                        : CtfileUtil.submitDownTask(getUrl,booku.getPwd1(),check,booku.getName()).whenComplete(onComplete);
                 futureList.add(future);
             }catch (Exception e){
                 downLoadederror.add(booku);

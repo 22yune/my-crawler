@@ -127,8 +127,8 @@ public class SoBooksCrawlerByJsoup {
                 };
                 String pwd = bookUrl.getPwd().replace("×","x");
                 CompletableFuture<Boolean> future =  lanzou
-                        ? lanzouUtil.submitDownTask(getUrl, pwd,check,booku.getName()).whenComplete(onComplete)
-                        : CtfileUtil.submitDownTask(getUrl, pwd).whenComplete(onComplete);
+                        ? lanzouUtil.submitDownTask(getUrl, pwd, check, booku.getName()).whenComplete(onComplete)
+                        : CtfileUtil.submitDownTask(getUrl, pwd, check, booku.getName()).whenComplete(onComplete);
                 futureList.add(future);
             }catch (Exception e){
                 downLoadederror.add(booku);

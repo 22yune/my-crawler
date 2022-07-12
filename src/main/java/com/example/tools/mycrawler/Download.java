@@ -87,6 +87,7 @@ public class Download {
             f = new File(downDir, old + end);
         }
         if (f.exists()) {
+            log.info("重命名: {} -> {}", f.getAbsolutePath(), bookName);
             return f.renameTo(new File(downDir, bookName + end));
         }
         return false;

@@ -38,7 +38,7 @@ import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
  */
 @Slf4j
 public class TianLangCrawlerByJsoup {
-    private static final String defaultStoreDir = "/Volumes/Untitled/Books/tianlang-lanzou";//"/Users/hunliji/books/tianlang-lanzou";
+    private static final String defaultStoreDir = "/Volumes/android/Books/tianlang-lanzou";//"/Users/hunliji/books/tianlang-lanzou";
     private static final String defaultDownDir = "/Users/hunliji/books/tianlang-lanzou";
     private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
@@ -109,7 +109,7 @@ public class TianLangCrawlerByJsoup {
                 Supplier<String> getUrl = () -> {
                     log.info("try download {}  {}", finalI, booku.name);
                     String url = !ct
-                            ? booku.getUrl2().replace("https://wws.lanzous.com","https://tianlangbooks.lanzouf.com")
+                            ? booku.getUrl2().replace("https://wws.lanzous.com","https://tianlangbooks.lanzouf.com").replace(".lanzous.com",".lanzouf.com")
                             : booku.getUrl1().replace("z701.com","url54.ctfile.com").replace("306t.com","url54.ctfile.com");
                     if(url.contains("www.tianlangbooks.com/redirect")){
                         url = redirctInfo(url);

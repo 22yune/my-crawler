@@ -165,7 +165,7 @@ public class LanzouUtil {
         try {
             Book book = getFileInfo(userName,lanzUrl, pwd);
             if(book != null){
-                return Download.download(new Download.BookFile(book.name,book.url,downDir),e -> doDown(e.getUrl(),e.getName(),e.getDownDir()),true,bookName,check,storeDir,bookLibrary);
+                return Download.download(new Download.BookFile(book.name,book.url,downDir),e -> doDown(e.getUrl(),e.getName(),e.getDownDir()),false,bookName,check,storeDir,bookLibrary);
             }
         }catch (Exception ignore){
         }
@@ -210,15 +210,23 @@ public class LanzouUtil {
                 return new String[]{aa[0],aa[1],aa[2],aa[3],aa[4],pwd};
             }else if(mi > 0 && fi < 0){
                 String b = a.substring(mi + 8,a.indexOf("}", mi));
+
+                String c = a.substring(a.indexOf("var ajaxdata"), a.indexOf("$.ajax"));
+                Pattern pn = Pattern.compile("var (.*?) \\=");
+                Pattern pa = Pattern.compile("\\=(.*?)\\;");//正则表达式，取=和|之间的字符串，不包括=和|
+                Matcher n = pn.matcher(c);
+                Matcher m = pa.matcher(c);
+                while (n.find() && m.find()){
+                    String name = n.group(1).trim();
+                    String value =  m.group(1).trim().replace("'","");
+                    b = b.replace(":" + name,":" + value);
+                }
                 String[] aa = b.replace("'","").split(":|,");
                 String[] p = Arrays.stream(aa).map(String::trim).toArray(String[]::new);
-                String c = a.substring(a.indexOf("var ajaxdata"), a.indexOf("$.ajax"));
-                Pattern pa = Pattern.compile("\\=(.*?)\\;");//正则表达式，取=和|之间的字符串，不包括=和|
-                Matcher m = pa.matcher(c);
-                if(m.find()) p[3] = m.group(1).trim().replace("'","");
+                /*if(m.find()) p[3] = m.group(1).trim().replace("'","");
                 if(m.find()) m.group(1);
                 if(m.find()) p[11] = m.group(1).trim().replace("'","");
-                if(m.find()) p[9] = m.group(1);
+                if(m.find()) p[9] = m.group(1);*/
                 return p;
             }else {
                 if(listPage.select("body > div").toString().contains("文件取消分享了")){

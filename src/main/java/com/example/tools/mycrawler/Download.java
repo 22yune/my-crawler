@@ -48,7 +48,7 @@ public class Download {
             }
             boolean r = tryCheckZip(check, book.getName(), storeDir);
             if (r) {
-                doDown.apply(book);
+                r = doDown.apply(book);
             }
             try {
                 if (r) {

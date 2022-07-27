@@ -50,7 +50,8 @@ public class TianLangCrawlerByJsoup {
 
     public static void main(String[] args) throws IOException {
       //  crawlerAll();
-        downAll(true, 1);
+        downAll(false, -1);
+      //  reCrawlerError("bookInfo/tianlangdownerror2022-07-27T11:15:56Z");
     }
 
     public static void crawlerAll() {
@@ -62,11 +63,30 @@ public class TianLangCrawlerByJsoup {
         }
         CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
         future.join();
+        saveResult();
+    }
+    public static void reCrawlerError(String path) throws IOException {
+        List<String> bl = FileUtils.readLines(new File(path), Charset.defaultCharset());
+        List<CompletableFuture<Void>> futureList = new ArrayList<>();
+        for (String s : bl) {
+            if (StringUtils.isEmpty(s)) {
+                continue;
+            }
+            Book booku = JSON.parseObject(s, Book.class);
+            futureList.add(CompletableFuture.runAsync(() -> books.addAll(crawlerByName(booku.getName())), executorService));
+        }
+        CompletableFuture<Void> future = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
+        future.join();
+        saveResult();
+    }
+
+    private static void saveResult() {
         String d = DateUtils.formatDate(new Date());
         save("bookInfo/tianlang"+ d, books.stream().map(e -> JSON.toJSONString(e,false)).collect(Collectors.toList()));
         save("bookInfo/"+ d + "error", errorUrls);
         save("bookInfo/"+ d + "zero", sizeZero);
     }
+
     public static void downAll(boolean check, int onlyLanzou) throws IOException {
         save("bookInfo/tianlangdowned", Collections.emptyList(),true);
         List<String> downloadList = FileUtils.readLines(new File("bookInfo/tianlangdowned"), Charset.defaultCharset());
@@ -74,7 +94,7 @@ public class TianLangCrawlerByJsoup {
         LanzouUtil lanzouUtil = new LanzouUtil("tianlangbooks", defaultStoreDir, defaultDownDir,10);
         lanzouUtil.setBookLibrary(new BookLibrary());
         List<CompletableFuture<Boolean>> futureList = new ArrayList<>();
-        List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-06-23T14:12:49Z"), Charset.defaultCharset());
+        List<String> bl = FileUtils.readLines(new File("bookInfo/tianlang2022-07-27T12:28:49Z"), Charset.defaultCharset());
         for (int i = 0; i < bl.size(); i++ ){
             if(StringUtils.isEmpty(bl.get(i))){
                 continue;
@@ -132,6 +152,9 @@ public class TianLangCrawlerByJsoup {
         downLoadederror.clear();
     }
 
+    public static List<Book> crawlerByName(String name){
+        return crawler("https://www.tianlangbooks.com/?s="+name);
+    }
     public static List<Book> crawler(String url){
         log.info("开始 {}" ,url);
         List<Book> list = new ArrayList<>();

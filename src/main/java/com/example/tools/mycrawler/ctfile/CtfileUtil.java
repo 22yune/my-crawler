@@ -13,16 +13,13 @@ import lombok.Data;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.apache.tika.utils.DateUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -94,7 +91,7 @@ public class CtfileUtil {
 
     public static Book getBook(String url,String pwd){
         return doRetry(3,() -> {
-                JSONObject file = getFileInfo(url,pwd);
+                JSONObject file = getDirInfo(url,pwd);
                 String folderName = file.getString("folder_name");
                 String dirUrl = file.getString("url");
                 JSONArray dir = getDir(dirUrl);
@@ -109,7 +106,7 @@ public class CtfileUtil {
             });
     }
 
-    public static JSONObject getFileInfo(String url, String pwd){
+    public static JSONObject getDirInfo(String url, String pwd){
        // String u = "https://webapi.ctfile.com/getdir.php?path=d&d=18000254-49360899-bb4ee9&passcode=908047";
         url = url.trim();
         url = url.substring(0,url.lastIndexOf("?") > 0 ? url.lastIndexOf("?") : url.length() ).replace("https://url54.ctfile.com/d/","https://webapi.ctfile.com/getdir.php?path=d&d=");

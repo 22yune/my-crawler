@@ -91,6 +91,15 @@ public class CtfileUtil {
 
     public static Book getBook(String url,String pwd){
         return doRetry(3,() -> {
+            if (url.contains("/f/")){
+                String id = url.substring(url.lastIndexOf("/") + 1,url.lastIndexOf("?") > 0 ? url.lastIndexOf("?") : url.length());
+                JSONObject o =  getFilechk("/f/" + id, pwd);
+                String name = o.getString("file_name");
+                String urld = o.getString("downurl");
+                return Book.builder().name(null)
+                        .urls(Collections.singletonList(BookUrl.builder().type(name.substring(name.lastIndexOf(".") + 1)).url(urld).build()))
+                        .build();
+            }
                 JSONObject file = getDirInfo(url,pwd);
                 String folderName = file.getString("folder_name");
                 String dirUrl = file.getString("url");
@@ -99,18 +108,31 @@ public class CtfileUtil {
                     Elements f = Jsoup.parse(((JSONArray)e).getString(1)).select(" a");
                     String tempDir = f.attr("href");
                     String name = f.text();
-                    String urld = getFilechk(tempDir);
+                    String urld = getFilechk(tempDir,"").getString("downurl");
                     return BookUrl.builder().type(name.substring(name.lastIndexOf(".") + 1)).url(urld).build();
                 }).sorted(Comparator.comparing(a -> Type.index(a.getType()))).collect(Collectors.toList());
                 return Book.builder().name(folderName).urls(urls).build();
             });
     }
 
+    public static JSONObject getFileInfo(String url, String pwd){
+        // String u = "https://webapi.ctfile.com/getfile.php?path=f&f=14804066-605844636-9ff0ef";
+        url = url.trim();
+        String id = url.substring(url.lastIndexOf("/") + 1,url.lastIndexOf("?") > 0 ? url.lastIndexOf("?") : url.length());
+        String rurl = "https://webapi.ctfile.com/getfile.php?path=f&f=" + id + "&passcode=" + pwd;
+        return doRetry(3,() -> {
+            Document listPage = Jsoup.connect(rurl).get();
+            JSONObject object = JSON.parseObject(listPage.body().text());
+            return object.getObject("file",JSONObject.class);
+        });
+    }
+
     public static JSONObject getDirInfo(String url, String pwd){
        // String u = "https://webapi.ctfile.com/getdir.php?path=d&d=18000254-49360899-bb4ee9&passcode=908047";
         url = url.trim();
-        url = url.substring(0,url.lastIndexOf("?") > 0 ? url.lastIndexOf("?") : url.length() ).replace("https://url54.ctfile.com/d/","https://webapi.ctfile.com/getdir.php?path=d&d=");
-        String rurl = url + "&passcode=" + pwd;
+        String id = url.substring(url.lastIndexOf("/") + 1,url.lastIndexOf("?") > 0 ? url.lastIndexOf("?") : url.length());
+        //url = url.substring(0,url.lastIndexOf("?") > 0 ? url.lastIndexOf("?") : url.length() ).replace("https://url54.ctfile.com/d/","https://webapi.ctfile.com/getdir.php?path=d&d=");
+        String rurl = "https://webapi.ctfile.com/getdir.php?path=d&d=" + id + "&passcode=" + pwd;
         return doRetry(3,() -> {
             Document listPage = Jsoup.connect(rurl).get();
             JSONObject object = JSON.parseObject(listPage.body().text());
@@ -126,8 +148,8 @@ public class CtfileUtil {
             return object.getJSONArray("aaData");
         });
     }
-    public static String getFilechk(String tempDir){
-        String rurl = "https://webapi.ctfile.com/getfile.php?path=f&f=" + tempDir.replace("/f/","");
+    public static JSONObject getFilechk(String tempDir, String pwd){
+        String rurl = "https://webapi.ctfile.com/getfile.php?path=f&f=" + tempDir.replace("/f/","") + "&passcode=" + pwd;;
         return doRetry(3,() ->{
             Map<String,String> map = HttpUtils.get(rurl, "");
             String a = map.get("body");
@@ -136,17 +158,13 @@ public class CtfileUtil {
         });
     }
 
-    public static String getFileDownUrl(String uid, String fid, String fck){
+    public static JSONObject getFileDownUrl(String uid, String fid, String fck){
         String rurl = String.format("https://webapi.ctfile.com/get_file_url.php?uid=%s&fid=%s&file_chk=%s",uid,fid,fck);
         return doRetry(3,() ->{
             Map<String,String> map = HttpUtils.get(rurl, "");
             String a = map.get("body");
             JSONObject object = JSON.parseObject(a);
-            String u = object.getString("downurl");
-            if (StringUtils.isEmpty(u)){
-                throw new RuntimeException();
-            }
-            return u;
+            return object;
         });
     }
     @Data

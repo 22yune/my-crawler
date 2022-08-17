@@ -38,8 +38,8 @@ import static com.example.tools.mycrawler.util.CommonUtil.doRetry;
  */
 @Slf4j
 public class CtfileUtil {
-    private static final String storeDir = "/Users/hunliji/books/tianlang";
-    private static final String downDir = "/Users/hunliji/books/tianlang";
+    private static final String storeDir = "/Users/hunliji/books/ct";
+    private static final String downDir = "/Users/hunliji/books/ct";
     private static final ExecutorService executorService = Executors.newFixedThreadPool(1);
     private static final List<Book> books = new ArrayList<>();
     private static final List<String> errorUrls = new ArrayList<>();
@@ -48,6 +48,7 @@ public class CtfileUtil {
 
     public static void main(String[] args) throws IOException {
 
+        download("https://u062.com/file/14804066-229509484",null,false,"关键对话");
         TianLangCrawlerByJsoup.downAll(false, -1);
         //FileUtils.writeLines(new File(dir,"files.txt"), FileUtils.listFiles(new File(dir),null,false).stream().map(File::getName).collect(Collectors.toList()));
 

@@ -130,14 +130,26 @@ public class CtfileUtil {
     public static JSONObject getDirInfo(String url, String pwd){
        // String u = "https://webapi.ctfile.com/getdir.php?path=d&d=18000254-49360899-bb4ee9&passcode=908047";
         url = url.trim();
+        if(url.endsWith("/")){
+            url = url.substring(0, url.length() - 1);
+        }
         String id = url.substring(url.lastIndexOf("/") + 1,url.lastIndexOf("?") > 0 ? url.lastIndexOf("?") : url.length());
         //url = url.substring(0,url.lastIndexOf("?") > 0 ? url.lastIndexOf("?") : url.length() ).replace("https://url54.ctfile.com/d/","https://webapi.ctfile.com/getdir.php?path=d&d=");
         String rurl = "https://webapi.ctfile.com/getdir.php?path=d&d=" + id + "&passcode=" + pwd;
-        return doRetry(3,() -> {
+        String rurl2 = "https://webapi.ctfile.com/getdir.php?path=dir&d=" + id + "&passcode=" + pwd;
+        JSONObject a = doRetry(3,() -> {
             Document listPage = Jsoup.connect(rurl).get();
             JSONObject object = JSON.parseObject(listPage.body().text());
             return object.getObject("file",JSONObject.class);
         });
+        if(a == null|| a.size() < 3){
+            a = doRetry(3,() -> {
+                Document listPage = Jsoup.connect(rurl2).get();
+                JSONObject object = JSON.parseObject(listPage.body().text());
+                return object.getObject("file",JSONObject.class);
+            });
+        }
+        return a;
     }
     public static JSONArray getDir(String url){
         String rurl = "https://webapi.ctfile.com" + url;

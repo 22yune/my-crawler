@@ -42,22 +42,29 @@ public class BookLibrary {
 
     public static void main(String[] args){
         BookLibrary library = new BookLibrary(defaultMetaFilePath);
-        library.addStore("/Users/hunliji/books/sobooks-lanzou");//Untitled  /Volumes/android/Books
-      //  library.remove("bookInfo/library.txtdupMd5");
-      //  library.remove("bookInfo/library.txtdupName");
+   //     library.addStore("/Users/hunliji/books/sobooks-lanzou");//Untitled  /Volumes/android/Books
+    //    library.remove(bookInfo/library.txtdupMd5");
+        library.remove("bookInfo/library.txtdupName");
     }
 
     public void remove(String path){
         List<String> a = new ArrayList<>();
+        List<String> del = new ArrayList<>();
         load(path).forEach(e -> {
             BookMeta b = JSON.parseObject(e,BookMeta.class);
             if(md5Contain(b.getMd5()) || nameContain(b.getName())){
-                log.warn("delete {}, {}",e, new File(b.getPath()).delete());
+            //    b.setPath(b.getPath().replace("/Users/hunliji/books/tianlang/unzip","/Volumes/android/Books/tianlang"));
+                boolean r = new File(b.getPath()).delete();
+                log.warn("delete {}, {}",e, r);
+                if(r){
+                    del.add(b.getPath());
+                }
             }else {
                 a.add(e);
             }
         });
         log.info("[{}}]", JSON.toJSONString(a));
+        save(metaFilePath+ "dupDel", del, true);
     }
 
     public boolean nameContain(String name){

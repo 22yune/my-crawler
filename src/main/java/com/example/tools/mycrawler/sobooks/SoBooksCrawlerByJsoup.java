@@ -85,6 +85,8 @@ public class SoBooksCrawlerByJsoup {
 
     public static void downAll(boolean check, int onlyLanzou) throws IOException {
         save(downPath, Collections.emptyList(),true);
+        List<String> notDownKeys = Arrays.asList("境·界BLEACH死神","航海王One","新世纪福音战士","镖人","乌龙院大长篇","乌龙院四格漫画","阿拉蕾","夏目友人帐","深夜食堂","夜泉镇","哆啦A梦珍藏版"
+        ,"鬼灭之刃","圣斗士星矢","乱马","名侦探柯南","火影忍者","幽游白书","龙族","从前有座灵剑山");
         List<String> downloadList = FileUtils.readLines(new File(downPath), Charset.defaultCharset());
         Set<String> downloadNames = Streams.stream(downloadList).filter(e -> !StringUtils.isEmpty(e)).map(e -> JSON.parseObject(e, SoBooksCrawlerByJsoup.Book.class).getName()).toSet();
         LanzouUtil lanzouUtil = new LanzouUtil("sobooks", defaultStoreDir,defaultDownDir,10);
@@ -96,6 +98,10 @@ public class SoBooksCrawlerByJsoup {
                 continue;
             }
             SoBooksCrawlerByJsoup.Book booku = JSON.parseObject(bl.get(i), SoBooksCrawlerByJsoup.Book.class);
+            if(Streams.stream(notDownKeys).anyMatch(e -> booku.getName().contains(e))){
+                log.info("过滤，不下载{} {}.", i, booku.getName());
+                continue;
+            }
             if((check && !downloadNames.contains(booku.getName())) || (!check && downloadNames.contains(booku.getName()))){
                 log.info( (check ? "未" : "已") + "下载，跳过 {} {}", i ,booku.getName());
                 continue;
@@ -123,7 +129,7 @@ public class SoBooksCrawlerByJsoup {
                 }
                 Supplier<String> getUrl = () -> {
                     log.info("try download {}  {}", finalI, booku.name);
-                    return !ct ? bookUrl.getUrl() : bookUrl.getUrl().replace("z701.com","url54.ctfile.com").replace("306t.com","url54.ctfile.com");
+                    return !ct ? bookUrl.getUrl() : bookUrl.getUrl().replace("306t.com","z701.com").replace("sobooks.ctfile.com/dir/","z701.com/dir/");//.replace("z701.com","url54.ctfile.com");//.replace("306t.com","url54.ctfile.com");
                 };
                 String pwd = Optional.ofNullable(bookUrl.getPwd()).map(e -> e.replace("×","x")).orElse(null);
                 CompletableFuture<Boolean> future =  lanzou
